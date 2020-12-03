@@ -16,6 +16,8 @@ case class RemindersManager(lst_rem: Reminder_List) {
   def sort_by_priority(): RemindersManager = RemindersManager.sort_by_priority(this)
 
   def sort_by_date(): RemindersManager = RemindersManager.sort_by_date(this)
+
+  override def toString(): String = RemindersManager.toString(lst_rem)
 }
 
 object RemindersManager {
@@ -27,7 +29,7 @@ object RemindersManager {
   type Reminder = (Title, Body, Priority, Date, Points)
   type Reminder_List = List[Reminder]
 
-
+  val boundary = "////0xFFFF////EOF"
 
   //PRINT DOS LEMBRETES
   @tailrec
@@ -140,6 +142,30 @@ object RemindersManager {
     rem._3 * (2 * 1/(1 + Math.exp(days)) + 1)
   }
 
+  def toString(lst_rem: List[Reminder]): String = lst_rem match {
+    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}"
+    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}" +
+      s"\n ${toString(tail)}"
+  }
+
+  def parseItem(item: String): (String, String, Int, LocalDate, Double) = {
+    val title = item.split(boundary)(0).trim
+    val body = item.split(boundary)(1).trim
+    val priority = item.split(boundary)(2).split(",")(0).trim.toInt
+    val date = LocalDate.parse(item.split(boundary)(2).split(",")(1))
+    val points = item.split(boundary)(2).split(",")(2).toDouble
+    (title, body,priority,date,points)
+  }
+
+  def fromString(toParse: String): RemindersManager = {
+    @tailrec
+    def aux(rems_man: RemindersManager, items: List[String]): RemindersManager = items match {
+      case head :: Nil => rems_man.addReminder(parseItem(head))
+      case head :: tail => aux(rems_man.addReminder(parseItem(head)),tail)
+    }
+    aux(RemindersManager(List()),toParse.split("\n").toList)
+  }
+
   /*def variancia(): Int = {
   }*/
 
@@ -154,8 +180,14 @@ object RemindersManager {
     //println(rems.searchReminder("Titulo7"))
     //printReminders(rems.lst_rem)
    // println(points_gaussion(rems.lst_rem.head))
-    println(sort_smart(rems))
+    //println(sort_smart(rems))
+    print("ESTE É REMS ORIGINAL "+rems)
+    val rems1 = rems.toString()
+    print("ESTE É O TOSTRING "+rems1)
+    val rems2 = fromString(rems1)
+    print("ESTE É O FROM STRING "+rems2)
   }
+
 
 }
 
