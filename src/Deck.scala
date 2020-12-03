@@ -21,6 +21,8 @@ object Deck {
 
   type Card = (String, String, Int, String, LocalDate)
 
+  val boundary = "////0xFFFF////EOF"
+
   def addCard(deck: Deck, card: Card): Deck = Deck(card :: deck.cards, deck.ro)
 
   private def available_cards(course_cards: List[(String, String, Int, String, LocalDate)]) = {
@@ -64,6 +66,29 @@ object Deck {
     if (opt == "")
       aux(cards)
     else aux(cards.filter(card => card._4 == opt))
+  }
+
+  def toString(cards: List[Card]): String = cards match {
+    case head :: Nil => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}}"
+    case head :: tail => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}\n${toString(tail)}"
+  }
+
+  def parseItem(item: String): (String, String, Int, String, LocalDate) = {
+    val num = item.split(",")(0).toInt
+    val time = LocalDate.parse(item.split(",")(1))
+    val subj = item.split(",")(2).split(boundary)(0).trim
+    val q = item.split(boundary)(1).trim
+    val a = item.split(boundary)(2).trim
+    (q,a,num,subj,time)
+  }
+
+  def fromString(toParse: String): Deck = {
+    @tailrec
+    def aux(deck: Deck, items: List[String]): Deck = items match {
+      case item :: Nil => deck.addCard(parseItem(item))
+      case head :: tail => aux(deck.addCard(parseItem(head)), tail)
+    }
+    aux(Deck(List(), RandomWithState(0)), toParse.split("\n").toList)
   }
 
 }
