@@ -1,8 +1,9 @@
 import java.time.LocalDate
-
 import Notebook.Note
 import RemindersManager.Reminder
 import Subject.Evaluation
+
+import scala.annotation.tailrec
 
 
 //val rems_default = List()
@@ -30,6 +31,7 @@ object Subject {
   type Percent_Grade = Double
   type Date = LocalDate
   type Evaluation = (Date, (Percent_Grade, Grade))
+  val boundary = "////0xFFFF////EOF"
 
   def associate_reminder(subj: Subject, rem: Reminder): Subject = {
     Subject(subj.name, rem :: subj.rems, subj.notes, subj.evals)
@@ -53,8 +55,35 @@ object Subject {
   }
 
 
-  def product(xs: List[Int]) = (xs foldLeft 1) (_*_)
-  def sum(xs: List[Int]) = (xs foldLeft 1) (_+_)
+  def product(xs: List[Int]): Int = (xs foldLeft 1) (_*_)
+  def sum(xs: List[Int]): Int = (xs foldLeft 1) (_+_)
+
+  def toString(subj: Subject) : String = {
+    def aux(evals: List[Evaluation]): String = evals match {
+      case head :: Nil => s"${head._1},${head._2._1},${head._2._2}"
+      case head :: tail => s"${head._1},${head._2._1},${head._2._2} $boundary ${aux(tail)}"
+    }
+    s"${subj.name} $boundary ${aux(subj.evals)}"
+  }
+
+  def parseEval(head: String): (Date, (Percent_Grade, Grade)) = {
+    val fields = head.split(",")
+    val date = LocalDate.parse(fields.head)
+    val percent_Grade = fields(1).toDouble
+    val grade = fields.last.toInt
+    (date, (percent_Grade, grade))
+  }
+
+  def fromString(toParse: String) : Subject = {
+    @tailrec
+    def aux(lst: List[String], evals: List[Evaluation]): List[Evaluation] = lst match {
+      case item :: Nil => parseEval(item) :: evals
+      case head :: tail => aux(tail, parseEval(head) :: evals)
+    }
+    val fields = toParse.split(s"$boundary").toList
+    val name = fields.head
+    Subject(name, List(), List(), aux(fields.tail, List()))
+  }
 
   def main(args: Array[String]): Unit = {
     val eval1 = (LocalDate.parse("2020-11-19"), (30.0, 20))
