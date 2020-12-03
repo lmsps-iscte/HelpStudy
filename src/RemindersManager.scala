@@ -5,7 +5,7 @@ import RemindersManager.{Reminder, Reminder_List}
 import scala.annotation.tailrec
 import scala.math._
 
-case class RemindersManager(val lst_rem: Reminder_List) {
+case class RemindersManager(lst_rem: Reminder_List) {
 
   def addReminder(new_rem: Reminder): RemindersManager = RemindersManager.addReminder(this, new_rem)
 
@@ -60,7 +60,7 @@ object RemindersManager {
   //  throw new IllegalArgumentException("Erro: Esse lembrete não existe")
   //------------AUXILIAR------------------------------
   def searchReminder(rem_man: RemindersManager, title: String): Option[Reminder] = {
-    Option((rem_man.lst_rem filter ( r => r._1.equals(title))) (0))
+    Option((rem_man.lst_rem filter (r => r._1.equals(title))).head)
   }
 
   //-------------SORTING------------------------------
@@ -75,18 +75,18 @@ object RemindersManager {
   def sort_smart(rem_man: RemindersManager): RemindersManager = {
     //Algoritmo de complexidade
     //RemindersManager((rem_man.lst_rem.sortBy( r => (r._4, r._3))))
-    RemindersManager(smart_list(rem_man.lst_rem).sortBy(_._5).reverse)
+    RemindersManager(smart_list(rem_man.lst_rem)(points_sigmoid).sortBy(_._5).reverse)
   }
 
-  def smart_list(rems: List[Reminder]): List[Reminder] = rems match {
+  def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {
       case Nil => Nil
-      case head :: tail => (head._1, head._2, head._3, head._4, points(head)) :: smart_list(tail)
+      case head :: tail => (head._1, head._2, head._3, head._4, points(head)(dist_func)) :: smart_list(tail)(dist_func)
     }
 
-  def points(rem: Reminder): Double = {
+  def points(rem: Reminder)(dist_func: (Reminder, Int) => Double): Double = {
     val today = LocalDate.now()
-    val days = Period.between(today, rem._4).getDays()
-    val prior_points = rem._3
+    val days = Period.between(today, rem._4).getDays
+/*    val prior_points = rem._3
     if(days < 1)
       prior_points match {
         case 1 => 1*0.25
@@ -126,15 +126,18 @@ object RemindersManager {
         case 3 => 0.10*0.75
         case 4 => 0.10*1
       }
-    }
+    } */
+    dist_func(rem, days)
   }
 
-  def points_gaussion(rem: Reminder): Double = {
-    val today = LocalDate.now()
-    val days = Period.between(today, rem._4).getDays()
+  def points_gaussian(rem: Reminder, days: Int): Double = {
     val variancia = 1000000000
     1/sqrt(2*Math.PI*variancia)*Math.exp(-pow(days,2)/(2*variancia))
 
+  }
+
+  def points_sigmoid(rem: Reminder, days: Int): Double = {
+    rem._3 * (2 * 1/(1 + Math.exp(days)) + 1)
   }
 
   /*def variancia(): Int = {
