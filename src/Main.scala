@@ -29,7 +29,7 @@ object Main {
       case "NOTEBOOK" => notebookLoop(Notebook(Nil))
       case "REMINDERS" => remindersLoop()
       case "SCHEDULE" => scheduleLoop(Schedule(Nil, 50))
-      case "SUBJECTS" => //subjectsLoop()
+      case "SUBJECTS" => subjectsLoop()
       case "QUIT" => exit(0)
       case _ =>
     }
@@ -138,6 +138,10 @@ object Main {
     RemindersMenu.mainLoop_Reminders(rems)
   }
 
+  def subjectsLoop(): Unit = {
+    //val subj_man: SubjectsManager = SubjectsManager(List("PPM"))
+    //SubjectsManagerMenu.mainLoop_Subjects()
+  }
   //Load hs.state file
   def loadState(): Unit = {
 
