@@ -101,7 +101,7 @@ object Main {
 
       case "BLOCKS_BY_DAY" => print("\nDATE (EX:. 2020-11-20): ")
         val date = LocalDate.parse(getUserInput)
-        schedule.blocksByDay(date)
+        print("\n"+schedule.blocksByDay(date))
 
       case "TIME_CUNIT_L7DAYS" => print("\nCURRICULAR UNIT: ")
         val cunit = getUserInput

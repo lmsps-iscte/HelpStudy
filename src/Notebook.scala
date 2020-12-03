@@ -23,11 +23,15 @@ case class Notebook(notes: List[Note]) {
 
   //Sorts notes by Course by default or TITLE if provided "TITLE"
   def sortNoteBy(opt: String): Notebook = Notebook.sortNotesBy(this, opt)
+
+  override def toString(): String = Notebook.toString(notes)
 }
 
 object Notebook {
 
   type Note = (String, String, String)
+
+  val boundary = "////0xFFFF////EOF"
 
   def addNote(nbook: Notebook, note: Note): Notebook = Notebook(note :: nbook.notes)
 
@@ -68,5 +72,38 @@ object Notebook {
     } else {
       aux(nb.notes.filter(note => note._3 == opt), 0)
     }
+  }
+
+  def toString(notes: List[Note]): String = notes match {
+    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3}"
+    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3} \n ${toString(tail)}"
+  }
+
+  def parseItem(item: String): (String, String, String) = {
+    val title = item.split(boundary)(0).trim
+    val body = item.split(boundary)(1).trim
+    val cunit = item.split(boundary)(2).trim
+    (title, body, cunit)
+  }
+
+  def fromString(toParse: String): Notebook = {
+    @tailrec
+    def aux(nb: Notebook, items: List[String]): Notebook = items match {
+      case head :: Nil => nb.addNote(parseItem(head))
+      case head :: tail => aux(nb.addNote(parseItem(head)),tail)
+    }
+    aux(Notebook(List()),toParse.split("\n").toList)
+  }
+
+  def main(args: Array[String]): Unit = {
+    val notebook = Notebook(List())
+    val n1 = notebook.addNote("Nota 1","Corpo 1","MC")
+    val n2 = n1.addNote("Nota 2", "Corpo 2", "TS")
+    val n3 = n2.addNote("Nota 3", "Corpo 3", "TS")
+    print("ESTA É A NOTA 3 ANTES... "+n3)
+    print("ESTE É O TOSTRING... "+n3.toString())
+    val aux = n3.toString()
+    val aux1 = fromString(aux)
+    print("ESTE É O FROM STRING... "+aux1)
   }
 }

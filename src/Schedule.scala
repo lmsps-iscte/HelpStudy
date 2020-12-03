@@ -1,5 +1,8 @@
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalTime}
+
+import Notebook.boundary
 
 import scala.annotation.tailrec
 
@@ -57,6 +60,7 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 
   def printToFile(): Unit = Schedule.printToFile(this)
 
+  override def toString(): String = Schedule.toString(sblocks, school_percent)
 
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
@@ -68,6 +72,8 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 }
 
 object Schedule {
+
+  val boundary = "////0xFFFF////EOF"
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
 
@@ -165,7 +171,33 @@ object Schedule {
     writer.close()
   }
 
-  /*def main(args: Array[String]): Unit = {
+  def toString(sblocks: List[SBlock], school_percent: Int): String = sblocks match {
+    case Nil => s"$school_percent"
+    case head :: Nil => s"$school_percent,${head.date},${head.start_time},${head.end_time} $boundary ${head.title} " +
+      s"$boundary ${head.cunit}"
+    case head :: tail => s"$school_percent,${head.date},${head.start_time},${head.end_time}  $boundary ${head.title} " +
+      s"$boundary ${head.cunit} \n ${toString(tail, school_percent)}"
+  }
+
+  def parseItem(item: String): SBlock = {
+    val date = LocalDate.parse(item.split(",")(1))
+    val start_time = LocalTime.parse(item.split(",")(2))
+    val end_time = LocalTime.parse(item.split(",")(3).split(boundary)(0).trim)
+    val title = item.split(boundary)(1).trim
+    val cunit = item.split(boundary)(2).trim
+    SBlock(date, start_time, end_time, title, cunit)
+  }
+
+  def fromString(toParse: String): Schedule = {
+    @tailrec
+    def aux(schedule: Schedule, items: List[String]): Schedule = items match {
+      case head :: Nil => schedule.addSBlock(parseItem(head))
+      case head :: tail => aux(schedule.addSBlock(parseItem(head)),tail)
+    }
+    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\n").toList)
+  }
+
+  def main(args: Array[String]): Unit = {
 
 
         val bloco1 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
@@ -181,13 +213,21 @@ object Schedule {
         val horario2 = horario1.addSBlock(bloco2)
         val horario3 = horario2.addSBlock(bloco3)
 
-        println(horario)
-        println(horario1)
-        println(horario2)
-        println(horario3)
-        println(horario3.fatigueAlert())
-        horario2.printToFile()
-  }*/
+//        println(horario)
+//        println(horario1)
+//        println(horario2)
+//        println(horario3)
+//        println(horario3.fatigueAlert())
+//        horario2.printToFile()
+
+    print("ESTE É O HORÁRIO 3 "+horario3+"\n")
+    val horario4 = horario3.toString
+    print("ESTA É O TOSTRING DO HORÁRIO 3 "+horario4+"\n")
+    val horario5 = fromString(horario4)
+    print("ESTE É O FROM STRING DO HORÁRIO 3 "+horario5+"\n")
+
+
+  }
 
 
 
