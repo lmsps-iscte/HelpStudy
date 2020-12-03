@@ -28,7 +28,7 @@ object SubjectsManagerMenu {
       case "ADD" => addSubject_menu(subj_man)
       case "SHOW" => showSubjects_menu(subj_man)
       case "OPEN" => openSubject_menu(subj_man)
-      case "BACK" => mainLoop()
+      case "BACK" => subj_man
       case _ =>
     }
     mainLoop_Subjects(subj_man)

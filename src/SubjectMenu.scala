@@ -20,7 +20,7 @@ object SubjectMenu {
       case "ASSOCIATE NOTE" => associate_Note_menu(subj)
       case "ADD EVALUATION" => addEvaluation_menu(subj)
       case "CALCULATE FINAL GRADE" => calcFinalGrade_menu(subj)
-      //case "BACK" => mainLoop_Subjects()
+      case "BACK" => subj
       case _ =>
     }
     mainLoop_Subject_Open(subj)
