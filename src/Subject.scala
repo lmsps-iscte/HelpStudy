@@ -74,7 +74,7 @@ object Subject {
     (date, (percent_Grade, grade))
   }
 
-  def fromString(toParse: String) : Subject = {
+  def fromString(toParse: String, rems: List[Reminder], notes: List[Note]) : Subject = {
     @tailrec
     def aux(lst: List[String], evals: List[Evaluation]): List[Evaluation] = lst match {
       case item :: Nil => parseEval(item) :: evals
@@ -82,7 +82,7 @@ object Subject {
     }
     val fields = toParse.split(s"$boundary").toList
     val name = fields.head
-    Subject(name, List(), List(), aux(fields.tail, List()))
+    Subject(name, rems, notes, aux(fields.tail, List()))
   }
 
   def main(args: Array[String]): Unit = {

@@ -2,8 +2,6 @@ import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
 
-import Notebook.boundary
-
 import scala.annotation.tailrec
 
 case class Schedule(sblocks: List[SBlock], school_percent: Int) {
@@ -60,7 +58,7 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 
   def printToFile(): Unit = Schedule.printToFile(this)
 
-  override def toString(): String = Schedule.toString(sblocks, school_percent)
+  override def toString: String = Schedule.toString(sblocks, school_percent)
 
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!

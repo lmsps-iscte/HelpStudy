@@ -1,6 +1,6 @@
 import scala.annotation.tailrec
 
-case class SubjectsManager(val subjs: List[Subject]) {
+case class SubjectsManager(subjs: List[Subject]) {
 
   def addSubject(subj: Subject): SubjectsManager = SubjectsManager.addSubject(this, subj)
 
@@ -19,7 +19,12 @@ object SubjectsManager {
   }
 
   def searchSubject(subj_man: SubjectsManager, title: String): Option[Subject] = {
-    Option((subj_man.subjs filter ( s => s.name.equals(title))) (0))
+    Option((subj_man.subjs filter (s => s.name.equals(title))).head)
+  }
+
+  def toString(subjs: List[Subject]): String = subjs match {
+    case head :: Nil => s"${head.toString}"
+    case head :: tail => s"${head.toString}\n${toString(tail)}"
   }
 
   @tailrec
