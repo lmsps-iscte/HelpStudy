@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+   <children>
+      <AnchorPane layoutY="-1.0" prefHeight="700.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="homeButton" layoutX="19.0" layoutY="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Home" />
+            <Button layoutX="19.0" layoutY="425.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Deck" />
+            <Button layoutX="19.0" layoutY="275.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Schedule" />
+            <Button layoutX="19.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Subjects" />
+            <Button fx:id="remindersButton" layoutX="19.0" layoutY="500.0" mnemonicParsing="false" onAction="#remindersButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Reminders" />
+            <Button layoutX="19.0" layoutY="575.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Notes" />
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="28.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../out/production/HelpStudy/hslogo.png" />
+               </image></ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="228.0" layoutY="20.0" prefHeight="661.0" prefWidth="739.0">
+         <children>
+            <Label layoutX="218.0" layoutY="203.0" text="Your best friend at Study time! ">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="280.0" layoutY="110.0" text="HelpStudy">
+               <font>
+                  <Font size="39.0" />
+               </font>
+            </Label>
+            <Label layoutX="321.0" layoutY="354.0" text="Developed by">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="335.0" layoutY="394.0" text="João Polónio" />
+            <Label layoutX="345.0" layoutY="417.0" text="Luís Pires" />
+            <Label layoutX="337.0" layoutY="440.0" text="Tiago Torres" />
+            <Label layoutX="341.0" layoutY="534.0" text="Version 1.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
