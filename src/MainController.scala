@@ -37,6 +37,16 @@ class MainController {
     //aboutStage.show()
   }
 
+  def scheduleButtonClicked(): Unit = {
+    val fxmlLoader = new FXMLLoader(getClass.getResource(("ScheduleController.fxml")))
+    val mainViewRoot: Parent = fxmlLoader.load()
+    //val scene = new Scene(mainViewRoot)
+    remindersButton.getScene().setRoot(mainViewRoot)
+    //val aboutStage: Stage = new Stage()
+    //aboutStage.setScene(scene)
+    //aboutStage.show()
+  }
+
   /*@FXML
   def handleMenuButton(event: ActionEvent): Unit = {
     if(event.getSource() == aboutButton)
