@@ -22,6 +22,7 @@ case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note
 
   def calculate_FinalGrade(): Double = Subject.calculate_FinalGrade(this)
 
+  override def toString: String = Subject.toString(this)
 
 }
 

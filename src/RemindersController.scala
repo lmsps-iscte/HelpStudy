@@ -26,8 +26,8 @@ class RemindersController extends Initializable {
       ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
       ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
     val rems_list = rems.lst_rem
-    val list_obs = FXCollections.observableList[Reminder](rems_list)
-    remindersListView.setItems()
-
+    var list_obs = FXCollections.observableArrayList[Reminder]()
+    rems_list.forall(list_obs.add(_))
+    remindersListView.setItems(list_obs)
   }
 }

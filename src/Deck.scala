@@ -11,10 +11,12 @@ case class Deck(cards: List[Card], ro: RandomWithState) {
   def addCard(card: Card): Deck = Deck.addCard(this, card)
 
   //Ask the user a question from a random card at a valid time, allow for response and update the deck
-  def ask(course: String): Deck = Deck.ask(this, course)
+  def ask(course: String): (Card, Deck) = Deck.ask(this, course)
 
   //Print deck cards, opt is an optional String that works as a filter is not blank
   def printCards(cards: List[Card])(opt: String): Unit = Deck.printCards(cards)(opt)
+
+  override def toString: String = Deck.toString(cards)
 }
 
 object Deck {
@@ -29,43 +31,41 @@ object Deck {
     course_cards filter (card => card._5.isBefore(LocalDate.now()))
   }
 
-  def ask(deck: Deck, course: String): Deck = {
+  def ask(deck: Deck, course: String): (Card, Deck) = {
     val course_cards = deck.cards.filter(_._4 == course)
     val cards = available_cards(course_cards)
     if (cards.isEmpty) {
-      System.err.println("No available cards have been found")
-      return deck
+      return (("Deck is Empty", "", 0, "", LocalDate.now()),deck)
     }
     val num_ro = deck.ro.nextIntRange(deck.cards.size)
     val card = cards(num_ro._1)
-    print(card._1)
-    val answer = readLine.trim
+    (card, Deck(deck.cards,num_ro._2))
+  }
+
+  def answer(deck: Deck, card: Card, answer: String): (Boolean, Deck) = {
     val index = deck.cards.indexOf(card)
     if (answer.compareToIgnoreCase(card._2) == 0) {
-      println("Correct")
       val newDate = LocalDate.now().plusDays(deck.cards(index)._3 * 2)
       if (deck.cards(index)._3 >= 5)
-        Deck(deck.cards.updated(index, (card._1, card._2, card._3 + 1, card._4, LocalDate.MAX)), num_ro._2)
+        (true, Deck(deck.cards.updated(index, (card._1, card._2, card._3 + 1, card._4, LocalDate.MAX)), deck.ro))
       else
-        Deck(deck.cards.updated(index, (card._1, card._2, card._3 + 1, card._4, newDate)), num_ro._2)
+        (true, Deck(deck.cards.updated(index, (card._1, card._2, card._3 + 1, card._4, newDate)), deck.ro))
     }
     else {
-      println("Wrong")
-      Deck(deck.cards.updated(index, (card._1, card._2, 1, card._4, LocalDate.now())), num_ro._2)
+      (false, Deck(deck.cards.updated(index, (card._1, card._2, 1, card._4, LocalDate.now())), deck.ro))
     }
   }
 
   def printCards(cards: List[Card])(opt: String = ""): Unit = {
     @tailrec
-    def aux(card_list: List[Card]): Unit = cards match {
-      case Nil => Nil
-      case card :: tail => println(s"Q: ${card._1} A: ${card._2} Level: ${card._3} Next Due Date: ${card._5}")
-        aux(tail)
+    def aux(card_list: List[Card], acc: String): Unit = cards match {
+      case card :: Nil => s"Q: ${card._1} A: ${card._2} Level: ${card._3} Next Due Date: ${card._5}"
+      case card :: tail => aux(tail, s"Q: ${card._1} A: ${card._2} Level: ${card._3} Next Due Date: ${card._5}\n")
     }
 
     if (opt == "")
-      aux(cards)
-    else aux(cards.filter(card => card._4 == opt))
+      aux(cards, "")
+    else aux(cards.filter(card => card._4 == opt), "")
   }
 
   def toString(cards: List[Card]): String = cards match {

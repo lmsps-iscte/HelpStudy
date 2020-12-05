@@ -6,6 +6,8 @@ case class SubjectsManager(subjs: List[Subject]) {
 
   def sort_Subjects(): SubjectsManager = SubjectsManager.sort_Subjects(this)
 
+  override def toString: String = SubjectsManager.toString(subjs)
+
 }
 
 object SubjectsManager {
@@ -22,9 +24,15 @@ object SubjectsManager {
     Option((subj_man.subjs filter (s => s.name.equals(title))).head)
   }
 
-  def toString(subjs: List[Subject]): String = subjs match {
-    case head :: Nil => s"${head.toString}"
-    case head :: tail => s"${head.toString}\n${toString(tail)}"
+  def toString(subjs: List[Subject]): String = {
+    @tailrec
+    def aux (subjs: List[Subject], acc: String): String = {
+      subjs match {
+        case head :: Nil => s"${head.toString}"
+        case head :: tail => aux(tail, s"$acc ${head.toString}\n")
+      }
+    }
+    aux(subjs, "")
   }
 
   @tailrec
