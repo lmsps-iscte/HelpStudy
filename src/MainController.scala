@@ -40,7 +40,7 @@ class MainController {
   def scheduleButtonClicked(): Unit = {
     val fxmlLoader = new FXMLLoader(getClass.getResource(("ScheduleController.fxml")))
     val mainViewRoot: Parent = fxmlLoader.load()
-    remindersButton.getScene().setRoot(mainViewRoot)
+    scheduleButton.getScene().setRoot(mainViewRoot)
   }
 
   def subjectsButtonClicked(): Unit = {
