@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SubjectsManagerController" >
+    <children>
+        <AnchorPane layoutY="-1.0" prefHeight="700.0" prefWidth="200.0">
+            <children>
+                <Button fx:id="homeButton" layoutX="19.0" layoutY="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Home" />
+                <Button layoutX="19.0" layoutY="425.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Deck" />
+                <Button fx:id="scheduleButton" layoutX="19.0" layoutY="275.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Schedule" />
+                <Button layoutX="19.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Subjects" />
+                <Button layoutX="19.0" layoutY="500.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Reminders" />
+                <Button layoutX="19.0" layoutY="575.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Notes" />
+                <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="28.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@hslogo.png" />
+                    </image></ImageView>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>
