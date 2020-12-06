@@ -43,15 +43,18 @@
             <ListView fx:id="listView7" layoutX="617.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="dWeek7" layoutX="631.0" layoutY="30.0" text="N/D" />
             <Label fx:id="date7" layoutX="631.0" layoutY="47.0" text="11-12-2020" />
-            <TextField layoutX="83.0" layoutY="567.0" prefHeight="25.0" prefWidth="128.0" promptText="Date (Ex: 2020-12-06)" />
-            <TextField layoutX="83.0" layoutY="598.0" prefHeight="25.0" prefWidth="128.0" promptText="Start Time (Ex: 10:30)" />
-            <TextField layoutX="83.0" layoutY="630.0" prefHeight="25.0" prefWidth="116.0" promptText="End Time(Ex: 11:30)" />
-            <TextField layoutX="229.0" layoutY="567.0" prefHeight="25.0" prefWidth="174.0" promptText="Title" />
-            <TextField layoutX="229.0" layoutY="599.0" prefHeight="25.0" prefWidth="71.0" promptText="Subject" />
-            <Button layoutX="528.0" layoutY="567.0" mnemonicParsing="false" text="Delete" />
-            <Button layoutX="426.0" layoutY="567.0" mnemonicParsing="false" text="Add" />
-            <Button layoutX="476.0" layoutY="567.0" mnemonicParsing="false" text="Edit" />
-            <CheckBox layoutX="228.0" layoutY="635.0" mnemonicParsing="false" text="Set Reminder" />
+            <TextField fx:id="dateTextField" layoutX="83.0" layoutY="567.0" prefHeight="25.0" prefWidth="128.0" promptText="Date (Ex: 2020-12-06)" />
+            <TextField fx:id="sTimeTextField" layoutX="83.0" layoutY="598.0" prefHeight="25.0" prefWidth="128.0" promptText="Start Time (Ex: 10:30)" />
+            <TextField fx:id="eTimeTextField" layoutX="83.0" layoutY="630.0" prefHeight="25.0" prefWidth="116.0" promptText="End Time(Ex: 11:30)" />
+            <TextField fx:id="titleTextField" layoutX="229.0" layoutY="567.0" prefHeight="25.0" prefWidth="174.0" promptText="Title" />
+            <TextField fx:id="cUnitTextField" layoutX="229.0" layoutY="599.0" prefHeight="25.0" prefWidth="71.0" promptText="Subject" />
+            <Button fx:id="deleteButton" layoutX="528.0" layoutY="567.0" mnemonicParsing="false" onAction="#deleteFunc" text="Delete" />
+            <Button fx:id="addButton" layoutX="426.0" layoutY="567.0" mnemonicParsing="false" onAction="#addFunc" text="Add" />
+            <Button fx:id="editButton" layoutX="476.0" layoutY="567.0" mnemonicParsing="false" onAction="#editFunc" text="Edit" />
+            <CheckBox fx:id="reminderSet" layoutX="228.0" layoutY="635.0" mnemonicParsing="false" text="Set Reminder" />
+            <Label fx:id="ratioLabel" layoutX="426.0" layoutY="628.0" prefHeight="32.0" prefWidth="174.0" text="Current school - fun daily ratio:" />
+            <TextField fx:id="ratioTextBox" layoutX="600.0" layoutY="631.0" prefHeight="25.0" prefWidth="38.0" />
+            <Button fx:id="updateButton" layoutX="643.0" layoutY="631.0" mnemonicParsing="false" onAction="#updateFunc" text="Update" />
          </children>
       </AnchorPane>
     </children>
