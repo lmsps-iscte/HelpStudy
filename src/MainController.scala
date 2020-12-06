@@ -49,6 +49,12 @@ class MainController {
     subjectsButton.getScene().setRoot(mainViewRoot)
   }
 
+  def notesButtonClicked(): Unit = {
+    val fxmlLoader = new FXMLLoader(getClass.getResource(("NotesManagerController.fxml")))
+    val mainViewRoot: Parent = fxmlLoader.load()
+    notesButton.getScene().setRoot(mainViewRoot)
+  }
+
   /*@FXML
   def handleMenuButton(event: ActionEvent): Unit = {
     if(event.getSource() == aboutButton)
