@@ -22,7 +22,7 @@ case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note
 
   def calculate_FinalGrade(): Double = Subject.calculate_FinalGrade(this)
 
-  override def toString: String = Subject.toString(this)
+  //override def toString: String = Subject.toString(this)
 
 }
 
@@ -59,13 +59,13 @@ object Subject {
   def product(xs: List[Int]): Int = (xs foldLeft 1) (_*_)
   def sum(xs: List[Int]): Int = (xs foldLeft 1) (_+_)
 
-  def toString(subj: Subject) : String = {
+  /*def toString(subj: Subject) : String = {
     def aux(evals: List[Evaluation]): String = evals match {
       case head :: Nil => s"${head._1},${head._2._1},${head._2._2}"
       case head :: tail => s"${head._1},${head._2._1},${head._2._2} $boundary ${aux(tail)}"
     }
     s"${subj.name} $boundary ${aux(subj.evals)}"
-  }
+  }*/
 
   def parseEval(head: String): (Date, (Percent_Grade, Grade)) = {
     val fields = head.split(",")

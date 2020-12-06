@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SubjectsManagerController" >
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SubjectsManagerController">
     <children>
         <AnchorPane layoutY="-1.0" prefHeight="700.0" prefWidth="200.0">
             <children>
@@ -21,6 +18,15 @@
                     <image>
                         <Image url="@hslogo.png" />
                     </image></ImageView>
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutX="200.0" layoutY="4.0" prefHeight="693.0" prefWidth="822.0">
+            <children>
+                <ListView fx:id="subjectsListView" layoutX="44.0" layoutY="38.0" prefHeight="382.0" prefWidth="694.0" />
+                <TextField fx:id="title_box" layoutX="44.0" layoutY="442.0" promptText="Title" />
+                <Button fx:id="add_button" layoutX="231.0" layoutY="442.0" mnemonicParsing="false" onAction="#add_func" text="Add" />
+                <Button fx:id="delete_button" layoutX="285.0" layoutY="442.0" mnemonicParsing="false" onAction="#delete_func" text="Delete" />
+            <Button fx:id="open_button" layoutX="650.0" layoutY="442.0" mnemonicParsing="false" onAction="#elementClicked" text="Open Subject" />
             </children>
         </AnchorPane>
     </children>
