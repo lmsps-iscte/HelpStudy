@@ -95,7 +95,7 @@ object RemindersMenu {
   }
 
   def smartSort_menu(rem_m: RemindersManager): Unit = {
-    val rem_m1 = RemindersManager.sort_smart(rem_m)
+    val rem_m1 = RemindersManager.sort_smart(rem_m, "SIGMOID")
     RemindersManager.printReminders(rem_m1.lst_rem)
     mainLoop_Reminders(rem_m1)
   }

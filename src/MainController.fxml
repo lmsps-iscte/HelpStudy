@@ -21,7 +21,7 @@
                </image></ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="228.0" layoutY="20.0" prefHeight="661.0" prefWidth="739.0">
+      <AnchorPane fx:id="main_pane" layoutX="225.0" layoutY="20.0" prefHeight="661.0" prefWidth="768.0">
          <children>
             <Label layoutX="218.0" layoutY="203.0" text="Your best friend at Study time! ">
                <font>

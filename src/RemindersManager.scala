@@ -74,10 +74,22 @@ object RemindersManager {
     RemindersManager(rem_man.lst_rem.sortBy(_._4))
   }
 
-  def sort_smart(rem_man: RemindersManager): RemindersManager = {
+  def sort_smart(rem_man: RemindersManager, f_name: String): RemindersManager = {
     //Algoritmo de complexidade
     //RemindersManager((rem_man.lst_rem.sortBy( r => (r._4, r._3))))
-    RemindersManager(smart_list(rem_man.lst_rem)(points_sigmoid).sortBy(_._5).reverse)
+    val f1_name = f_name.toUpperCase
+    f1_name match {
+      case "SIGMOID" => RemindersManager(smart_list(rem_man.lst_rem)(points_sigmoid).sortBy(_._5).reverse)
+      case "GAUSSIAN" => RemindersManager(smart_list(rem_man.lst_rem)(points_gaussian).sortBy(_._5).reverse)
+      case _ => throw new IllegalArgumentException("ERROR: FUNCTION DOES NOT EXIST")
+    }
+
+   /*f_name match {
+      case "SIGMOID" => val func = smart_list(rem_man.lst_rem)(points_sigmoid)
+      case "GAUSSIAN" => val func = smart_list(rem_man.lst_rem)(points_gaussian)
+      case _ => throw new IllegalArgumentException("ERROR: FUNCTION DOES NOT EXIST")
+    }
+    RemindersManager(func())*/
   }
 
   def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {

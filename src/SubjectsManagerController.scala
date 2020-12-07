@@ -18,7 +18,7 @@ class SubjectsManagerController extends Initializable {
   def initialize(location: URL, resources: ResourceBundle): Unit = {
     val subj: Subject = Subject("PPM")
     val subj2 = subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0))
-    val subj1 = subj2.associate_note(("Nota 1","Corpo 1","MC"))
+    val subj1 = subj2.associate_note(("Nota 1","Corpo 1","PPM"))
     val subs_list = List(subj1)
     subj_man = SubjectsManager(subs_list)
     var list_obs = FXCollections.observableArrayList[String]()
