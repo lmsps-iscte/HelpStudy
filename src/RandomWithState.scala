@@ -7,6 +7,10 @@ case class RandomWithState(seed: Long) {
     (n, nextRandom)
   }
 
+  def updateSeed(seed: Int): RandomWithState = {
+    RandomWithState(seed)
+  }
+
   def nextIntRange(top: Int): (Int, RandomWithState) = {
     val newSeed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL
     val nextRandom = RandomWithState(newSeed)

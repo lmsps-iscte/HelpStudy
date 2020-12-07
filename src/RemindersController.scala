@@ -12,19 +12,20 @@ import scala.collection.mutable.ListBuffer
 
 class RemindersController extends Initializable {
 
-  @FXML private var remindersListView: ListView[Reminder] = _
+  @FXML private var remindersListView: ListView[String] = _
   @FXML private var title_box: TextField = _
   @FXML private var priority_box: ChoiceBox[Int] = _
   @FXML private var text_area: TextArea = _
   @FXML private var date_box: DatePicker = _
+  var rem_man = RemindersManager(List())
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
-    val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
+    rem_man = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
       ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
       ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
-    val rems_list = rems.lst_rem
-    var list_obs = FXCollections.observableArrayList[Reminder]()
-    rems_list.forall(list_obs.add(_))
+    val rems_list = rem_man.lst_rem
+    var list_obs = FXCollections.observableArrayList[String]()
+    rems_list.forall(r => list_obs.add(r._1))
     remindersListView.setItems(list_obs)
     var list = FXCollections.observableArrayList[Int]()
     List(1, 2, 3, 4).foreach(num => list.add(num))
@@ -39,7 +40,8 @@ class RemindersController extends Initializable {
     val body_aux = text_area.getText
     val body = body_aux.trim
     val rem: Reminder = (title, body, priority, date_box.getValue, 0.0)
-    remindersListView.getItems.add(5, rem)
+    rem_man = rem_man.addReminder(rem)
+    remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
   }
 
   def delete_func(): Unit = {
