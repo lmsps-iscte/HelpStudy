@@ -17,19 +17,26 @@ class MainController {
   @FXML private var main_pane: AnchorPane = _
 
   def remindersButtonClicked(): Unit = {
-    val fxmlLoader = new FXMLLoader(getClass.getResource(("RemindersController.fxml")))
+    /*val fxmlLoader = new FXMLLoader(getClass.getResource(("RemindersController.fxml")))
     val mainViewRoot: Parent = fxmlLoader.load()
     //val scene = new Scene(mainViewRoot)
     remindersButton.getScene().setRoot(mainViewRoot)
     //val aboutStage: Stage = new Stage()
     //aboutStage.setScene(scene)
-    //aboutStage.show()
+    //aboutStage.show()*/
+    val fxmlLoader = new FXMLLoader(getClass.getResource(("RemindersController.fxml")))
+    main_pane.getChildren.clear()
+    main_pane.getChildren.add(fxmlLoader.load())
   }
 
   def scheduleButtonClicked(): Unit = {
-    val fxmlLoader = new FXMLLoader(getClass.getResource(("ScheduleController.fxml")))
+    /*val fxmlLoader = new FXMLLoader(getClass.getResource(("ScheduleController.fxml")))
     val mainViewRoot: Parent = fxmlLoader.load()
-    scheduleButton.getScene().setRoot(mainViewRoot)
+    scheduleButton.getScene().setRoot(mainViewRoot)*/
+
+    val fxmlLoader = new FXMLLoader(getClass.getResource(("ScheduleController.fxml")))
+    main_pane.getChildren.clear()
+    main_pane.getChildren.add(fxmlLoader.load())
   }
 
   def subjectsButtonClicked(): Unit = {
@@ -37,6 +44,8 @@ class MainController {
     val fxmlLoader = new FXMLLoader(getClass.getResource(("SubjectsManagerController.fxml")))
     main_pane.getChildren.clear()
     main_pane.getChildren.add(fxmlLoader.load())
+    val controller_child: SubjectsManagerController = fxmlLoader.getController
+    controller_child.setParent(this)
     //val mainViewRoot: Parent = fxmlLoader.load()
     //fxmlLoader.setRoot(main_pane)
     //fxmlLoader.setController(controller)
@@ -45,9 +54,12 @@ class MainController {
   }
 
   def notesButtonClicked(): Unit = {
-    val fxmlLoader = new FXMLLoader(getClass.getResource(("NotesManagerController.fxml")))
+    /*val fxmlLoader = new FXMLLoader(getClass.getResource(("NotesManagerController.fxml")))
     val mainViewRoot: Parent = fxmlLoader.load()
-    notesButton.getScene().setRoot(mainViewRoot)
+    notesButton.getScene().setRoot(mainViewRoot)*/
+    val fxmlLoader = new FXMLLoader(getClass.getResource(("NotesManagerController.fxml")))
+    main_pane.getChildren.clear()
+    main_pane.getChildren.add(fxmlLoader.load())
   }
 
   /*@FXML
@@ -58,6 +70,10 @@ class MainController {
       notesPane.toFront()
 
   }*/
+
+  def getMainPane(): Pane = {
+    main_pane
+  }
 
 
 }
