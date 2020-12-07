@@ -6,6 +6,8 @@ case class SubjectsManager(subjs: List[Subject]) {
 
   def sort_Subjects(): SubjectsManager = SubjectsManager.sort_Subjects(this)
 
+  def searchSubject(name: String): Option[Subject] = SubjectsManager.searchSubject(this, name)
+
   override def toString: String = SubjectsManager.toString(subjs)
 
 }
