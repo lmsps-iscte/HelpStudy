@@ -1,4 +1,5 @@
 import java.time.LocalDate
+
 import Notebook.Note
 import RemindersManager.Reminder
 import Subject.Evaluation
@@ -55,6 +56,10 @@ object Subject {
     result.foldRight(0.0)(_+_)
   }
 
+  def calculate_FinalGrade2(percent_test: Double, test: List[Double])(percent_project: Double, project: List[Double])(percent_labs: Double, labs: List[Double]): Double = {
+    percent_test*test.sum/test.length + percent_project*project.sum/project.length + percent_labs*labs.sum/labs.length
+  }
+
 
   def product(xs: List[Int]): Int = (xs foldLeft 1) (_*_)
   def sum(xs: List[Int]): Int = (xs foldLeft 1) (_+_)
@@ -94,7 +99,10 @@ object Subject {
     val subj1 = add_evaluation(subj, eval1)
     val subj2 = add_evaluation(subj1, eval2)
     println(subj2.evals)
-    println(calculate_FinalGrade(subj2))
+    //println(calculate_FinalGrade(subj2))
+    println(calculate_FinalGrade2(0.5 , List(20, 15)) (0.25, List(15))(0.25, List(15)))
+    val i = calculate_FinalGrade2(0.5 , List(20)) (0.25, List(15))_
+    println(i(0.25, List(15)))
   }
 
 

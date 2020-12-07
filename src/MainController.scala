@@ -3,29 +3,18 @@ import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.{Parent, Scene}
 import javafx.scene.control.Button
-import javafx.scene.layout.Pane
+import javafx.scene.layout.{AnchorPane, Pane}
 import javafx.stage.Stage
 
 class MainController {
 
-  @FXML
-  private var scheduleButton: Button = _
-
-  @FXML
-  private var subjectsButton: Button = _
-
-  @FXML
-  private var deckButton: Button = _
-
-  @FXML
-  private var remindersButton: Button = _
-
-  @FXML
-  private var notesButton: Button = _
-
-  @FXML
-  private var homeButton: Button = _
-
+  @FXML private var scheduleButton: Button = _
+  @FXML private var subjectsButton: Button = _
+  @FXML private var deckButton: Button = _
+  @FXML private var remindersButton: Button = _
+  @FXML private var notesButton: Button = _
+  @FXML private var homeButton: Button = _
+  @FXML private var main_pane: AnchorPane = _
 
   def remindersButtonClicked(): Unit = {
     val fxmlLoader = new FXMLLoader(getClass.getResource(("RemindersController.fxml")))
@@ -44,9 +33,15 @@ class MainController {
   }
 
   def subjectsButtonClicked(): Unit = {
+    //var controller: SubjectsManagerController
     val fxmlLoader = new FXMLLoader(getClass.getResource(("SubjectsManagerController.fxml")))
-    val mainViewRoot: Parent = fxmlLoader.load()
-    subjectsButton.getScene().setRoot(mainViewRoot)
+    main_pane.getChildren.clear()
+    main_pane.getChildren.add(fxmlLoader.load())
+    //val mainViewRoot: Parent = fxmlLoader.load()
+    //fxmlLoader.setRoot(main_pane)
+    //fxmlLoader.setController(controller)
+
+    //subjectsButton.getScene().setRoot(mainViewRoot)
   }
 
   def notesButtonClicked(): Unit = {
