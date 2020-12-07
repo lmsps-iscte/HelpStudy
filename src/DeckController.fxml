@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DeckController">
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCard" prefHeight="25.0" prefWidth="96.0" text="Create Card" />
+            <Button mnemonicParsing="false" onAction="#deleteCard" prefHeight="25.0" prefWidth="125.0" text="Delete Card" />
+            <Button mnemonicParsing="false" onAction="#doQuiz" prefHeight="25.0" prefWidth="88.0" text="Quiz" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <center>
+      <ListView fx:id="cardList" prefHeight="394.0" prefWidth="509.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

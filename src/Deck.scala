@@ -10,11 +10,15 @@ case class Deck(cards: List[Card], ro: RandomWithState) {
 
   def addCard(card: Card): Deck = Deck.addCard(this, card)
 
+  def removeCard(card: Card): Deck = Deck.removeCard(card, this)
+
   //Ask the user a question from a random card at a valid time, allow for response and update the deck
   def ask(course: String): (Card, Deck) = Deck.ask(this, course)
 
   //Print deck cards, opt is an optional String that works as a filter is not blank
   def printCards(cards: List[Card])(opt: String): Unit = Deck.printCards(cards)(opt)
+
+  def getCard(question: String) : Option[Card] = Deck.getCard(question, this)
 
   override def toString: String = Deck.toString(cards)
 }
@@ -26,6 +30,14 @@ object Deck {
   val boundary = "////0xFFFF////EOF"
 
   def addCard(deck: Deck, card: Card): Deck = Deck(card :: deck.cards, deck.ro)
+
+  def removeCard(card: Card, deck: Deck): Deck = {
+    Deck(deck.cards.filterNot(c => c == card), deck.ro)
+  }
+
+  def getCard(question: String, deck: Deck): Option[Card] = {
+    deck.cards.find(card => card._1 == question)
+  }
 
   private def available_cards(course_cards: List[(String, String, Int, String, LocalDate)]) = {
     course_cards filter (card => card._5.isBefore(LocalDate.now()))
