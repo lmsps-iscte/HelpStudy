@@ -6,11 +6,12 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DeckController">
    <bottom>
-      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="100.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
             <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#addCard" prefHeight="25.0" prefWidth="96.0" text="Create Card" />
-            <Button mnemonicParsing="false" onAction="#deleteCard" prefHeight="25.0" prefWidth="125.0" text="Delete Card" />
+            <ChoiceBox fx:id="subj_box" prefWidth="150.0" />
             <Button mnemonicParsing="false" onAction="#doQuiz" prefHeight="25.0" prefWidth="88.0" text="Quiz" />
+            <Button mnemonicParsing="false" onAction="#deleteCard" prefHeight="25.0" prefWidth="125.0" text="Delete Card" />
          </children>
          <opaqueInsets>
             <Insets />

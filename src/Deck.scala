@@ -15,6 +15,8 @@ case class Deck(cards: List[Card], ro: RandomWithState) {
   //Ask the user a question from a random card at a valid time, allow for response and update the deck
   def ask(course: String): (Card, Deck) = Deck.ask(this, course)
 
+  def answer(card: Card, answer: String): (Boolean, Deck) = Deck.answer(this, card, answer)
+
   //Print deck cards, opt is an optional String that works as a filter is not blank
   def printCards(cards: List[Card])(opt: String): Unit = Deck.printCards(cards)(opt)
 

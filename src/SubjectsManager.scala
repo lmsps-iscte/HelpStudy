@@ -1,3 +1,6 @@
+import Notebook.Note
+import RemindersManager.Reminder
+
 import scala.annotation.tailrec
 
 case class SubjectsManager(subjs: List[Subject]) {
@@ -35,6 +38,15 @@ object SubjectsManager {
       }
     }
     aux(subjs, "")
+  }
+
+  def fromString(str: String, reminders: List[Reminder], notes: List[Note]): SubjectsManager = {
+    @tailrec
+    def aux(subj_man: SubjectsManager, lst: List[String]): SubjectsManager = lst match {
+      case Nil => subj_man
+      case head :: tail => aux(subj_man.addSubject(Subject.fromString(head, reminders, notes)), tail)
+    }
+    aux(SubjectsManager(List()) , str.split("\n").toList)
   }
 
   @tailrec
