@@ -95,7 +95,10 @@ object RemindersManager {
 
   def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {
       case Nil => Nil
-      case head :: tail => (head._1, head._2, head._3, head._4, points(head)(dist_func)) :: smart_list(tail)(dist_func)
+      case head :: tail => if (head._4.isBefore(LocalDate.now))
+        (head._1, head._2, head._3, head._4, 0.0) :: smart_list(tail)(dist_func)
+      else
+        (head._1, head._2, head._3, head._4, points(head)(dist_func)) :: smart_list(tail)(dist_func)
     }
 
   def points(rem: Reminder)(dist_func: (Reminder, Int) => Double): Double = {
