@@ -1,11 +1,14 @@
-import java.net.URL
-import java.time.{LocalDate, LocalTime}
-import java.time.format.DateTimeFormatter
-import java.util.ResourceBundle
+package controllers
 
+import classes.{SBlock, Schedule}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.{Button, Label, ListView, TextField}
+
+import java.net.URL
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalTime}
+import java.util.ResourceBundle
 
 class ScheduleController extends Initializable {
 

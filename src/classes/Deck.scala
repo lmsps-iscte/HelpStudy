@@ -1,9 +1,9 @@
+package classes
+
+import classes.Deck.Card
+
 import java.time.LocalDate
-
-import Deck.Card
-
 import scala.annotation.tailrec
-import scala.io.StdIn.readLine
 
 //Flashcard deck with a random number generator
 case class Deck(cards: List[Card], ro: RandomWithState) {
@@ -49,7 +49,7 @@ object Deck {
     val course_cards = deck.cards.filter(_._4 == course)
     val cards = available_cards(course_cards)
     if (cards.isEmpty) {
-      return (("Deck is Empty", "", 0, "", LocalDate.now()),deck)
+      return (("classes.Deck is Empty", "", 0, "", LocalDate.now()),deck)
     }
     val num_ro = deck.ro.nextIntRange(deck.cards.size)
     val card = cards(num_ro._1)
@@ -84,7 +84,7 @@ object Deck {
 
   def toString(cards: List[Card]): String = cards match {
     case head :: Nil => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}}"
-    case head :: tail => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}\n${toString(tail)}"
+    case head :: tail => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}\\n${toString(tail)}"
   }
 
   def parseItem(item: String): (String, String, Int, String, LocalDate) = {
@@ -102,7 +102,7 @@ object Deck {
       case item :: Nil => deck.addCard(parseItem(item))
       case head :: tail => aux(deck.addCard(parseItem(head)), tail)
     }
-    aux(Deck(List(), RandomWithState(0)), toParse.split("\n").toList)
+    aux(Deck(List(), RandomWithState(0)), toParse.split("\\\\n").toList)
   }
 
 }

@@ -1,13 +1,15 @@
+package controllers
+
+import classes.RemindersManager.Reminder
+import classes.{RemindersManager, Util}
+import javafx.collections.FXCollections
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.control._
+
+import java.io.FileNotFoundException
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
-
-import RemindersManager.{Reminder, delReminder, smart_list, sort_by_priority, sort_smart}
-import javafx.collections.{FXCollections, ObservableList}
-import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.{Button, ChoiceBox, DatePicker, ListView, TextArea, TextField}
-
-import scala.collection.mutable.ListBuffer
 
 
 class RemindersController extends Initializable {
@@ -17,13 +19,22 @@ class RemindersController extends Initializable {
   @FXML private var priority_box: ChoiceBox[Int] = _
   @FXML private var text_area: TextArea = _
   @FXML private var date_box: DatePicker = _
-  var rem_man = RemindersManager(List())
+  private var rem_man = RemindersManager(List())
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
-    val rem_man_import = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
-      ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
-      ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
-    rem_man = sort_smart(rem_man_import, "SIGMOID") //Sort de acordo com a funcao desenvolvida
+    try {
+      val body = Util.readFromFile("reminders.obj")
+      rem_man = RemindersManager.fromString(body)
+    } catch {
+      case e: FileNotFoundException =>
+        rem_man = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
+        ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
+        ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
+
+      case wat => println("WHAT THE FUCK IS THAT")
+        wat.printStackTrace()
+    }
+    rem_man = RemindersManager.sort_smart(rem_man, "SIGMOID") //Sort de acordo com a funcao desenvolvida
     val rems_list = rem_man.lst_rem
     var list_obs = FXCollections.observableArrayList[String]()
     rems_list.forall(r => list_obs.add(r._1))
@@ -44,12 +55,14 @@ class RemindersController extends Initializable {
     rem_man = rem_man.addReminder(rem)
     //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
     remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
+    Util.saveToFile(rem_man.toString(), "reminders.obj")
   }
 
   def delete_func(): Unit = {
     val item: String = remindersListView.getSelectionModel.getSelectedItem
     remindersListView.getItems.remove(item)
-    rem_man = delReminder(rem_man, item)
+    rem_man = rem_man.delReminder(item)
+    Util.saveToFile(rem_man.toString(), "reminders.obj")
   }
 
   def elementClicked(): Unit = {

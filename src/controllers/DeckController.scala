@@ -1,8 +1,10 @@
-import Deck.Card
-import javafx.collections.FXCollections
+package controllers
+
+import classes.Deck.Card
+import classes.{Deck, RandomWithState, Subject, SubjectsManager}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Button, ChoiceBox, Label, ListView, TextField}
+import javafx.scene.control._
 import javafx.scene.layout.GridPane
 
 import java.net.URL
@@ -17,7 +19,7 @@ class DeckController extends Initializable{
   private var subjs: SubjectsManager = _
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
-//    subjs = SubjectsManager.fromString("", List(), List())
+//    subjs = classes.SubjectsManager.fromString("", List(), List())
       subjs = SubjectsManager(List(Subject("PPM")))
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
   }

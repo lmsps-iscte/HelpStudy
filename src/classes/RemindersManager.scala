@@ -1,7 +1,8 @@
+package classes
+
+import classes.RemindersManager.{Reminder, Reminder_List}
+
 import java.time.{LocalDate, Period}
-
-import RemindersManager.{Reminder, Reminder_List}
-
 import scala.annotation.tailrec
 import scala.math._
 
@@ -17,7 +18,7 @@ case class RemindersManager(lst_rem: Reminder_List) {
 
   def sort_by_date(): RemindersManager = RemindersManager.sort_by_date(this)
 
-  override def toString(): String = RemindersManager.toString(lst_rem)
+  override def toString: String = RemindersManager.toString(lst_rem)
 }
 
 object RemindersManager {
@@ -76,7 +77,7 @@ object RemindersManager {
 
   def sort_smart(rem_man: RemindersManager, f_name: String): RemindersManager = {
     //Algoritmo de complexidade
-    //RemindersManager((rem_man.lst_rem.sortBy( r => (r._4, r._3))))
+    //classes.RemindersManager((rem_man.lst_rem.sortBy( r => (r._4, r._3))))
     val f1_name = f_name.toUpperCase
     f1_name match {
       case "SIGMOID" => RemindersManager(smart_list(rem_man.lst_rem)(points_sigmoid).sortBy(_._5).reverse)
@@ -89,7 +90,7 @@ object RemindersManager {
       case "GAUSSIAN" => val func = smart_list(rem_man.lst_rem)(points_gaussian)
       case _ => throw new IllegalArgumentException("ERROR: FUNCTION DOES NOT EXIST")
     }
-    RemindersManager(func())*/
+    classes.RemindersManager(func())*/
   }
 
   def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {
@@ -156,8 +157,8 @@ object RemindersManager {
 
   def toString(lst_rem: List[Reminder]): String = lst_rem match {
     case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}"
-    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}" +
-      s"\n ${toString(tail)}"
+    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}$boundary" +
+      s"\\n${toString(tail)}"
   }
 
   def parseItem(item: String): (String, String, Int, LocalDate, Double) = {
@@ -175,7 +176,8 @@ object RemindersManager {
       case head :: Nil => rems_man.addReminder(parseItem(head))
       case head :: tail => aux(rems_man.addReminder(parseItem(head)),tail)
     }
-    aux(RemindersManager(List()),toParse.split("\n").toList)
+    println(toParse)
+    aux(RemindersManager(List()),toParse.split("\\\\n").toList)
   }
 
   /*def variancia(): Int = {

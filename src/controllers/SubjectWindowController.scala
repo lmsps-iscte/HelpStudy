@@ -1,15 +1,18 @@
+package controllers
+
+
+import classes.Notebook.Note
+import classes.RemindersManager.Reminder
+import classes.Subject
+import classes.Subject.Evaluation
+import javafx.collections.FXCollections
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.control._
 
 import java.lang.Double.parseDouble
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
-
-import Notebook.Note
-import RemindersManager.Reminder
-import Subject.{Evaluation, add_evaluation, calculate_FinalGrade, del_evaluation}
-import javafx.collections.FXCollections
-import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.{Button, DatePicker, Label, ListView, TextField}
 
 class SubjectWindowController extends Initializable {
 
@@ -57,7 +60,7 @@ class SubjectWindowController extends Initializable {
   def delEvaluation_Clicked(): Unit = {
     val item = evalsListView.getSelectionModel.getSelectedItem
     evalsListView.getItems.remove(item)
-    subj = del_evaluation(subj, item._3)
+    subj = subj.delEvaluation(item._3)
   }
 
   def schedule_evaluation_buttonClicked(): Unit = {
@@ -66,14 +69,14 @@ class SubjectWindowController extends Initializable {
     val date: LocalDate = date_picker.getValue
     val title: String = type_eval_field.getText
     val eval: Evaluation = (date, (percentage, 0.0), title)
-    subj = add_evaluation(subj, eval)
+    subj = subj.add_evaluation(eval)
     evalsListView.getItems.add(evalsListView.getItems.size, eval)
-    percentage_field.clear
-    type_eval_field.clear
+    percentage_field.clear()
+    type_eval_field.clear()
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
-    System.out.println(calculate_FinalGrade(subj))
+    System.out.println(subj.calculate_FinalGrade())
   }
 
   def time_spent_buttonClicked(): Unit = {

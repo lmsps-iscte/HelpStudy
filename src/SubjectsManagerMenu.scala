@@ -1,6 +1,8 @@
 
 import Main.mainLoop
+import classes.{Subject, SubjectsManager}
 
+import scala.annotation.tailrec
 import scala.io.StdIn.readLine
 
 object SubjectsManagerMenu {
@@ -20,7 +22,7 @@ object SubjectsManagerMenu {
   }
 
 
-
+  @tailrec
   def mainLoop_Subjects(subj_man: SubjectsManager): Unit = {
     showPrompt()
     val input = getUserInput

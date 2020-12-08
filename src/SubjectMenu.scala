@@ -1,3 +1,6 @@
+import classes.Subject
+
+import scala.annotation.tailrec
 import scala.io.StdIn.readLine
 
 object SubjectMenu {
@@ -12,6 +15,7 @@ object SubjectMenu {
     readLine.trim.toUpperCase
   }
 
+  @tailrec
   def mainLoop_Subject_Open(subj: Subject): Unit = {
     showPrompt()
     val input = getUserInput

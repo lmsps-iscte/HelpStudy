@@ -1,6 +1,6 @@
 import java.time.LocalDate
-
 import Main.mainLoop
+import classes.RemindersManager
 
 import scala.annotation.tailrec
 import scala.io.StdIn.readLine

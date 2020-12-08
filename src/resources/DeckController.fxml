@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DeckController">
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DeckController">
    <bottom>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -25,6 +25,12 @@
       </HBox>
    </bottom>
    <center>
-      <ListView fx:id="cardList" prefHeight="394.0" prefWidth="509.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="cardList" prefHeight="394.0" prefWidth="509.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="10.0" />
+         </padding></ListView>
    </center>
+   <padding>
+      <Insets left="5.0" top="10.0" />
+   </padding>
 </BorderPane>

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SubjectWindowController">
+<AnchorPane prefHeight="700.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SubjectWindowController">
     <children>
       <Label layoutX="38.0" layoutY="45.0" text="SUBJECT:">
          <font>
@@ -30,7 +30,7 @@
       </Label>
       <Button fx:id="calculate_final_grade_button" layoutX="509.0" layoutY="590.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
       <Button fx:id="time_spent_button" layoutX="531.0" layoutY="493.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
-      <Button fx:id="schedule_evaluation_button" layoutX="235.0" layoutY="493.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="28.0" prefWidth="128.0" text="Schedule Evaluation" />
+      <Button fx:id="schedule_evaluation_button" layoutX="235.0" layoutY="493.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="28.0" prefWidth="128.0" text="classes.Schedule Evaluation" />
       <ListView fx:id="evalsListView" layoutX="65.0" layoutY="330.0" prefHeight="95.0" prefWidth="304.0" />
       <Label layoutX="65.0" layoutY="302.0" text="Evaluations">
          <font>

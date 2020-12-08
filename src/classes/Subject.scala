@@ -1,9 +1,10 @@
+package classes
+
+import classes.Notebook.Note
+import classes.RemindersManager.Reminder
+import classes.Subject.Evaluation
+
 import java.time.LocalDate
-
-import Notebook.Note
-import RemindersManager.Reminder
-import Subject.Evaluation
-
 import scala.annotation.tailrec
 
 
@@ -20,6 +21,8 @@ case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note
   def associate_note(note: Note): Subject = Subject.associate_note(this, note)
 
   def add_evaluation(eval: Evaluation): Subject = Subject.add_evaluation(this, eval)
+
+  def delEvaluation(eval: String): Subject = Subject.del_evaluation(this, eval)
 
   def calculate_FinalGrade(): Double = Subject.calculate_FinalGrade(this)
 
@@ -80,7 +83,7 @@ object Subject {
   def toString(subj: Subject) : String = {
     def aux(evals: List[Evaluation]): String = evals match {
       case Nil => s""
-      case head :: tail => s"${head._1},${head._2._1},${head._2._2} $boundary ${aux(tail)}"
+      case head :: tail => s"${head._1},${head._2._1},${head._2._2},${head._3} $boundary ${aux(tail)}"
     }
     s"${subj.name} $boundary ${aux(subj.evals)}"
   }

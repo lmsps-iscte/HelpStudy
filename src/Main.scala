@@ -1,7 +1,7 @@
 import java.nio.file.Paths
 import java.time.{LocalDate, LocalTime}
-
-import About.about
+import classes.About.about
+import classes.{Notebook, RemindersManager, SBlock, Schedule}
 
 import scala.annotation.tailrec
 import scala.io.StdIn.readLine
@@ -139,7 +139,7 @@ object Main {
   }
 
   def subjectsLoop(): Unit = {
-    //val subj_man: SubjectsManager = SubjectsManager(List("PPM"))
+    //val subj_man: classes.SubjectsManager = classes.SubjectsManager(List("PPM"))
     //SubjectsManagerMenu.mainLoop_Subjects()
   }
   //Load hs.state file

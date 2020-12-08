@@ -1,3 +1,5 @@
+package classes
+
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalTime}
 
@@ -13,7 +15,7 @@ case class SBlock(date: LocalDate, start_time: LocalTime, end_time: LocalTime, t
 
   //CHECKS IF BLOCK OF TIME IS TOO LONG (OVER 90 MINUTES)
 
-  def isTooLong(): Boolean = SBlock.isTooLong(this)
+  def isTooLong: Boolean = SBlock.isTooLong(this)
 
 }
 

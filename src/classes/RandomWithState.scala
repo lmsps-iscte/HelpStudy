@@ -1,3 +1,4 @@
+package classes
 
 case class RandomWithState(seed: Long) {
   def nextInt: (Int, RandomWithState) = {

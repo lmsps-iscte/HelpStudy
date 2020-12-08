@@ -1,13 +1,16 @@
+package controllers
+
+import classes.Notebook
+import classes.Notebook.Note
+import javafx.collections.FXCollections
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.Scene
+import javafx.scene.control.{Button, ListView, TextArea, TextField}
+import javafx.scene.layout.BorderPane
+import javafx.stage.Stage
+
 import java.net.URL
 import java.util.ResourceBundle
-
-import Notebook.Note
-import javafx.collections.FXCollections
-import javafx.fxml.{FXML, FXMLLoader, Initializable}
-import javafx.scene.{Parent, Scene}
-import javafx.scene.control.{Button, Label, ListView, TextArea, TextField}
-import javafx.scene.layout.{AnchorPane, BorderPane, FlowPane, HBox}
-import javafx.stage.Stage
 
 class NotesController extends Initializable {
 

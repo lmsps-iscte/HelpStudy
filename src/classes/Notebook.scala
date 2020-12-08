@@ -1,8 +1,9 @@
+package classes
+
+import classes.Notebook.Note
+
 import java.io._
 import java.nio.file.Paths
-
-import Notebook.Note
-
 import scala.annotation.tailrec
 import scala.io.Source
 

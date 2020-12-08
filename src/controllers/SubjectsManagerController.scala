@@ -1,14 +1,14 @@
+package controllers
+
+import classes.{Subject, SubjectsManager}
+import javafx.collections.FXCollections
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
-import javafx.scene.control.{Button, ChoiceBox, DatePicker, ListView, TextArea, TextField}
+import javafx.scene.Parent
+import javafx.scene.control.{Button, ListView, TextField}
+
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
-
-import Subject.add_evaluation
-import javafx.collections.FXCollections
-import javafx.scene.Parent
-import javafx.scene.layout.AnchorPane
-import javafx.stage.Stage
 
 class SubjectsManagerController extends Initializable {
 
@@ -22,7 +22,7 @@ class SubjectsManagerController extends Initializable {
 
     val subj: Subject = Subject("PPM")
     val subj2 = subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0))
-    val subj3 = add_evaluation(subj2, (LocalDate.parse("2020-11-20"), (100.0, 17.0), "TRABALHO"))
+    val subj3 = subj2.add_evaluation((LocalDate.parse("2020-11-20"), (100.0, 17.0), "TRABALHO"))
     val subj1 = subj3.associate_note(("Nota 1","Corpo 1","PPM"))
     val subs_list = List(subj1)
     subj_man = SubjectsManager(subs_list)
@@ -49,13 +49,13 @@ class SubjectsManagerController extends Initializable {
   def elementClicked(): Unit = {
     val subj_name = subjectsListView.getSelectionModel.getSelectedItem
     val subj = subj_man.searchSubject(subj_name).get
-    /*val fxmlLoader = new FXMLLoader(getClass.getResource("SubjectWindowController.fxml"))
+    /*val fxmlLoader = new FXMLLoader(getClass.getResource("controllers.SubjectWindowController.fxml"))
     val mainViewRoot: Parent = fxmlLoader.load()
 
-    val subjectWindowController: SubjectWindowController = fxmlLoader.getController
+    val subjectWindowController: controllers.SubjectWindowController = fxmlLoader.getController
     subjectWindowController.setController(subj)
     open_button.getScene.setRoot(mainViewRoot)*/
-    val fxmlLoader = new FXMLLoader(getClass.getResource("SubjectWindowController.fxml"))
+    val fxmlLoader = new FXMLLoader(getClass.getResource("resources/SubjectWindowController.fxml"))
     val mainViewRoot: Parent = fxmlLoader.load()
     mainController.getMainPane.setCenter(mainViewRoot)
     val subjectWindowController: SubjectWindowController = fxmlLoader.getController

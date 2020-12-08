@@ -1,7 +1,8 @@
+package classes
+
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
-
 import scala.annotation.tailrec
 
 case class Schedule(sblocks: List[SBlock], school_percent: Int) {
@@ -65,9 +66,9 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
 
-  //def timebyCUnit(cunit: String): Long = Schedule.timebyCUnit(this, cunit)
+  //def timebyCUnit(cunit: String): Long = classes.Schedule.timebyCUnit(this, cunit)
 
-  //def isProblematic(sblock: SBlock): Boolean = Schedule.isProblematic(this, sblock)
+  //def isProblematic(sblock: classes.SBlock): Boolean = classes.Schedule.isProblematic(this, sblock)
 
 }
 
@@ -180,7 +181,7 @@ object Schedule {
     case head :: Nil => s"$school_percent,${head.date},${head.start_time},${head.end_time} $boundary ${head.title} " +
       s"$boundary ${head.cunit}"
     case head :: tail => s"$school_percent,${head.date},${head.start_time},${head.end_time}  $boundary ${head.title} " +
-      s"$boundary ${head.cunit} \n ${toString(tail, school_percent)}"
+      s"$boundary ${head.cunit} \\n ${toString(tail, school_percent)}"
   }
 
   def parseItem(item: String): SBlock = {
@@ -198,7 +199,7 @@ object Schedule {
       case head :: Nil => schedule.addSBlock(parseItem(head))
       case head :: tail => aux(schedule.addSBlock(parseItem(head)),tail)
     }
-    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\n").toList)
+    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
   }
 
   def main(args: Array[String]): Unit = {
@@ -237,9 +238,9 @@ object Schedule {
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
 
-  /*def timebyCUnit(schedule: Schedule, cunit: String): Long = {
+  /*def timebyCUnit(schedule: classes.Schedule, cunit: String): Long = {
     @tailrec
-    def aux (l: List[SBlock], c: String, acc: Long): Long = l match {
+    def aux (l: List[classes.SBlock], c: String, acc: Long): Long = l match {
       case Nil => 0
       case head :: Nil => if(head.cunit == c) head.duration() else 0
       case head :: tail => if(head.cunit == c) aux(tail, c, acc + head.duration()) else aux(tail, c, acc)
@@ -249,9 +250,9 @@ object Schedule {
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
 
-  /*  def isProblematic(schedule: Schedule, sblock: SBlock): Boolean = {
+  /*  def isProblematic(schedule: classes.Schedule, sblock: classes.SBlock): Boolean = {
       @tailrec
-      def aux (l: List[SBlock], s: SBlock): Boolean = l match {
+      def aux (l: List[classes.SBlock], s: classes.SBlock): Boolean = l match {
         case Nil => false
         case head :: Nil => if(head.isOverlay(s)) true else false
         case head :: tail => if(head.isOverlay(s)) true else aux(tail, s)
@@ -261,20 +262,20 @@ object Schedule {
 
   //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
 
-  /*def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = {
+  /*def addSBlock(schedule: classes.Schedule, sblock: classes.SBlock): classes.Schedule = {
     @tailrec
-    def aux(l: List[SBlock], s: SBlock, stock: List[SBlock]): Schedule = l match {
-      case Nil => Schedule(sblock :: stock)
+    def aux(l: List[classes.SBlock], s: classes.SBlock, stock: List[classes.SBlock]): classes.Schedule = l match {
+      case Nil => classes.Schedule(sblock :: stock)
       case head :: Nil => if(head.isOverlay(s)) {
         println("Não pode inserir este bloco no horário porque irá existir uma sobreposição!")
-        Schedule(l)
+        classes.Schedule(l)
       } else if(head.isTooLong()) {
         println("Não deve inserir este bloco no horário porque é muito longo!")
-        Schedule(l)
-      } else Schedule(s::stock)
+        classes.Schedule(l)
+      } else classes.Schedule(s::stock)
       case head :: tail => if(head.isOverlay(s)) {
         println("Não pode inserir este bloco no horário porque irá existir uma sobreposição!")
-        Schedule(l)
+        classes.Schedule(l)
       } else aux(tail, s, stock)
     }
     aux(schedule.sblocks, sblock, schedule.sblocks)
