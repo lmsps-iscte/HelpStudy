@@ -2,7 +2,7 @@ import Deck.Card
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Button, ComboBox, Label, ListView, TextField}
+import javafx.scene.control.{Alert, Button, ChoiceBox, Label, ListView, TextField}
 import javafx.scene.layout.GridPane
 
 import java.net.URL
@@ -12,12 +12,13 @@ import java.util.ResourceBundle
 class DeckController extends Initializable{
 
   @FXML private var cardList: ListView[String] = _
-  @FXML private var subj_box: ComboBox[String] = _
+  @FXML private var subj_box: ChoiceBox[String] = _
   private var deck: Deck = Deck(List(), RandomWithState(0))
   private var subjs: SubjectsManager = _
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
-    subjs = SubjectsManager.fromString("", List(), List())
+//    subjs = SubjectsManager.fromString("", List(), List())
+      subjs = SubjectsManager(List(Subject("PPM")))
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
   }
 

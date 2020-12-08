@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
-   <children>
-      <AnchorPane layoutY="-1.0" prefHeight="700.0" prefWidth="200.0">
-         <children>
-            <Button fx:id="homeButton" layoutX="19.0" layoutY="200.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Home" />
-            <Button layoutX="19.0" layoutY="425.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="162.0" text="Deck" />
-            <Button fx:id="scheduleButton" layoutX="19.0" layoutY="275.0" mnemonicParsing="false" onAction="#scheduleButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Schedule" />
-            <Button fx:id="subjectsButton" layoutX="19.0" layoutY="350.0" mnemonicParsing="false" onAction="#subjectsButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Subjects" />
-            <Button fx:id="remindersButton" layoutX="19.0" layoutY="500.0" mnemonicParsing="false" onAction="#remindersButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Reminders" />
-            <Button fx:id="notesButton" layoutX="19.0" layoutY="575.0" mnemonicParsing="false" onAction="#notesButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Notes" />
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="28.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@hslogo.png" />
-               </image></ImageView>
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="main_pane" layoutX="225.0" layoutY="20.0" prefHeight="661.0" prefWidth="768.0">
+<BorderPane fx:id="big_pane" prefHeight="680.0" prefWidth="920.0" stylesheets="@app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+   <center>
+      <AnchorPane fx:id="main_pane" prefHeight="682.0" prefWidth="521.0">
          <children>
             <Label layoutX="218.0" layoutY="203.0" text="Your best friend at Study time! ">
                <font>
@@ -44,5 +31,31 @@
             <Label layoutX="341.0" layoutY="534.0" text="Version 1.0" />
          </children>
       </AnchorPane>
-   </children>
-</AnchorPane>
+   </center>
+   <left>
+      <VBox alignment="TOP_CENTER" spacing="40.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="28.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@hslogo.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="homeButton" layoutX="19.0" layoutY="200.0" mnemonicParsing="false" onAction="#homeButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Home" />
+            <Button layoutX="19.0" layoutY="425.0" mnemonicParsing="false" onAction="#deckButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Deck" />
+            <Button fx:id="scheduleButton" layoutX="19.0" layoutY="275.0" mnemonicParsing="false" onAction="#scheduleButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Schedule" />
+            <Button fx:id="subjectsButton" layoutX="19.0" layoutY="350.0" mnemonicParsing="false" onAction="#subjectsButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Subjects" />
+            <Button fx:id="remindersButton" layoutX="19.0" layoutY="500.0" mnemonicParsing="false" onAction="#remindersButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Reminders" />
+            <Button fx:id="notesButton" layoutX="19.0" layoutY="575.0" mnemonicParsing="false" onAction="#notesButtonClicked" prefHeight="50.0" prefWidth="162.0" text="Notes" />
+         </children>
+         <BorderPane.margin>
+            <Insets right="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
+</BorderPane>
