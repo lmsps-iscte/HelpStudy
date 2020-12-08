@@ -14,7 +14,6 @@ class MainController {
   @FXML private var remindersButton: Button = _
   @FXML private var notesButton: Button = _
   @FXML private var homeButton: Button = _
-  @FXML private var main_pane: Pane = _
   @FXML private var big_pane: BorderPane = _
 
   def homeButtonClicked(): Unit = {
@@ -87,9 +86,9 @@ class MainController {
 
   }*/
 
-//  def getMainPane(): Pane = {
-//    main_pane
-//  }
+  def getMainPane: BorderPane = {
+    big_pane
+  }
 
 
 }
