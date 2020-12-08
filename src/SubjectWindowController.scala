@@ -21,6 +21,7 @@ class SubjectWindowController extends Initializable {
   @FXML private var calculate_final_grade_button: Button = _
   @FXML private var time_spent_button: Button = _
   @FXML private var percentage_field: TextField = _
+  @FXML private var type_eval_field: TextField = _
   @FXML private var date_picker: DatePicker = _
   @FXML private var delEvaluation_button: Button = _
 
@@ -63,10 +64,12 @@ class SubjectWindowController extends Initializable {
     /*val eval: Evaluation = (LocalDate.parse("2020-11-20"), (100.0, 17))*/
     val percentage: Double = parseDouble(percentage_field.getText)
     val date: LocalDate = date_picker.getValue
-    val eval: Evaluation = (date, (percentage, 0.0), "TESTE")
+    val title: String = type_eval_field.getText
+    val eval: Evaluation = (date, (percentage, 0.0), title)
     subj = add_evaluation(subj, eval)
     evalsListView.getItems.add(evalsListView.getItems.size, eval)
-    percentage_field.clear()
+    percentage_field.clear
+    type_eval_field.clear
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
