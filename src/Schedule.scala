@@ -7,8 +7,10 @@ import scala.annotation.tailrec
 case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
-
   def addSBlock(sblock: SBlock): Schedule = Schedule.addSBlock(this, sblock)
+
+  //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
+  def getSBlockByName(title: String): SBlock = Schedule.getSBlockByName(this, title)
 
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 
@@ -82,6 +84,10 @@ object Schedule {
     println("YOU CANNOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT WILL OVERLAY ANOTHER!")
     schedule
   } else Schedule(sblock :: schedule.sblocks, schedule.school_percent)
+
+  //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
+  def getSBlockByName(schedule: Schedule, title: String): SBlock =
+    schedule.sblocks.filter(block => block.title == title).head
 
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 

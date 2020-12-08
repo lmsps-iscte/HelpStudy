@@ -9,13 +9,13 @@ import javafx.scene.control.{Button, Label, ListView, TextField}
 
 class ScheduleController extends Initializable {
 
-    @FXML private var listView1: ListView[SBlock] = _
-    @FXML private var listView2: ListView[SBlock] = _
-    @FXML private var listView3: ListView[SBlock] = _
-    @FXML private var listView4: ListView[SBlock] = _
-    @FXML private var listView5: ListView[SBlock] = _
-    @FXML private var listView6: ListView[SBlock] = _
-    @FXML private var listView7: ListView[SBlock] = _
+    @FXML private var listView1: ListView[String] = _
+    @FXML private var listView2: ListView[String] = _
+    @FXML private var listView3: ListView[String] = _
+    @FXML private var listView4: ListView[String] = _
+    @FXML private var listView5: ListView[String] = _
+    @FXML private var listView6: ListView[String] = _
+    @FXML private var listView7: ListView[String] = _
     @FXML private var dWeek1: Label = _
     @FXML private var dWeek2: Label = _
     @FXML private var dWeek3: Label = _
@@ -40,6 +40,7 @@ class ScheduleController extends Initializable {
     @FXML private var editButton: Button = _
     @FXML private var deleteButton: Button = _
     @FXML private var updateButton: Button = _
+    private var schedule: Schedule = Schedule(List(), 50)
 
     def initialize(location: URL, resources: ResourceBundle): Unit = {
 
@@ -66,13 +67,12 @@ class ScheduleController extends Initializable {
         LocalTime.of(10,30,0), LocalTime.of(11,30,0), "Aula TP de MC", "CDSI")
       val bloco3 = SBlock(LocalDate.parse("08-12-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
         LocalTime.of(11,30,0), LocalTime.of(13,0,0), "Aula TP de MC", "MC")
-      val schedule = Schedule(List(),50)
-      val schedule1 = schedule.addSBlock(bloco1)
-      val schedule2 = schedule1.addSBlock(bloco2)
-      val schedule3 = schedule2.addSBlock(bloco3)
-      ratioTextBox.setText(schedule3.school_percent.toString)
-      var list_obs = FXCollections.observableArrayList[SBlock]()
-      schedule3.sblocks.forall(list_obs.add(_))
+      schedule = schedule.addSBlock(bloco1)
+      schedule = schedule.addSBlock(bloco2)
+      schedule = schedule.addSBlock(bloco3)
+      ratioTextBox.setText(schedule.school_percent.toString)
+      var list_obs = FXCollections.observableArrayList[String]()
+      schedule.sblocks.foreach(block => list_obs.add(block.title))
       listView1.setItems(list_obs)
     }
 
@@ -83,7 +83,8 @@ class ScheduleController extends Initializable {
       val title = titleTextField.getText.trim
       val cunit = cUnitTextField.getText().trim
       val sblock = SBlock(date, stime, etime, title, cunit)
-      listView1.getItems.add(sblock)
+      schedule.addSBlock(sblock)
+      listView1.getItems.add(title)
       dateTextField.clear()
       sTimeTextField.clear()
       eTimeTextField.clear()
@@ -93,11 +94,12 @@ class ScheduleController extends Initializable {
 
     def editFunc(): Unit = {
       val item = listView1.getSelectionModel.getSelectedItem
-      dateTextField.setText(item.date.toString)
-      sTimeTextField.setText(item.start_time.toString)
-      eTimeTextField.setText(item.end_time.toString)
-      titleTextField.setText(item.title)
-      cUnitTextField.setText(item.cunit)
+      val block = schedule.getSBlockByName(item)
+      dateTextField.setText(block.date.toString)
+      sTimeTextField.setText(block.start_time.toString)
+      eTimeTextField.setText(block.end_time.toString)
+      titleTextField.setText(block.title)
+      cUnitTextField.setText(block.cunit)
       var list = listView1.getItems.remove(item)
    }
 

@@ -12,6 +12,8 @@ case class Notebook(notes: List[Note]) {
   //Get a filtered list of notes of a certain Course
   def getNotesbyCUnit(cunit: String): List[Note] = Notebook.getNotesbyCUnit(this, cunit)
 
+  def getNoteByName(str: String): Note = Notebook.getNoteByName(this, str)
+
   //Import a note from a file, the name of the file is the title
   def importFromFile(file: String, cunit: String): Notebook = Notebook.importFromFile(this, file, cunit)
 
@@ -24,7 +26,7 @@ case class Notebook(notes: List[Note]) {
   //Sorts notes by Course by default or TITLE if provided "TITLE"
   def sortNoteBy(opt: String): Notebook = Notebook.sortNotesBy(this, opt)
 
-  override def toString(): String = Notebook.toString(notes)
+  override def toString: String = Notebook.toString(notes)
 }
 
 object Notebook {
@@ -34,6 +36,10 @@ object Notebook {
   val boundary = "////0xFFFF////EOF"
 
   def addNote(nbook: Notebook, note: Note): Notebook = Notebook(note :: nbook.notes)
+
+  def getNoteByName(notebook: Notebook, str: String): Note = {
+    notebook.notes.filter(note => note._1 == str).head
+  }
 
   def getNotesbyCUnit(nbook: Notebook, cunit: String): List[Note] = nbook.notes.filter(_._3 == cunit)
 
