@@ -29,10 +29,11 @@ case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note
 
 object Subject {
 
-  type Grade = Int
+  type Grade = Double
   type Percent_Grade = Double
   type Date = LocalDate
-  type Evaluation = (Date, (Percent_Grade, Grade))
+  type Title = String
+  type Evaluation = (Date, (Percent_Grade, Grade), Title)
   val boundary = "////0xFFFF////EOF"
 
   def associate_reminder(subj: Subject, rem: Reminder): Subject = {
@@ -45,9 +46,21 @@ object Subject {
   }
 
   def add_evaluation(subj: Subject, eval: Evaluation): Subject = {
-    val rem = ("Avaliação: " + subj.name, "", 4, eval._1, 0.0)
+    val rem = ("Avaliação: " + eval._3, "", 4, eval._1, 0.0)
     associate_reminder(subj, rem)
     Subject(subj.name, subj.rems, subj.notes, eval :: subj.evals)
+  }
+
+  def del_evaluation(subj: Subject, title: Title): Subject = {
+    searchEvaluation(subj, title) match {
+      case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equals(title)))
+      case None => /*System.err.println("Erro: Esse lembrete não existe")*/
+        throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+    }
+  }
+
+  def searchEvaluation(subj: Subject, title: String): Option[Evaluation] = {
+    Option((subj.evals filter (e => e._3.equals(title))).head)
   }
 
   def calculate_FinalGrade(subj: Subject): Double = {
@@ -72,12 +85,13 @@ object Subject {
     s"${subj.name} $boundary ${aux(subj.evals)}"
   }
 
-  def parseEval(head: String): (Date, (Percent_Grade, Grade)) = {
+  def parseEval(head: String): (Date, (Percent_Grade, Grade), Title) = {
     val fields = head.split(",")
     val date = LocalDate.parse(fields.head)
     val percent_Grade = fields(1).toDouble
-    val grade = fields.last.toInt
-    (date, (percent_Grade, grade))
+    val grade = fields(2).toInt //ATENCAO---------!!!!!!!!!
+    val title = fields.last
+    (date, (percent_Grade, grade), title)
   }
 
   def fromString(toParse: String, rems: List[Reminder], notes: List[Note]) : Subject = {
@@ -92,8 +106,8 @@ object Subject {
   }
 
   def main(args: Array[String]): Unit = {
-    val eval1 = (LocalDate.parse("2020-11-19"), (30.0, 20))
-    val eval2 = (LocalDate.parse("2020-12-18"), (70.0, 15))
+    val eval1 = (LocalDate.parse("2020-11-19"), (30.0, 20.0), "Teste")
+    val eval2 = (LocalDate.parse("2020-12-18"), (70.0, 15.0), "Teste")
     val subj = Subject("PPM")
     println(subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0)))
     val subj1 = add_evaluation(subj, eval1)

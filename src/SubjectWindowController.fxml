@@ -28,15 +28,21 @@
             <Font size="19.0" />
          </font>
       </Label>
-      <Button fx:id="calculate_final_grade_button" layoutX="184.0" layoutY="563.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
-      <Button fx:id="time_spent_button" layoutX="430.0" layoutY="563.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
-      <Button fx:id="schedule_evaluation_button" layoutX="65.0" layoutY="439.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="38.0" prefWidth="147.0" text="SCHEDULE EVALUATION" />
-      <ListView layoutX="65.0" layoutY="330.0" prefHeight="95.0" prefWidth="304.0" />
+      <Button fx:id="calculate_final_grade_button" layoutX="509.0" layoutY="590.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
+      <Button fx:id="time_spent_button" layoutX="531.0" layoutY="493.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
+      <Button fx:id="schedule_evaluation_button" layoutX="225.0" layoutY="506.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="38.0" prefWidth="147.0" text="SCHEDULE EVALUATION" />
+      <ListView fx:id="evalsListView" layoutX="65.0" layoutY="330.0" prefHeight="95.0" prefWidth="304.0" />
       <Label layoutX="65.0" layoutY="302.0" text="Evaluations">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
+      <DatePicker fx:id="date_picker" layoutX="235.0" layoutY="449.0" prefHeight="20.0" prefWidth="137.0" />
+      <Label layoutX="65.0" layoutY="453.0" prefHeight="17.0" prefWidth="63.0" text="Percentage:" />
+      <TextField fx:id="percentage_field" layoutX="137.0" layoutY="449.0" prefHeight="25.0" prefWidth="40.0" />
+      <Label layoutX="197.0" layoutY="453.0" text="Date:" />
+      <Label layoutX="72.0" layoutY="474.0" text="(0-100)" />
+      <Button fx:id="delEvaluation_button" layoutX="111.0" layoutY="513.0" mnemonicParsing="false" onAction="#delEvaluation_Clicked" text="Delete" />
     </children>
 
 </AnchorPane>

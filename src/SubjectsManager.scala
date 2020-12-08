@@ -21,6 +21,14 @@ object SubjectsManager {
     sort_Subjects(SubjectsManager(subj :: subj_man.subjs))
   }
 
+  def delSubject(subj_man: SubjectsManager, subj: Subject): SubjectsManager = {
+    searchSubject(subj_man, subj.name) match {
+      case Some(b) => SubjectsManager(subj_man.subjs.filter(r => !r.name.equals(subj.name)))
+      case None => /*System.err.println("Erro: Esse lembrete não existe")*/
+        throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+    }
+  }
+
   def sort_Subjects(subj_man: SubjectsManager): SubjectsManager = {
     SubjectsManager(subj_man.subjs.sortBy(_.name))
   }
