@@ -36,6 +36,7 @@ class ScheduleController extends Initializable {
   @FXML private var infoLabel: Label = _
   @FXML private var badAlert: Label = _
   @FXML private var goodAlert: Label = _
+  @FXML private var timeInfoLabel: Label = _
   @FXML private var ratioTextBox: TextField = _
   @FXML private var sTimeTextField: TextField = _
   @FXML private var eTimeTextField: TextField = _
@@ -230,7 +231,7 @@ class ScheduleController extends Initializable {
       goodAlert.setVisible(true)
     }
 
-
+    timeInfoLabel.setText(schedule.timeSpentBySchoolToday().toString)
   }
 
   def setFields(item: String, date: String): Unit = {

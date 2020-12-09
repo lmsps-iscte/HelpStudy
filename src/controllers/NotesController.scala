@@ -7,7 +7,7 @@ import classes.Notebook.{Note, getNote}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.Scene
-import javafx.scene.control.{Button, Label, ListView, TextArea, TextField}
+import javafx.scene.control.{Button, ChoiceBox, Label, ListView, TextArea, TextField}
 import javafx.scene.layout.BorderPane
 import javafx.stage.{FileChooser, Stage}
 import java.net.URL
@@ -27,6 +27,7 @@ class NotesController extends Initializable {
   @FXML private var deleteButton: Button = _
   @FXML private var openButton: Button = _
   @FXML private var textArea: TextArea = _
+  @FXML private var sortPicker: ChoiceBox[String] = _
   private var notebook : Notebook = Notebook(List())
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
@@ -46,6 +47,11 @@ class NotesController extends Initializable {
     var list_obs = FXCollections.observableArrayList[String]()
     notebook.notes.foreach(note => list_obs.add(note._1+" - "+note._3))
     notesListView.setItems(list_obs)
+
+    var choices = FXCollections.observableArrayList[String]()
+    choices.add("Title")
+    choices.add("Subject")
+    sortPicker.setItems(choices)
   }
 
   def openFunc(): Unit = {
@@ -127,6 +133,20 @@ class NotesController extends Initializable {
 
   def hoverFuncExit2(): Unit = {
     infoLabel2.setVisible(false)
+  }
+
+  def applyFunc(): Unit = {
+    val choice = sortPicker.getValue
+
+    if(choice.equals("Title"))
+      notebook = notebook.sortNotesBy("TITLE")
+     else
+      notebook = notebook.sortNotesBy("Subject")
+
+    var list_obs = FXCollections.observableArrayList[String]()
+    notebook.notes.foreach(note => list_obs.add(note._1+" - "+note._3))
+    notesListView.setItems(list_obs)
+
   }
 
   def deleteOps(item: String): Unit = {

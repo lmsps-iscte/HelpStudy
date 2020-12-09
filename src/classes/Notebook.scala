@@ -28,7 +28,7 @@ case class Notebook(notes: List[Note]) {
   def printNotes(opt: String = ""): Unit = Notebook.printNotes(this)(opt)
 
   //Sorts notes by Course by default or TITLE if provided "TITLE"
-  def sortNoteBy(opt: String): Notebook = Notebook.sortNotesBy(this, opt)
+  def sortNotesBy(opt: String): Notebook = Notebook.sortNotesBy(this, opt)
 
   override def toString: String = Notebook.toString(notes)
 }

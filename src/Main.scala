@@ -71,7 +71,7 @@ object Main {
 
       case "SORT_NOTES" => print("\nWRITE TITLE FOR SORT BY TITLE OR PRESS ENTER FOR SORT BY CUNIT: ")
         val choice = getUserInput
-        notebookLoop(notebook.sortNoteBy(choice))
+        notebookLoop(notebook.sortNotesBy(choice))
 
       case "BACK" => mainLoop()
       case "QUIT" => exit(0)
