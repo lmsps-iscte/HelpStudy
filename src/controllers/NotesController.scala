@@ -1,16 +1,17 @@
 package controllers
 
-import java.io.FileNotFoundException
+import java.io.{File, FileNotFoundException}
 
 import classes.{Notebook, Util}
-import classes.Notebook.Note
+import classes.Notebook.{Note, getNote}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.Scene
-import javafx.scene.control.{Button, ListView, TextArea, TextField}
+import javafx.scene.control.{Button, Label, ListView, TextArea, TextField}
 import javafx.scene.layout.BorderPane
-import javafx.stage.Stage
+import javafx.stage.{FileChooser, Stage}
 import java.net.URL
+import java.nio.file.Paths
 import java.util.ResourceBundle
 
 class NotesController extends Initializable {
@@ -18,6 +19,9 @@ class NotesController extends Initializable {
   @FXML private var notesListView: ListView[String] = _
   @FXML private var titleTextBox: TextField = _
   @FXML private var cUnitTextBox: TextField = _
+  @FXML private var importTextField: TextField = _
+  @FXML private var infoLabel: Label = _
+  @FXML private var infoLabel2: Label = _
   @FXML private var addButton: Button = _
   @FXML private var editButton: Button = _
   @FXML private var deleteButton: Button = _
@@ -46,13 +50,13 @@ class NotesController extends Initializable {
 
   def openFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
-    val title = item.split(" ")(0).trim
-    val cunit = item.split(" ")(2).trim
+    val title = item.split("-")(0).trim
+    val cunit = item.split("-")(1).trim
     val secondStage: Stage = new Stage()
     val textArea2 = new TextArea(notebook.getNote(title, cunit)._2)
     textArea2.setEditable(false)
     secondStage.setScene(new Scene(new BorderPane(textArea2)))
-    secondStage.setTitle(item)
+    secondStage.setTitle(title)
     secondStage.show()
 
   }
@@ -64,7 +68,7 @@ class NotesController extends Initializable {
     val note: Note = (title, body, cunit)
     notebook = notebook.addNote(note)
     notesListView.getItems.add(title+" - "+cunit)
-    notebook.exportToFile(note)
+    notebook.exportToFile(note,"normal")
     Util.saveToFile(notebook.toString, "notes_paths.obj")
     titleTextBox.clear()
     textArea.clear()
@@ -73,16 +77,64 @@ class NotesController extends Initializable {
 
   def deleteFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
-    var list = notesListView.getItems.remove(item)
+    deleteOps(item)
   }
 
   def editFunc(): Unit = {
-    /*val item = notesListView.getSelectionModel.getSelectedItem
-    val note = notebook.getNoteB(item)
+    val item = notesListView.getSelectionModel.getSelectedItem
+    val title = item.split("-")(0).trim
+    val cunit = item.split("-")(1).trim
+    val note = notebook.getNote(title, cunit)
     titleTextBox.setText(note._1)
-    cUnitTextBox.setText(note._3)
     textArea.setText(note._2)
-    var list = notesListView.getItems.remove(item)*/
+    cUnitTextBox.setText(note._3)
+    deleteOps(item)
+
+  }
+
+  def importFunc(): Unit = {
+    if(cUnitTextBox.getText.isEmpty)
+      cUnitTextBox.setText("Unknown")
+    val path = importTextField.getText()
+    val title = Paths.get(path).getFileName.toString.stripSuffix(".txt")
+    val cunit = cUnitTextBox.getText()
+    notebook = notebook.importFromFile(path, cunit)
+    print("NOTEBOOK DEPOIS DE IMPORT "+notebook.notes)
+    notesListView.getItems.add(title+" - "+cunit)
+    notebook.exportToFile(getNote(notebook, title, cunit),"normal")
+    Util.saveToFile(notebook.toString, "notes_paths.obj")
+    importTextField.clear()
+    cUnitTextBox.clear()
+  }
+
+  def exportFunc(): Unit = {
+    val item = notesListView.getSelectionModel.getSelectedItem
+    notebook.exportToFile(getNote(notebook, item.split("-")(0).trim,
+      item.split("-")(1).trim),"desktop")
+  }
+
+  def hoverFuncEnter(): Unit = {
+    infoLabel.setVisible(true)
+  }
+
+  def hoverFuncExit(): Unit = {
+    infoLabel.setVisible(false)
+  }
+
+  def hoverFuncEnter2(): Unit = {
+    infoLabel2.setVisible(true)
+  }
+
+  def hoverFuncExit2(): Unit = {
+    infoLabel2.setVisible(false)
+  }
+
+  def deleteOps(item: String): Unit = {
+    var list = notesListView.getItems.remove(item)
+    val file = Paths.get(System.getProperty("user.dir"), item.split("-")(1).trim, item.split("-")(0).trim + ".txt")
+    notebook = notebook.removeNote(getNote(notebook, item.split("-")(0).trim, item.split("-")(1).trim))
+    Util.saveToFile(notebook.toString, "notes_paths.obj")
+    Util.deleteFile(file.toString)
   }
 
 }

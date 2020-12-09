@@ -11,6 +11,8 @@ import scala.reflect.io.Path
 case class Notebook(notes: List[Note]) {
   def addNote(note: Note): Notebook = Notebook.addNote(this, note)
 
+  def removeNote(note: Note): Notebook = Notebook.removeNote(this, note)
+
   //Get a filtered list of notes of a certain Course
   def getNotesbyCUnit(cunit: String): List[Note] = Notebook.getNotesbyCUnit(this, cunit)
 
@@ -20,7 +22,7 @@ case class Notebook(notes: List[Note]) {
   def importFromFile(file: String, cunit: String): Notebook = Notebook.importFromFile(this, file, cunit)
 
   //Export a note to a file, the name of the file is the title
-  def exportToFile(note: Note): Unit = Notebook.exportToFile(this, note)
+  def exportToFile(note: Note, opt: String): Unit = Notebook.exportToFile(this, note, opt)
 
   //Prints all notes, filtered by Course if provided
   def printNotes(opt: String = ""): Unit = Notebook.printNotes(this)(opt)
@@ -39,6 +41,8 @@ object Notebook {
 
   def addNote(nbook: Notebook, note: Note): Notebook = Notebook(note :: nbook.notes)
 
+  def removeNote(notebook: Notebook, note: Note): Notebook = Notebook(notebook.notes.filter(n => !n.equals(note)))
+
   def getNote(notebook: Notebook, title: String, cunit: String): Note = {
     notebook.notes.filter(note => note._1.equals(title) && note._3.equals(cunit)).head
   }
@@ -47,17 +51,25 @@ object Notebook {
 
   def importFromFile(nb: Notebook, file: String, cunit: String): Notebook = {
     val body = Source.fromFile(Paths.get(file).toAbsolutePath.toString).getLines.mkString
-    print(body)
     val newNote = (Paths.get(file).getFileName.toString.stripSuffix(".txt"), body, cunit)
     Notebook.addNote(nb, newNote)
   }
 
-  def exportToFile(nb: Notebook, note: Note): Unit = {
-    val file = Paths.get(System.getProperty("user.dir"), note._3, note._1 + ".txt")
-    if (!file.getParent.toFile.exists()) file.getParent.toFile.mkdirs()
-    val pw = new PrintWriter(file.toFile)
-    pw.write(note._2)
-    pw.close()
+  def exportToFile(nb: Notebook, note: Note, opt: String): Unit = {
+      if(opt.equals("normal")) {
+        val file = Paths.get(System.getProperty("user.dir"), note._3, note._1 + ".txt")
+        if (!file.getParent.toFile.exists()) file.getParent.toFile.mkdirs()
+        val pw = new PrintWriter(file.toFile)
+        pw.write(note._2)
+        pw.close()
+      }
+      else {
+        val file = Paths.get(System.getProperty("user.home") + "/Desktop", note._1 + ".txt")
+        if (!file.getParent.toFile.exists()) file.getParent.toFile.mkdirs()
+        val pw = new PrintWriter(file.toFile)
+        pw.write(note._2)
+        pw.close()
+      }
   }
 
   def sortNotesBy(nb: Notebook, opt: String): Notebook = {
@@ -83,14 +95,15 @@ object Notebook {
   }
 
   def toString(notes: List[Note]): String = notes match {
-    case head :: Nil => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")},${head._3}"
-    case head :: tail => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")},${head._3} $boundary" +
-      s"\n ${toString(tail)}"
+    case Nil => ""
+    case head :: Nil => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")} $boundary ${head._3} $boundary"
+    case head :: tail => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")} $boundary ${head._3} $boundary" +
+      s"\\n ${toString(tail)}"
   }
 
   def parseItem(item: String): (String,String) = {
-    val path = item.split(",")(0).trim
-    val cunit = item.split(",")(1).split(boundary)(0)
+    val path = item.split(boundary)(0).trim
+    val cunit = item.split(boundary)(1).trim
     (path,cunit)
   }
 
@@ -100,7 +113,7 @@ object Notebook {
       case head :: Nil => importFromFile(nb, parseItem(head)._1, parseItem(head)._2)
       case head :: tail => aux(importFromFile(nb, parseItem(head)._1, parseItem(head)._2),tail)
     }
-    aux(Notebook(List()),toParse.split("\n").toList)
+    aux(Notebook(List()),toParse.split("\\\\n").toList)
   }
 
   def main(args: Array[String]): Unit = {

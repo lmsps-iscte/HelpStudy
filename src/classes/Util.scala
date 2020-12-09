@@ -21,4 +21,9 @@ object Util {
     source.getLines.mkString
   }
 
+  def deleteFile(path: String): Unit = {
+    val file = Paths.get(path).toFile
+    file.delete()
+  }
+
 }
