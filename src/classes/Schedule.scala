@@ -59,7 +59,7 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
   def willOverlay(sblock: SBlock): Boolean = Schedule.willOverlay(this, sblock)
 
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
-  def fatigueAlert(): String = Schedule.fatigueAlert(this)
+  def fatigueAlert(): Boolean = Schedule.fatigueAlert(this)
 
   //UPDATES RATIO
 
@@ -159,12 +159,10 @@ object Schedule {
   }
 
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
-  def fatigueAlert(schedule: Schedule): String = {
-    val bad = "TODAY YOU ARE SPENDING TOO MUCH TIME WITH SCHOOL! IF POSSIBLE PLAN YOUR DAY DIFFERENTLY TO BE MORE PRODUCTIVE! :)"
-    val good = "YOUR DAY HAS A GOOD BALANCE BETWEEN SCHOOL AND FUN TIME! HAVE A NICE DAY! :)"
+  def fatigueAlert(schedule: Schedule): Boolean = {
     if(timeSpentBySchoolToday(schedule) > 960.longValue()*(schedule.school_percent/100.floatValue()))
-      bad
-    else good
+      true
+    else false
   }
 
   def toString(sblocks: List[SBlock], school_percent: Int): String = sblocks match {
@@ -172,7 +170,7 @@ object Schedule {
     case head :: Nil => s"$school_percent,${head.date},${head.start_time},${head.end_time} $boundary ${head.title} " +
       s"$boundary ${head.cunit}"
     case head :: tail => s"$school_percent,${head.date},${head.start_time},${head.end_time}  $boundary ${head.title} " +
-      s"$boundary ${head.cunit} \n ${toString(tail, school_percent)}"
+      s"$boundary ${head.cunit} \\n ${toString(tail, school_percent)}"
   }
 
   def parseItem(item: String): SBlock = {
@@ -190,7 +188,7 @@ object Schedule {
       case head :: Nil => schedule.addSBlock(parseItem(head))
       case head :: tail => aux(schedule.addSBlock(parseItem(head)),tail)
     }
-    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\n").toList)
+    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
   }
 
   //UPDATES RATIO

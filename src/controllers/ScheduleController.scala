@@ -34,6 +34,8 @@ class ScheduleController extends Initializable {
   @FXML private var date6: Label = _
   @FXML private var date7: Label = _
   @FXML private var infoLabel: Label = _
+  @FXML private var badAlert: Label = _
+  @FXML private var goodAlert: Label = _
   @FXML private var ratioTextBox: TextField = _
   @FXML private var sTimeTextField: TextField = _
   @FXML private var eTimeTextField: TextField = _
@@ -79,7 +81,7 @@ class ScheduleController extends Initializable {
       schedule = Schedule.fromString(fileContent)
     } catch {
       case e: FileNotFoundException =>
-        val bloco1 = SBlock(LocalDate.parse("2020-12-08"), LocalTime.of(9, 30, 0),
+        /*val bloco1 = SBlock(LocalDate.parse("2020-12-08"), LocalTime.of(9, 30, 0),
           LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
         val bloco2 = SBlock(LocalDate.parse("2020-12-09"), LocalTime.of(10, 30, 0),
           LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
@@ -87,7 +89,7 @@ class ScheduleController extends Initializable {
           LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
         schedule = schedule.addSBlock(bloco1)
         schedule = schedule.addSBlock(bloco2)
-        schedule = schedule.addSBlock(bloco3)
+        schedule = schedule.addSBlock(bloco3)*/
     }
 
     loadInfo()
@@ -218,6 +220,17 @@ class ScheduleController extends Initializable {
     listView7.setItems(list_obs7)
 
     ratioTextBox.setText(schedule.school_percent.toString)
+
+    if(schedule.fatigueAlert() == true) {
+      badAlert.setVisible(true)
+      goodAlert.setVisible(false)
+    }
+    else {
+      badAlert.setVisible(false)
+      goodAlert.setVisible(true)
+    }
+
+
   }
 
   def setFields(item: String, date: String): Unit = {

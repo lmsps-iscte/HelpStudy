@@ -45,6 +45,8 @@
             <Button fx:id="updateButton" layoutX="414.0" layoutY="627.0" mnemonicParsing="false" onAction="#updateFunc" text="Update" />
             <DatePicker fx:id="datePicker" editable="false" layoutX="83.0" layoutY="553.0" promptText="Date" />
             <Label fx:id="infoLabel" layoutX="50.0" layoutY="659.0" text="If you sleep 8h per day you have 16h of usable time. Here you can choose the percentage you want to spend with school related work." visible="false" />
+            <Label fx:id="badAlert" layoutX="36.0" layoutY="6.0" prefHeight="27.0" prefWidth="731.0" text="TODAY YOU ARE SPENDING TOO MUCH TIME WITH SCHOOL! IF POSSIBLE PLAN YOUR DAY DIFFERENTLY TO BE MORE PRODUCTIVE! ☺" underline="true" visible="false" />
+            <Label fx:id="goodAlert" layoutX="130.0" layoutY="6.0" prefHeight="27.0" prefWidth="497.0" text="YOUR DAY HAS A GOOD BALANCE BETWEEN SCHOOL AND FUN TIME! HAVE A NICE DAY! ☺" underline="true" visible="false" />
          </children>
       </AnchorPane>
     </children>
