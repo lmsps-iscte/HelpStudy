@@ -1,11 +1,12 @@
 package classes
 
 import classes.Notebook.Note
-
 import java.io._
 import java.nio.file.Paths
+
 import scala.annotation.tailrec
 import scala.io.Source
+import scala.reflect.io.Path
 
 case class Notebook(notes: List[Note]) {
   def addNote(note: Note): Notebook = Notebook.addNote(this, note)
@@ -13,13 +14,13 @@ case class Notebook(notes: List[Note]) {
   //Get a filtered list of notes of a certain Course
   def getNotesbyCUnit(cunit: String): List[Note] = Notebook.getNotesbyCUnit(this, cunit)
 
-  def getNoteByName(str: String): Note = Notebook.getNoteByName(this, str)
+  def getNote(title: String, cunit: String): Note = Notebook.getNote(this, title, cunit)
 
   //Import a note from a file, the name of the file is the title
   def importFromFile(file: String, cunit: String): Notebook = Notebook.importFromFile(this, file, cunit)
 
   //Export a note to a file, the name of the file is the title
-  def exportToFile(index: Int): Unit = Notebook.exportToFile(this, index)
+  def exportToFile(note: Note): Unit = Notebook.exportToFile(this, note)
 
   //Prints all notes, filtered by Course if provided
   def printNotes(opt: String = ""): Unit = Notebook.printNotes(this)(opt)
@@ -38,20 +39,20 @@ object Notebook {
 
   def addNote(nbook: Notebook, note: Note): Notebook = Notebook(note :: nbook.notes)
 
-  def getNoteByName(notebook: Notebook, str: String): Note = {
-    notebook.notes.filter(note => note._1 == str).head
+  def getNote(notebook: Notebook, title: String, cunit: String): Note = {
+    notebook.notes.filter(note => note._1.equals(title) && note._3.equals(cunit)).head
   }
 
   def getNotesbyCUnit(nbook: Notebook, cunit: String): List[Note] = nbook.notes.filter(_._3 == cunit)
 
   def importFromFile(nb: Notebook, file: String, cunit: String): Notebook = {
     val body = Source.fromFile(Paths.get(file).toAbsolutePath.toString).getLines.mkString
-    val newNote = (Paths.get(file).getFileName.toString.stripSuffix(".TXT"), body, cunit)
+    print(body)
+    val newNote = (Paths.get(file).getFileName.toString.stripSuffix(".txt"), body, cunit)
     Notebook.addNote(nb, newNote)
   }
 
-  def exportToFile(nb: Notebook, index: Int): Unit = {
-    val note = nb.notes(index)
+  def exportToFile(nb: Notebook, note: Note): Unit = {
     val file = Paths.get(System.getProperty("user.dir"), note._3, note._1 + ".txt")
     if (!file.getParent.toFile.exists()) file.getParent.toFile.mkdirs()
     val pw = new PrintWriter(file.toFile)
@@ -82,22 +83,22 @@ object Notebook {
   }
 
   def toString(notes: List[Note]): String = notes match {
-    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3}"
-    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3} \n ${toString(tail)}"
+    case head :: Nil => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")},${head._3}"
+    case head :: tail => s"${Paths.get(System.getProperty("user.dir"), head._3, head._1 + ".txt")},${head._3} $boundary" +
+      s"\n ${toString(tail)}"
   }
 
-  def parseItem(item: String): (String, String, String) = {
-    val title = item.split(boundary)(0).trim
-    val body = item.split(boundary)(1).trim
-    val cunit = item.split(boundary)(2).trim
-    (title, body, cunit)
+  def parseItem(item: String): (String,String) = {
+    val path = item.split(",")(0).trim
+    val cunit = item.split(",")(1).split(boundary)(0)
+    (path,cunit)
   }
 
   def fromString(toParse: String): Notebook = {
     @tailrec
     def aux(nb: Notebook, items: List[String]): Notebook = items match {
-      case head :: Nil => nb.addNote(parseItem(head))
-      case head :: tail => aux(nb.addNote(parseItem(head)),tail)
+      case head :: Nil => importFromFile(nb, parseItem(head)._1, parseItem(head)._2)
+      case head :: tail => aux(importFromFile(nb, parseItem(head)._1, parseItem(head)._2),tail)
     }
     aux(Notebook(List()),toParse.split("\n").toList)
   }
@@ -110,7 +111,7 @@ object Notebook {
     print("ESTA É A NOTA 3 ANTES... "+n3)
     print("ESTE É O TOSTRING... "+n3.toString())
     val aux = n3.toString()
-    val aux1 = fromString(aux)
-    print("ESTE É O FROM STRING... "+aux1)
+    //val aux1 = fromString(aux)
+    //print("ESTE É O FROM STRING... "+aux1)
   }
 }

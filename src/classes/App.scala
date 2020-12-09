@@ -14,6 +14,8 @@ class App extends Application {
     val scene = new Scene(mainViewRoot)
     primaryStage.setScene(scene)
     primaryStage.show()
+
+
   }
 }
 

@@ -13,6 +13,10 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
   //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
   def getSBlockByName(title: String): SBlock = Schedule.getSBlockByName(this, title)
 
+  //REMOVES A GIVEN SBLOCK
+
+  def removeSBlock(sblock: SBlock): Schedule = Schedule.removeSBlock(this, sblock)
+
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 
   def blocksByDay(date: LocalDate): List[SBlock] = Schedule.blocksByDay(this, date)
@@ -57,18 +61,11 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
   def fatigueAlert(): String = Schedule.fatigueAlert(this)
 
-  //PRINTS SCHEDULE TO A FILE
+  //UPDATES RATIO
 
-  def printToFile(): Unit = Schedule.printToFile(this)
+  def updateRatio(value: Int): Schedule = Schedule.updateRatio(this, value)
 
   override def toString: String = Schedule.toString(sblocks, school_percent)
-
-
-  //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
-
-  //def timebyCUnit(cunit: String): Long = classes.Schedule.timebyCUnit(this, cunit)
-
-  //def isProblematic(sblock: classes.SBlock): Boolean = classes.Schedule.isProblematic(this, sblock)
 
 }
 
@@ -78,7 +75,7 @@ object Schedule {
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
 
-  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = if(sblock.isTooLong()) {
+  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = if(sblock.isTooLong) {
     println("YOU SHOULD NOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT IS TOO LONG (MORE THAN 90 MINUTES)!")
     schedule
   } else if(schedule.willOverlay(sblock)) {
@@ -90,10 +87,15 @@ object Schedule {
   def getSBlockByName(schedule: Schedule, title: String): SBlock =
     schedule.sblocks.filter(block => block.title == title).head
 
+  //REMOVES A GIVEN SBLOCK
+
+  def removeSBlock(schedule: Schedule, sblock: SBlock): Schedule =
+    Schedule(schedule.sblocks.filter(s => !s.equals(sblock)), schedule.school_percent)
+
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 
   def blocksByDay(schedule: Schedule, date: LocalDate): List[SBlock] =
-    schedule.sblocks.filter(x => x.date == date)
+    schedule.sblocks.filter(x => x.date == date).sortBy(_.start_time)
 
   //GIVES THE TIME SPENT ON A SPECIFIC CUNIT ON THE LAST 7 DAYS
 
@@ -165,23 +167,12 @@ object Schedule {
     else good
   }
 
-  //PRINTS SCHEDULE TO A FILE
-
-  def printToFile(schedule: Schedule): Unit = {
-    val file = "MySchedule.txt"
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))
-    for (x <- schedule.sblocks) {
-      writer.write(x + "\n")
-    }
-    writer.close()
-  }
-
   def toString(sblocks: List[SBlock], school_percent: Int): String = sblocks match {
     case Nil => s"$school_percent"
     case head :: Nil => s"$school_percent,${head.date},${head.start_time},${head.end_time} $boundary ${head.title} " +
       s"$boundary ${head.cunit}"
     case head :: tail => s"$school_percent,${head.date},${head.start_time},${head.end_time}  $boundary ${head.title} " +
-      s"$boundary ${head.cunit} \\n ${toString(tail, school_percent)}"
+      s"$boundary ${head.cunit} \n ${toString(tail, school_percent)}"
   }
 
   def parseItem(item: String): SBlock = {
@@ -199,8 +190,12 @@ object Schedule {
       case head :: Nil => schedule.addSBlock(parseItem(head))
       case head :: tail => aux(schedule.addSBlock(parseItem(head)),tail)
     }
-    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
+    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\n").toList)
   }
+
+  //UPDATES RATIO
+
+  def updateRatio(schedule: Schedule, value: Int): Schedule = Schedule(schedule.sblocks, value)
 
   def main(args: Array[String]): Unit = {
 
@@ -236,48 +231,5 @@ object Schedule {
 
 
 
-  //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
 
-  /*def timebyCUnit(schedule: classes.Schedule, cunit: String): Long = {
-    @tailrec
-    def aux (l: List[classes.SBlock], c: String, acc: Long): Long = l match {
-      case Nil => 0
-      case head :: Nil => if(head.cunit == c) head.duration() else 0
-      case head :: tail => if(head.cunit == c) aux(tail, c, acc + head.duration()) else aux(tail, c, acc)
-    }
-    aux(schedule.sblocks, cunit, 0)
-  }*/
-
-  //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
-
-  /*  def isProblematic(schedule: classes.Schedule, sblock: classes.SBlock): Boolean = {
-      @tailrec
-      def aux (l: List[classes.SBlock], s: classes.SBlock): Boolean = l match {
-        case Nil => false
-        case head :: Nil => if(head.isOverlay(s)) true else false
-        case head :: tail => if(head.isOverlay(s)) true else aux(tail, s)
-      }
-      aux(schedule.sblocks, sblock)
-    }*/
-
-  //TALVEZ JÁ NÃO SEJA PRECISO!!! CONFIRMAR!!!
-
-  /*def addSBlock(schedule: classes.Schedule, sblock: classes.SBlock): classes.Schedule = {
-    @tailrec
-    def aux(l: List[classes.SBlock], s: classes.SBlock, stock: List[classes.SBlock]): classes.Schedule = l match {
-      case Nil => classes.Schedule(sblock :: stock)
-      case head :: Nil => if(head.isOverlay(s)) {
-        println("Não pode inserir este bloco no horário porque irá existir uma sobreposição!")
-        classes.Schedule(l)
-      } else if(head.isTooLong()) {
-        println("Não deve inserir este bloco no horário porque é muito longo!")
-        classes.Schedule(l)
-      } else classes.Schedule(s::stock)
-      case head :: tail => if(head.isOverlay(s)) {
-        println("Não pode inserir este bloco no horário porque irá existir uma sobreposição!")
-        classes.Schedule(l)
-      } else aux(tail, s, stock)
-    }
-    aux(schedule.sblocks, sblock, schedule.sblocks)
-  }*/
 }
