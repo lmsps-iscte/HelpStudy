@@ -80,8 +80,6 @@ object RemindersController {
   }
 
   private def setReminders(newReminders: RemindersManager): Unit = {
-    if (reminders == null)
-      reminders = firstReminders
     reminders = newReminders
   }
 

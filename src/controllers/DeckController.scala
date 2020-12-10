@@ -24,7 +24,7 @@ class DeckController extends Initializable{
     subjs = SubjectsManagerController.getSubjectsManager
     subj_box.getItems.clear()
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
-    deck.cards.foreach(card => cardList.getItems.add(card._1))
+    deck.cards.foreach(card => cardList.getItems.add(s"${card._1} | ${card._4}"))
   }
 
   def addCard(): Unit = {
@@ -44,33 +44,35 @@ class DeckController extends Initializable{
 
     result.get match {
       case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem.trim, LocalDate.now)
-        DeckController setDeck deck.addCard(card)
-        deck = DeckController.getDeck
-        cardList.getItems.add(card._1)
+        if (!(quest_text.getText.isEmpty || ans_text.getText.isEmpty)) {
+          DeckController setDeck deck.addCard(card)
+          deck = DeckController.getDeck
+          cardList.getItems.add(s"${card._1} | ${card._4}")
+        }
       case ButtonType.CANCEL =>
     }
   }
 
   def deleteCard(): Unit = {
-    val question = cardList.getSelectionModel.getSelectedItem
+    val question = cardList.getSelectionModel.getSelectedItem.split("\\|").toList.head.trim
     val card = deck.getCard(question)
     DeckController setDeck deck.removeCard(card)
     deck = DeckController.getDeck
-    cardList.getItems.remove(question)
+    cardList.getItems.remove(cardList.getSelectionModel.getSelectedItem)
   }
 
   def launchCorrect(): Unit = {
     val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Your answer is...")
     alert.setHeaderText("CORRECT!")
-    alert.show()
+    alert.showAndWait()
   }
 
   def launchWrong(card: Card): Unit = {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("Your answer is...")
     alert.setHeaderText(s"Incorrect! The correct answer is:\n${card._2}")
-    alert.show()
+    alert.showAndWait()
   }
 
   def doQuiz(): Unit ={
@@ -125,15 +127,12 @@ object DeckController {
   }
 
   private def setDeck(newDeck: Deck): Unit = {
-    if (deck == null)
-      deck = firstDeck
     deck = newDeck
   }
 
   def getDeck: Deck = {
     if (deck == null) {
       deck = firstDeck
-      println(deck)
     }
     deck
   }

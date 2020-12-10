@@ -159,7 +159,7 @@ class NotesController extends Initializable {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
     alert.setHeaderText("You mus fill the fields title and subject to create a note!")
-    alert.show()
+    alert.showAndWait()
   }
 
 }
@@ -188,8 +188,6 @@ object NotesController {
   }
 
   private def setNotes(newNotes: Notebook): Unit = {
-    if (notes == null)
-      notes = firstNotes
     notes = newNotes
   }
 

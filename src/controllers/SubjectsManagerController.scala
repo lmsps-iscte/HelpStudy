@@ -99,8 +99,6 @@ object SubjectsManagerController {
   }
 
   def setSubjectsManager(newSubjectsManager: SubjectsManager): Unit = {
-    if (SubjectsManager == null)
-      sub_man = firstSubjectsManager
     sub_man = newSubjectsManager
   }
 

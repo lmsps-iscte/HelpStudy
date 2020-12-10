@@ -38,6 +38,7 @@ object Deck {
   }
 
   def getCard(question: String, deck: Deck): Card = {
+    println(question)
     deck.cards.filter(card => card._1 == question).head
   }
 

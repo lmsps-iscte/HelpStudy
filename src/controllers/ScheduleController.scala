@@ -84,7 +84,7 @@ class ScheduleController extends Initializable {
   }
 
   def addFunc(): Unit = {
-    if(datePicker.getDat || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
+    if(datePicker.getValue == null || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
       || titleTextField.getText().isEmpty || cUnitTextField.getText().isEmpty)
       launchAlert()
     else {
@@ -255,8 +255,8 @@ class ScheduleController extends Initializable {
   def launchAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
-    alert.setHeaderText("You mus fill all the fields!")
-    alert.show()
+    alert.setHeaderText("You must fill all the fields!")
+    alert.showAndWait()
   }
 }
 
@@ -286,8 +286,6 @@ object ScheduleController {
   }
 
   private def setSchedule(newSchedule: Schedule): Unit = {
-    if (Schedule == null)
-      schedule = firstSchedule
     schedule = newSchedule
   }
 
