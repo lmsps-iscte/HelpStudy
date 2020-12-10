@@ -2,44 +2,60 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="700.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ScheduleController">
     <children>
       <AnchorPane layoutX="-14.0" layoutY="-1.0" prefHeight="690.0" prefWidth="793.0">
          <children>
-            <ListView fx:id="listView1" layoutX="83.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView1" layoutX="83.0" layoutY="71.0" onMouseClicked="#elementClicked1" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date1" layoutX="97.0" layoutY="47.0" text="06-12-2020" />
             <Label fx:id="dWeek1" layoutX="97.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView2" layoutX="172.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView2" layoutX="172.0" layoutY="71.0" onMouseClicked="#elementClicked2" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date2" layoutX="186.0" layoutY="47.0" text="07-12-2020" />
             <Label fx:id="dWeek2" layoutX="186.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView3" layoutX="261.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView3" layoutX="261.0" layoutY="71.0" onMouseClicked="#elementClicked3" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date3" layoutX="275.0" layoutY="47.0" text="07-12-2020" />
             <Label fx:id="dWeek3" layoutX="275.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView4" layoutX="350.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView4" layoutX="350.0" layoutY="71.0" onMouseClicked="#elementClicked4" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date4" layoutX="364.0" layoutY="47.0" text="08-12-2020" />
             <Label fx:id="dWeek4" layoutX="364.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView5" layoutX="439.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView5" layoutX="439.0" layoutY="71.0" onMouseClicked="#elementClicked5" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date5" layoutX="453.0" layoutY="47.0" text="09-12-2020" />
             <Label fx:id="dWeek5" layoutX="453.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView6" layoutX="528.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView6" layoutX="528.0" layoutY="71.0" onMouseClicked="#elementClicked6" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="date6" layoutX="542.0" layoutY="47.0" text="10-12-2020" />
             <Label fx:id="dWeek6" layoutX="542.0" layoutY="30.0" text="N/D" />
-            <ListView fx:id="listView7" layoutX="617.0" layoutY="71.0" prefHeight="466.0" prefWidth="89.0" />
+            <ListView fx:id="listView7" layoutX="617.0" layoutY="71.0" onMouseClicked="#elementClicked7" prefHeight="466.0" prefWidth="89.0" />
             <Label fx:id="dWeek7" layoutX="631.0" layoutY="30.0" text="N/D" />
             <Label fx:id="date7" layoutX="631.0" layoutY="47.0" text="11-12-2020" />
-            <TextField fx:id="dateTextField" layoutX="83.0" layoutY="567.0" prefHeight="25.0" prefWidth="128.0" promptText="Date (Ex: 2020-12-06)" />
-            <TextField fx:id="sTimeTextField" layoutX="83.0" layoutY="598.0" prefHeight="25.0" prefWidth="128.0" promptText="Start Time (Ex: 10:30)" />
-            <TextField fx:id="eTimeTextField" layoutX="83.0" layoutY="630.0" prefHeight="25.0" prefWidth="116.0" promptText="End Time(Ex: 11:30)" />
-            <TextField fx:id="titleTextField" layoutX="229.0" layoutY="567.0" prefHeight="25.0" prefWidth="174.0" promptText="Title" />
-            <TextField fx:id="cUnitTextField" layoutX="229.0" layoutY="599.0" prefHeight="25.0" prefWidth="71.0" promptText="classes.Subject" />
-            <Button fx:id="deleteButton" layoutX="528.0" layoutY="567.0" mnemonicParsing="false" onAction="#deleteFunc" text="Delete" />
-            <Button fx:id="addButton" layoutX="426.0" layoutY="567.0" mnemonicParsing="false" onAction="#addFunc" text="Add" />
-            <Button fx:id="editButton" layoutX="476.0" layoutY="567.0" mnemonicParsing="false" onAction="#editFunc" text="Edit" />
-            <CheckBox fx:id="reminderSet" layoutX="228.0" layoutY="635.0" mnemonicParsing="false" text="Set Reminder" />
-            <Label fx:id="ratioLabel" layoutX="426.0" layoutY="628.0" prefHeight="32.0" prefWidth="174.0" text="Current school - fun daily ratio:" />
-            <TextField fx:id="ratioTextBox" layoutX="600.0" layoutY="631.0" prefHeight="25.0" prefWidth="38.0" />
-            <Button fx:id="updateButton" layoutX="643.0" layoutY="631.0" mnemonicParsing="false" onAction="#updateFunc" text="Update" />
+            <TextField fx:id="sTimeTextField" layoutX="269.0" layoutY="553.0" prefHeight="25.0" prefWidth="128.0" promptText="Start Time (Ex: 10:30)" />
+            <TextField fx:id="eTimeTextField" layoutX="405.0" layoutY="553.0" prefHeight="25.0" prefWidth="116.0" promptText="End Time(Ex: 11:30)" />
+            <TextField fx:id="titleTextField" layoutX="84.0" layoutY="589.0" prefHeight="25.0" prefWidth="174.0" promptText="Title" />
+            <TextField fx:id="cUnitTextField" layoutX="269.0" layoutY="589.0" prefHeight="25.0" prefWidth="71.0" promptText="Subject" />
+            <Button fx:id="deleteButton" layoutX="641.0" layoutY="553.0" mnemonicParsing="false" onAction="#deleteFunc" text="Delete" />
+            <Button fx:id="addButton" layoutX="552.0" layoutY="553.0" mnemonicParsing="false" onAction="#addFunc" text="Add" />
+            <Button fx:id="editButton" layoutX="597.0" layoutY="553.0" mnemonicParsing="false" onAction="#editFunc" text="Edit" />
+            <Label fx:id="ratioLabel" layoutX="84.0" layoutY="623.0" onMouseEntered="#hoverFuncEnter" onMouseExited="#hoverFuncExit" prefHeight="32.0" prefWidth="287.0" text="Current school work - free time daily ratio: 🛈">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <TextField fx:id="ratioTextBox" layoutX="371.0" layoutY="627.0" prefHeight="25.0" prefWidth="38.0" />
+            <Button fx:id="updateButton" layoutX="414.0" layoutY="627.0" mnemonicParsing="false" onAction="#updateFunc" text="Update" />
+            <DatePicker fx:id="datePicker" editable="false" layoutX="83.0" layoutY="553.0" promptText="Date" />
+            <Label fx:id="infoLabel" layoutX="351.0" layoutY="582.0" prefHeight="39.0" prefWidth="711.0" text="If you sleep 8h per day you have 16h of usable time.&#10;Here you can choose the percentage you want to spend with school related work." visible="false" />
+            <Label fx:id="badAlert" layoutX="36.0" layoutY="6.0" prefHeight="27.0" prefWidth="731.0" text="TODAY YOU ARE SPENDING TOO MUCH TIME WITH SCHOOL! IF POSSIBLE PLAN YOUR DAY DIFFERENTLY TO BE MORE PRODUCTIVE! ☺" underline="true" visible="false" />
+            <Label fx:id="goodAlert" layoutX="130.0" layoutY="6.0" prefHeight="27.0" prefWidth="497.0" text="YOUR DAY HAS A GOOD BALANCE BETWEEN SCHOOL AND FUN TIME! HAVE A NICE DAY! ☺" underline="true" visible="false" />
+            <Label fx:id="timeLabel" layoutX="83.0" layoutY="659.0" prefHeight="25.0" prefWidth="491.0" text="Today you will use this amount of time with school related work (in minutes):">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="timeInfoLabel" layoutX="564.0" layoutY="662.0" text="0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
     </children>

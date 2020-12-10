@@ -1,11 +1,12 @@
 package controllers
 
-import classes.{Subject, SubjectsManager}
+import java.io.FileNotFoundException
+
+import classes.{Subject, SubjectsManager, Util}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, FXMLLoader, Initializable}
 import javafx.scene.Parent
 import javafx.scene.control.{Button, ListView, TextField}
-
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
@@ -20,12 +21,31 @@ class SubjectsManagerController extends Initializable {
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
+    try {
+      //Importar as notas e os reminders e depois dar filter pela subj?
+      val subj_notes = List()
+      val subj_rems = List()
+
+      val masterFileContent = Util.readFromFile("subjects_paths.obj")
+      System.out.println(masterFileContent)
+      subj_man = SubjectsManager.fromString(masterFileContent/*, subj_notes, subj_rems*/)
+      //System.out.println(subj_man)
+    } catch {
+      case e: FileNotFoundException =>
+    }
+
+
+
     val subj: Subject = Subject("PPM")
     val subj2 = subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0))
     val subj3 = subj2.add_evaluation((LocalDate.parse("2020-11-20"), (100.0, 17.0), "TRABALHO"))
     val subj1 = subj3.associate_note(("Nota 1","Corpo 1","PPM"))
     val subs_list = List(subj1)
+    //val subs_list: List[Subject] = List()
     subj_man = SubjectsManager(subs_list)
+    //System.out.println("Cheguei")
+    //val subs_list: List[Subject] = subj_man.subjs
+    //System.out.println(subj_man.subjs)
     var list_obs = FXCollections.observableArrayList[String]()
     subs_list.forall(subj => list_obs.add(subj.name))
     subjectsListView.setItems(list_obs)
@@ -38,6 +58,7 @@ class SubjectsManagerController extends Initializable {
     val subj: Subject = Subject(title)
     subj_man.addSubject(subj)
     subjectsListView.getItems.add(subjectsListView.getItems.size, subj.name)
+    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
 
   }
 
