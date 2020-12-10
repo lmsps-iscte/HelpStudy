@@ -3,9 +3,10 @@ package classes
 import classes.Notebook.Note
 import classes.RemindersManager.Reminder
 import classes.Subject.Evaluation
-
 import java.time.LocalDate
+
 import scala.annotation.tailrec
+import scala.util.control.Breaks.break
 
 
 //val rems_default = List()
@@ -89,23 +90,35 @@ object Subject {
   }
 
   def parseEval(head: String): (Date, (Percent_Grade, Grade), Title) = {
+    System.out.println("Cheguei2")
+    System.out.println(head)
     val fields = head.split(",")
-    val date = LocalDate.parse(fields.head)
+    val date = LocalDate.parse(fields.head.trim)
     val percent_Grade = fields(1).toDouble
-    val grade = fields(2).toInt //ATENCAO---------!!!!!!!!!
+    System.out.println(percent_Grade)
+    val grade = fields(2).toDouble //ATENCAO---------!!!!!!!!!
+    System.out.println(grade)
     val title = fields.last
+    System.out.println(title)
     (date, (percent_Grade, grade), title)
   }
 
-  def fromString(toParse: String, rems: List[Reminder], notes: List[Note]) : Subject = {
+  def fromString(toParse: String/*, rems: List[Reminder], notes: List[Note]*/) : Subject = {
+    System.out.println(toParse)
+
     @tailrec
     def aux(lst: List[String], evals: List[Evaluation]): List[Evaluation] = lst match {
-      case item :: Nil => parseEval(item) :: evals
+      case head :: Nil => parseEval(head) :: evals
       case head :: tail => aux(tail, parseEval(head) :: evals)
     }
+    System.out.println("Olá")
     val fields = toParse.split(s"$boundary").toList
+    System.out.println("Olá")
+    System.out.println(fields)
     val name = fields.head
-    Subject(name, rems, notes, aux(fields.tail, List()))
+    System.out.println(name)
+    Subject(name/*, rems, notes,*/, List(), List(), aux(fields.tail, List()))
+
   }
 
   def main(args: Array[String]): Unit = {
