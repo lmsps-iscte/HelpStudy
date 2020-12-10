@@ -38,7 +38,6 @@ object Deck {
   }
 
   def getCard(question: String, deck: Deck): Card = {
-    println(question)
     deck.cards.filter(card => card._1 == question).head
   }
 
@@ -48,7 +47,6 @@ object Deck {
 
   def ask(deck: Deck, course: String): (Card, Deck) = {
     val course_cards = deck.cards.filter(card => card._4.equalsIgnoreCase(course))
-    println(deck.cards)
     val cards = available_cards(course_cards)
     if (cards.isEmpty) {
       return (("classes.Deck is Empty", "", 0, "", LocalDate.now()),deck)
@@ -107,7 +105,6 @@ object Deck {
       case item :: Nil => deck.addCard(parseItem(item))
       case head :: tail => aux(deck.addCard(parseItem(head)), tail)
     }
-    println(toParse.split("\\\\n").toList)
     aux(Deck(List(), RandomWithState(0)), toParse.split("\\\\n").toList)
   }
 

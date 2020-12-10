@@ -90,21 +90,15 @@ object Subject {
   }
 
   def parseEval(head: String): (Date, (Percent_Grade, Grade), Title) = {
-    System.out.println("Cheguei2")
-    System.out.println(head)
     val fields = head.split(",")
     val date = LocalDate.parse(fields.head.trim)
     val percent_Grade = fields(1).toDouble
-    System.out.println(percent_Grade)
     val grade = fields(2).toDouble //ATENCAO---------!!!!!!!!!
-    System.out.println(grade)
     val title = fields.last
-    System.out.println(title)
     (date, (percent_Grade, grade), title)
   }
 
   def fromString(toParse: String/*, rems: List[Reminder], notes: List[Note]*/) : Subject = {
-    System.out.println(toParse)
 
     @tailrec
     def aux(lst: List[String], evals: List[Evaluation]): List[Evaluation] = lst match {
@@ -113,12 +107,8 @@ object Subject {
       case head :: Nil => parseEval(head) :: evals
       case head :: tail => aux(tail, parseEval(head) :: evals)
     }
-    System.out.println("Olá")
     val fields = toParse.split(s"$boundary").toList
-    System.out.println("Olá")
-    System.out.println(fields)
     val name = fields.head
-    System.out.println(name)
     Subject(name/*, rems, notes,*/, List(), List(), aux(fields.tail, List()))
 
   }
@@ -127,14 +117,10 @@ object Subject {
     val eval1 = (LocalDate.parse("2020-11-19"), (30.0, 20.0), "Teste")
     val eval2 = (LocalDate.parse("2020-12-18"), (70.0, 15.0), "Teste")
     val subj = Subject("PPM")
-    println(subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0)))
     val subj1 = add_evaluation(subj, eval1)
     val subj2 = add_evaluation(subj1, eval2)
-    println(subj2.evals)
     //println(calculate_FinalGrade(subj2))
-    println(calculate_FinalGrade2(0.5 , List(20, 15)) (0.25, List(15))(0.25, List(15)))
-    val i = calculate_FinalGrade2(0.5 , List(20)) (0.25, List(15))_
-    println(i(0.25, List(15)))
+     val i = calculate_FinalGrade2(0.5 , List(20)) (0.25, List(15))_
   }
 
 
