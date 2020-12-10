@@ -11,7 +11,7 @@
                 <TextField fx:id="title_box" layoutX="44.0" layoutY="599.0" promptText="Title" />
                 <Button layoutX="231.0" layoutY="599.0" mnemonicParsing="false" onAction="#add_func" text="Add" />
                 <Button layoutX="285.0" layoutY="599.0" mnemonicParsing="false" onAction="#delete_func" text="Delete" />
-            <Button fx:id="open_button" layoutX="611.0" layoutY="599.0" mnemonicParsing="false" onAction="#elementClicked" text="Open classes.Subject" />
+            <Button fx:id="open_button" layoutX="611.0" layoutY="599.0" mnemonicParsing="false" onAction="#elementClicked" text="Open Subject" />
             </children>
         </AnchorPane>
     </children>

@@ -76,7 +76,7 @@ class SubjectsManagerController extends Initializable {
     val subjectWindowController: controllers.SubjectWindowController = fxmlLoader.getController
     subjectWindowController.setController(subj)
     open_button.getScene.setRoot(mainViewRoot)*/
-    val fxmlLoader = new FXMLLoader(getClass.getResource("resources/SubjectWindowController.fxml"))
+    val fxmlLoader = new FXMLLoader(getClass.getResource("../resources/SubjectWindowController.fxml"))
     val mainViewRoot: Parent = fxmlLoader.load()
     mainController.getMainPane.setCenter(mainViewRoot)
     val subjectWindowController: SubjectWindowController = fxmlLoader.getController
