@@ -243,7 +243,6 @@ class ScheduleController extends Initializable {
   }
 
   def clearFields(): Unit = {
-    datePicker.getEditor.clear()
     sTimeTextField.clear()
     eTimeTextField.clear()
     titleTextField.clear()

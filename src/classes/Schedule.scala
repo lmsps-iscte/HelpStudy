@@ -90,7 +90,7 @@ object Schedule {
   //REMOVES A GIVEN SBLOCK
 
   def removeSBlock(schedule: Schedule, sblock: SBlock): Schedule =
-    Schedule(schedule.sblocks.filter(s => !s.equals(sblock)), schedule.school_percent)
+    Schedule(schedule.sblocks.filter(s => !s.equals(sblock)),schedule.school_percent)
 
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 
