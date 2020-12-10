@@ -159,6 +159,7 @@ object RemindersManager {
   }
 
   def toString(lst_rem: List[Reminder]): String = lst_rem match {
+    case Nil => s""
     case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}"
     case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}$boundary" +
       s"\\n${toString(tail)}"
@@ -176,10 +177,11 @@ object RemindersManager {
   def fromString(toParse: String): RemindersManager = {
     @tailrec
     def aux(rems_man: RemindersManager, items: List[String]): RemindersManager = items match {
+      case Nil => rems_man
+      case "" :: tail => rems_man
       case head :: Nil => rems_man.addReminder(parseItem(head))
       case head :: tail => aux(rems_man.addReminder(parseItem(head)),tail)
     }
-    println(toParse)
     aux(RemindersManager(List()),toParse.split("\\\\n").toList)
   }
 

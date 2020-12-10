@@ -5,10 +5,12 @@ import java.io.FileNotFoundException
 import classes.{SBlock, Schedule, Util}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.{Button, DatePicker, Label, ListView, TextField}
+import javafx.scene.control.{Alert, Button, DatePicker, Label, ListView, TextField}
 import java.net.URL
 import java.time.{LocalDate, LocalTime}
 import java.util.ResourceBundle
+
+import javafx.scene.control.Alert.AlertType
 
 class ScheduleController extends Initializable {
 
@@ -82,19 +84,24 @@ class ScheduleController extends Initializable {
   }
 
   def addFunc(): Unit = {
-    val date = datePicker.getValue
-    val stime = LocalTime.parse(sTimeTextField.getText().trim)
-    val etime = LocalTime.parse(eTimeTextField.getText().trim)
-    val title = titleTextField.getText.trim
-    val cunit = cUnitTextField.getText().trim
-    val sblock = SBlock(date, stime, etime, title, cunit)
+    if(datePicker.getDat || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
+      || titleTextField.getText().isEmpty || cUnitTextField.getText().isEmpty)
+      launchAlert()
+    else {
+      val date = datePicker.getValue
+      val stime = LocalTime.parse(sTimeTextField.getText().trim)
+      val etime = LocalTime.parse(eTimeTextField.getText().trim)
+      val title = titleTextField.getText.trim
+      val cunit = cUnitTextField.getText().trim
+      val sblock = SBlock(date, stime, etime, title, cunit)
 
-    schedule = schedule.addSBlock(sblock)
-    ScheduleController.setSchedule(schedule)
-//    Util.saveToFile(schedule.toString(), "schedule.obj")
-    loadInfo()
+      schedule = schedule.addSBlock(sblock)
+      ScheduleController.setSchedule(schedule)
+      //    Util.saveToFile(schedule.toString(), "schedule.obj")
+      loadInfo()
 
-    clearFields()
+      clearFields()
+    }
   }
 
   def editFunc(): Unit = {
@@ -243,6 +250,13 @@ class ScheduleController extends Initializable {
     val title = titleTextField.getText.trim
     val cunit = cUnitTextField.getText().trim
     SBlock(date, stime, etime, title, cunit)
+  }
+
+  def launchAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You mus fill all the fields!")
+    alert.show()
   }
 }
 

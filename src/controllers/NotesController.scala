@@ -1,19 +1,21 @@
 package controllers
 
 import java.io.{File, FileNotFoundException}
+
 import classes.{Notebook, Util}
 import classes.Notebook.{Note, getNote}
 import controllers.NotesController.setNotes
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.Scene
-import javafx.scene.control.{Button, ChoiceBox, Label, ListView, TextArea, TextField}
+import javafx.scene.control.{Alert, Button, ChoiceBox, Label, ListView, TextArea, TextField}
 import javafx.scene.layout.BorderPane
 import javafx.stage.{FileChooser, Stage}
-
 import java.net.URL
 import java.nio.file.Paths
 import java.util.ResourceBundle
+
+import javafx.scene.control.Alert.AlertType
 
 class NotesController extends Initializable {
 
@@ -62,14 +64,18 @@ class NotesController extends Initializable {
     val body = textArea.getText.trim
     val cunit = cUnitTextBox.getText.trim
     val note: Note = (title, body, cunit)
-    notebook = notebook.addNote(note)
-    NotesController.setNotes(notebook)
-    notesListView.getItems.add(title + " - " + cunit)
-    notebook.exportToFile(note, "normal")
-    //    Util.saveToFile(notebook.toString, "notes_paths.obj")
-    titleTextBox.clear()
-    textArea.clear()
-    cUnitTextBox.clear()
+    if(title.isEmpty || cunit.isEmpty)
+      launchAlert()
+    else {
+      notebook = notebook.addNote(note)
+      NotesController.setNotes(notebook)
+      notesListView.getItems.add(title + " - " + cunit)
+      notebook.exportToFile(note, "normal")
+      //    Util.saveToFile(notebook.toString, "notes_paths.obj")
+      titleTextBox.clear()
+      textArea.clear()
+      cUnitTextBox.clear()
+    }
   }
 
   def deleteFunc(): Unit = {
@@ -97,7 +103,6 @@ class NotesController extends Initializable {
     val cunit = cUnitTextBox.getText()
     notebook = notebook.importFromFile(path, cunit)
     setNotes(notebook)
-    print("NOTEBOOK DEPOIS DE IMPORT " + notebook.notes)
     notesListView.getItems.add(title + " - " + cunit)
     notebook.exportToFile(getNote(notebook, title, cunit), "normal")
     //    Util.saveToFile(notebook.toString, "notes_paths.obj")
@@ -148,6 +153,13 @@ class NotesController extends Initializable {
     NotesController.setNotes(notebook)
     Util.saveToFile(notebook.toString, "notes_paths.obj")
     Util.deleteFile(file.toString)
+  }
+
+  def launchAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You mus fill the fields title and subject to create a note!")
+    alert.show()
   }
 
 }
