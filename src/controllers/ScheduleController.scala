@@ -47,7 +47,7 @@ class ScheduleController extends Initializable {
   @FXML private var editButton: Button = _
   @FXML private var deleteButton: Button = _
   @FXML private var updateButton: Button = _
-  private var schedule: Schedule = Schedule(List(), 50)
+  private var schedule: Schedule = ScheduleController.getSchedule
   private var sblock: SBlock = _
   private var list_obs1 = FXCollections.observableArrayList[String]()
   private var list_obs2 = FXCollections.observableArrayList[String]()
@@ -77,22 +77,6 @@ class ScheduleController extends Initializable {
 
     ratioTextBox.setText(schedule.school_percent.toString)
 
-    try {
-      val fileContent = Util.readFromFile("schedule.obj")
-      schedule = Schedule.fromString(fileContent)
-    } catch {
-      case e: FileNotFoundException =>
-        /*val bloco1 = SBlock(LocalDate.parse("2020-12-08"), LocalTime.of(9, 30, 0),
-          LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
-        val bloco2 = SBlock(LocalDate.parse("2020-12-09"), LocalTime.of(10, 30, 0),
-          LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
-        val bloco3 = SBlock(LocalDate.parse("2020-12-10"), LocalTime.of(11, 30, 0),
-          LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
-        schedule = schedule.addSBlock(bloco1)
-        schedule = schedule.addSBlock(bloco2)
-        schedule = schedule.addSBlock(bloco3)*/
-    }
-
     loadInfo()
 
   }
@@ -106,7 +90,8 @@ class ScheduleController extends Initializable {
     val sblock = SBlock(date, stime, etime, title, cunit)
 
     schedule = schedule.addSBlock(sblock)
-    Util.saveToFile(schedule.toString(), "schedule.obj")
+    ScheduleController.setSchedule(schedule)
+//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
 
     clearFields()
@@ -115,7 +100,8 @@ class ScheduleController extends Initializable {
   def editFunc(): Unit = {
     schedule = schedule.removeSBlock(sblock)
     schedule = schedule.addSBlock(fieldsToSBlock())
-    Util.saveToFile(schedule.toString(), "schedule.obj")
+    ScheduleController.setSchedule(schedule)
+//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
 
     clearFields()
@@ -123,7 +109,8 @@ class ScheduleController extends Initializable {
 
   def deleteFunc(): Unit = {
     schedule = schedule.removeSBlock(fieldsToSBlock())
-    Util.saveToFile(schedule.toString(), "schedule.obj")
+    ScheduleController.setSchedule(schedule)
+//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
 
     clearFields()
@@ -132,8 +119,8 @@ class ScheduleController extends Initializable {
 
   def updateFunc(): Unit = {
     schedule = schedule.updateRatio(ratioTextBox.getText().toInt)
-
-    Util.saveToFile(schedule.toString(), "schedule.obj")
+    ScheduleController.setSchedule(schedule)
+//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
   }
 
@@ -222,7 +209,7 @@ class ScheduleController extends Initializable {
 
     ratioTextBox.setText(schedule.school_percent.toString)
 
-    if(schedule.fatigueAlert() == true) {
+    if(schedule.fatigueAlert()) {
       badAlert.setVisible(true)
       goodAlert.setVisible(false)
     }
@@ -257,4 +244,43 @@ class ScheduleController extends Initializable {
     val cunit = cUnitTextField.getText().trim
     SBlock(date, stime, etime, title, cunit)
   }
+}
+
+object ScheduleController {
+
+  var schedule: Schedule = _
+
+  lazy val firstSchedule: Schedule = loadSchedule
+
+  private def loadSchedule: Schedule = {
+    try {
+      val fileContent = Util.readFromFile("schedule.obj")
+      Schedule.fromString(fileContent)
+    } catch {
+      case e: FileNotFoundException =>
+      /*val bloco1 = SBlock(LocalDate.parse("2020-12-08"), LocalTime.of(9, 30, 0),
+        LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
+      val bloco2 = SBlock(LocalDate.parse("2020-12-09"), LocalTime.of(10, 30, 0),
+        LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
+      val bloco3 = SBlock(LocalDate.parse("2020-12-10"), LocalTime.of(11, 30, 0),
+        LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
+      schedule = schedule.addSBlock(bloco1)
+      schedule = schedule.addSBlock(bloco2)
+      schedule = schedule.addSBlock(bloco3)*/
+        Schedule(List(), 50)
+    }
+  }
+
+  private def setSchedule(newSchedule: Schedule): Unit = {
+    if (Schedule == null)
+      schedule = firstSchedule
+    schedule = newSchedule
+  }
+
+  def getSchedule: Schedule = {
+    if (schedule == null)
+      schedule = firstSchedule
+    schedule
+  }
+
 }

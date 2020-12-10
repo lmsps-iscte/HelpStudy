@@ -3,7 +3,8 @@ package classes
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
-import javafx.stage.Stage
+import javafx.stage.{Stage, WindowEvent}
+import controllers.{DeckController, NotesController, RemindersController, ScheduleController, SubjectsManagerController}
 
 class App extends Application {
 
@@ -15,8 +16,10 @@ class App extends Application {
     primaryStage.setScene(scene)
     primaryStage.show()
 
+    primaryStage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, (_: WindowEvent) => HelpStudyApp.saveState())
 
   }
+
 }
 
 
@@ -26,5 +29,18 @@ object HelpStudyApp {
 
   def main(args: Array[String]): Unit = {
     Application.launch(classOf[App], args: _*)
+  }
+
+  def saveState(): Unit = {
+    val deck = DeckController.getDeck
+    Util.saveToFile(deck.toString, "deck.obj")
+    val notebook = NotesController.getNotes
+    Util.saveToFile(notebook.toString, "notes_paths.obj")
+    val rem_man = RemindersController.getReminders
+    Util.saveToFile(rem_man.toString, "reminders.obj")
+    val schedule = ScheduleController.getSchedule
+    Util.saveToFile(schedule.toString, "schedule.obj")
+    val subjectsManager = SubjectsManagerController.getSubjectsManager
+    Util.saveToFile(subjectsManager.toString, "subjects_paths.obj")
   }
 }

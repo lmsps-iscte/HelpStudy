@@ -75,10 +75,10 @@ object Schedule {
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
 
-  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = if(sblock.isTooLong) {
+  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = if (sblock.isTooLong) {
     println("YOU SHOULD NOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT IS TOO LONG (MORE THAN 90 MINUTES)!")
     schedule
-  } else if(schedule.willOverlay(sblock)) {
+  } else if (schedule.willOverlay(sblock)) {
     println("YOU CANNOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT WILL OVERLAY ANOTHER!")
     schedule
   } else Schedule(sblock :: schedule.sblocks, schedule.school_percent)
@@ -90,7 +90,7 @@ object Schedule {
   //REMOVES A GIVEN SBLOCK
 
   def removeSBlock(schedule: Schedule, sblock: SBlock): Schedule =
-    Schedule(schedule.sblocks.filter(s => !s.equals(sblock)),schedule.school_percent)
+    Schedule(schedule.sblocks.filter(s => !s.equals(sblock)), schedule.school_percent)
 
   //GIVES THE LIST OF BLOCKS OF ONE SPECIFIC DAY
 
@@ -114,7 +114,7 @@ object Schedule {
   def sumTime(schedule: Schedule, cunit: String, f: (Schedule, String) => List[SBlock]): Long =
     schedule.sblocks match {
       case Nil => 0
-      case _ => (f(schedule,cunit).map(x => x.duration()) foldRight 0.longValue()) (_ + _)
+      case _ => (f(schedule, cunit).map(x => x.duration()) foldRight 0.longValue()) (_ + _)
     }
 
   //GIVES THE SUM OF TIME
@@ -152,21 +152,22 @@ object Schedule {
     @tailrec
     def aux(sbl: List[SBlock], sb: SBlock): Boolean = sbl match {
       case Nil => false
-      case head :: Nil => if(head.isOverlay(sblock)) true else false
-      case head :: tail =>if(head.isOverlay(sblock)) true else aux(tail, sb)
+      case head :: Nil => if (head.isOverlay(sblock)) true else false
+      case head :: tail => if (head.isOverlay(sblock)) true else aux(tail, sb)
     }
+
     aux(schedule.sblocks, sblock)
   }
 
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
   def fatigueAlert(schedule: Schedule): Boolean = {
-    if(timeSpentBySchoolToday(schedule) > 960.longValue()*(schedule.school_percent/100.floatValue()))
+    if (timeSpentBySchoolToday(schedule) > 960.longValue() * (schedule.school_percent / 100.floatValue()))
       true
     else false
   }
 
   def toString(sblocks: List[SBlock], school_percent: Int): String = sblocks match {
-    case Nil => s"$school_percent"
+    case Nil => s""
     case head :: Nil => s"$school_percent,${head.date},${head.start_time},${head.end_time} $boundary ${head.title} " +
       s"$boundary ${head.cunit}"
     case head :: tail => s"$school_percent,${head.date},${head.start_time},${head.end_time}  $boundary ${head.title} " +
@@ -185,10 +186,16 @@ object Schedule {
   def fromString(toParse: String): Schedule = {
     @tailrec
     def aux(schedule: Schedule, items: List[String]): Schedule = items match {
+      case Nil => schedule
+      case "" :: tail => schedule
       case head :: Nil => schedule.addSBlock(parseItem(head))
-      case head :: tail => aux(schedule.addSBlock(parseItem(head)),tail)
+      case head :: tail => aux(schedule.addSBlock(parseItem(head)), tail)
     }
-    aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
+
+    if (toParse.isEmpty)
+      aux(Schedule(List(), 50), toParse.split("\\\\n").toList)
+    else
+      aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
   }
 
   //UPDATES RATIO
@@ -198,36 +205,34 @@ object Schedule {
   def main(args: Array[String]): Unit = {
 
 
-        val bloco1 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-          LocalTime.of(9,30,0), LocalTime.of(10,30,0), "Aula TP de MC", "MC")
-        val bloco2 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-        LocalTime.of(10,30,0), LocalTime.of(11,30,0), "Aula TP de MC", "CDSI")
-        val bloco3 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-        LocalTime.of(11,30,0), LocalTime.of(13,0,0), "Aula TP de MC", "MC")
+    val bloco1 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+      LocalTime.of(9, 30, 0), LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
+    val bloco2 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+      LocalTime.of(10, 30, 0), LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
+    val bloco3 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+      LocalTime.of(11, 30, 0), LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
 
-        val horario = Schedule(Nil,30)
+    val horario = Schedule(Nil, 30)
 
-        val horario1 = horario.addSBlock(bloco1)
-        val horario2 = horario1.addSBlock(bloco2)
-        val horario3 = horario2.addSBlock(bloco3)
+    val horario1 = horario.addSBlock(bloco1)
+    val horario2 = horario1.addSBlock(bloco2)
+    val horario3 = horario2.addSBlock(bloco3)
 
-//        println(horario)
-//        println(horario1)
-//        println(horario2)
-//        println(horario3)
-//        println(horario3.fatigueAlert())
-//        horario2.printToFile()
+    //        println(horario)
+    //        println(horario1)
+    //        println(horario2)
+    //        println(horario3)
+    //        println(horario3.fatigueAlert())
+    //        horario2.printToFile()
 
-    print("ESTE É O HORÁRIO 3 "+horario3+"\n")
+    print("ESTE É O HORÁRIO 3 " + horario3 + "\n")
     val horario4 = horario3.toString
-    print("ESTA É O TOSTRING DO HORÁRIO 3 "+horario4+"\n")
+    print("ESTA É O TOSTRING DO HORÁRIO 3 " + horario4 + "\n")
     val horario5 = fromString(horario4)
-    print("ESTE É O FROM STRING DO HORÁRIO 3 "+horario5+"\n")
+    print("ESTE É O FROM STRING DO HORÁRIO 3 " + horario5 + "\n")
 
 
   }
-
-
 
 
 }

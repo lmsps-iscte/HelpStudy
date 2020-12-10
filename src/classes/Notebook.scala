@@ -50,7 +50,9 @@ object Notebook {
   def getNotesbyCUnit(nbook: Notebook, cunit: String): List[Note] = nbook.notes.filter(_._3 == cunit)
 
   def importFromFile(nb: Notebook, file: String, cunit: String): Notebook = {
-    val body = Source.fromFile(Paths.get(file).toAbsolutePath.toString).getLines.mkString
+    val handle = Source.fromFile(Paths.get(file).toAbsolutePath.toString)
+    val body = handle.getLines.mkString
+    handle.close()
     val newNote = (Paths.get(file).getFileName.toString.stripSuffix(".txt"), body, cunit)
     Notebook.addNote(nb, newNote)
   }
@@ -110,6 +112,8 @@ object Notebook {
   def fromString(toParse: String): Notebook = {
     @tailrec
     def aux(nb: Notebook, items: List[String]): Notebook = items match {
+      case Nil => nb
+      case "" :: tail => nb
       case head :: Nil => importFromFile(nb, parseItem(head)._1, parseItem(head)._2)
       case head :: tail => aux(importFromFile(nb, parseItem(head)._1, parseItem(head)._2),tail)
     }

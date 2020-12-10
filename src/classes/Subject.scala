@@ -108,6 +108,8 @@ object Subject {
 
     @tailrec
     def aux(lst: List[String], evals: List[Evaluation]): List[Evaluation] = lst match {
+      case Nil => evals
+      case "" :: tail => evals
       case head :: Nil => parseEval(head) :: evals
       case head :: tail => aux(tail, parseEval(head) :: evals)
     }

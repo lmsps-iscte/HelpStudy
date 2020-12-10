@@ -16,25 +16,10 @@ class SubjectsManagerController extends Initializable {
   @FXML private var subjectsListView: ListView[String] = _
   @FXML private var title_box: TextField = _
   @FXML private var open_button: Button = _
-  private var subj_man : SubjectsManager = _
+  private var subj_man : SubjectsManager = SubjectsManagerController.getSubjectsManager
   private var mainController : MainController = _
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
-
-    try {
-      //Importar as notas e os reminders e depois dar filter pela subj?
-      val subj_notes = List()
-      val subj_rems = List()
-
-      val masterFileContent = Util.readFromFile("subjects_paths.obj")
-      System.out.println(masterFileContent)
-      subj_man = SubjectsManager.fromString(masterFileContent/*, subj_notes, subj_rems*/)
-      //System.out.println(subj_man)
-    } catch {
-      case e: FileNotFoundException =>
-    }
-
-
 
     val subj: Subject = Subject("PPM")
     val subj2 = subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0))
@@ -43,6 +28,7 @@ class SubjectsManagerController extends Initializable {
     val subs_list = List(subj1)
     //val subs_list: List[Subject] = List()
     subj_man = SubjectsManager(subs_list)
+    SubjectsManagerController.setSubjectsManager(subj_man)
     //System.out.println("Cheguei")
     //val subs_list: List[Subject] = subj_man.subjs
     //System.out.println(subj_man.subjs)
@@ -57,14 +43,16 @@ class SubjectsManagerController extends Initializable {
     val title = title_box.getText.trim
     val subj: Subject = Subject(title)
     subj_man.addSubject(subj)
+    SubjectsManagerController.setSubjectsManager(subj_man)
     subjectsListView.getItems.add(subjectsListView.getItems.size, subj.name)
-    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
+//    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
 
   }
 
   def delete_func(): Unit = {
     val item = subjectsListView.getSelectionModel.getSelectedItem
     var list = subjectsListView.getItems.remove(item)
+    SubjectsManagerController.setSubjectsManager(subj_man)
   }
 
   def elementClicked(): Unit = {
@@ -85,6 +73,41 @@ class SubjectsManagerController extends Initializable {
 
   def setParent(mainController1: MainController): Unit = {
       mainController = mainController1
+  }
+
+}
+object SubjectsManagerController {
+
+  var sub_man: SubjectsManager = _
+
+  lazy val firstSubjectsManager: SubjectsManager = loadSubjectsManager
+
+  private def loadSubjectsManager: SubjectsManager = {
+    try {
+      //Importar as notas e os reminders e depois dar filter pela subj?
+      val subj_notes = List()
+      val subj_rems = List()
+
+      val masterFileContent = Util.readFromFile("subjects_paths.obj")
+      System.out.println(masterFileContent)
+      SubjectsManager.fromString(masterFileContent/*, subj_notes, subj_rems*/)
+      //System.out.println(subj_man)
+    } catch {
+      case e: FileNotFoundException =>
+        SubjectsManager(List())
+    }
+  }
+
+  private def setSubjectsManager(newSubjectsManager: SubjectsManager): Unit = {
+    if (SubjectsManager == null)
+      sub_man = firstSubjectsManager
+    sub_man = newSubjectsManager
+  }
+
+  def getSubjectsManager: SubjectsManager = {
+    if (sub_man == null)
+      sub_man = firstSubjectsManager
+    sub_man
   }
 
 }

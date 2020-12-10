@@ -83,6 +83,7 @@ object Deck {
   }
 
   def toString(cards: List[Card]): String = cards match {
+    case Nil => ""
     case head :: Nil => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}}"
     case head :: tail => s"${head._3},${head._5},${head._4} $boundary ${head._1} $boundary ${head._2}\\n${toString(tail)}"
   }

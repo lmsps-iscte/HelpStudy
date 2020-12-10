@@ -43,6 +43,7 @@ object SubjectsManager {
     @tailrec
     def aux (subjs: List[Subject], acc: String): String = {
       subjs match {
+        case Nil => ""
         case head :: Nil => s"${head.toString}"
         case head :: tail => aux(tail, s"$acc ${head.toString}\\n")
       }
@@ -56,7 +57,7 @@ object SubjectsManager {
       case Nil => subj_man
       case head :: tail => aux(subj_man.addSubject(Subject.fromString(head/*, reminders, notes*/)), tail)
     }
-    aux(SubjectsManager(List()) , str.split("\\\\n").toList)
+    aux(SubjectsManager(List()) , str.split("\\\\n").toList.map(string => string.trim))
   }
 
   @tailrec
