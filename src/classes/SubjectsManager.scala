@@ -40,15 +40,11 @@ object SubjectsManager {
   }
 
   def toString(subjs: List[Subject]): String = {
-    @tailrec
-    def aux (subjs: List[Subject], acc: String): String = {
-      subjs match {
-        case Nil => ""
-        case head :: Nil => s"${head.toString}"
-        case head :: tail => aux(tail, s"$acc ${head.toString}\\n")
-      }
+    def aux(subjL: List[Subject]): String = subjL match {
+      case Nil => ""
+      case head :: tail => s"${head.toString}\\n${aux(tail)}"
     }
-    aux(subjs, "")
+    aux(subjs)
   }
 
   def fromString(str: String/*, reminders: List[Reminder], notes: List[Note]*/): SubjectsManager = {

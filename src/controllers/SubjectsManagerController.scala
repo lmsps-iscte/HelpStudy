@@ -21,19 +21,19 @@ class SubjectsManagerController extends Initializable {
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
-    val subj: Subject = Subject("PPM")
+/*    val subj: Subject = Subject("PPM")
     val subj2 = subj.associate_reminder(("Titulo1", "Body1", 3, LocalDate.now(), 0.0))
     val subj3 = subj2.add_evaluation((LocalDate.parse("2020-11-20"), (100.0, 17.0), "TRABALHO"))
     val subj1 = subj3.associate_note(("Nota 1","Corpo 1","PPM"))
-    val subs_list = List(subj1)
+    val subs_list = List(subj1)*/
     //val subs_list: List[Subject] = List()
-    subj_man = SubjectsManager(subs_list)
-    SubjectsManagerController.setSubjectsManager(subj_man)
+    subj_man = SubjectsManagerController.getSubjectsManager
+//    SubjectsManagerController.setSubjectsManager(subj_man)
     //System.out.println("Cheguei")
     //val subs_list: List[Subject] = subj_man.subjs
     //System.out.println(subj_man.subjs)
     var list_obs = FXCollections.observableArrayList[String]()
-    subs_list.forall(subj => list_obs.add(subj.name))
+    subj_man.subjs.forall(subj => list_obs.add(subj.name))
     subjectsListView.setItems(list_obs)
     var list = FXCollections.observableArrayList[Int]()
 
@@ -42,7 +42,7 @@ class SubjectsManagerController extends Initializable {
   def add_func(): Unit = {
     val title = title_box.getText.trim
     val subj: Subject = Subject(title)
-    subj_man.addSubject(subj)
+    subj_man = subj_man.addSubject(subj)
     SubjectsManagerController.setSubjectsManager(subj_man)
     subjectsListView.getItems.add(subjectsListView.getItems.size, subj.name)
 //    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
@@ -98,7 +98,7 @@ object SubjectsManagerController {
     }
   }
 
-  private def setSubjectsManager(newSubjectsManager: SubjectsManager): Unit = {
+  def setSubjectsManager(newSubjectsManager: SubjectsManager): Unit = {
     if (SubjectsManager == null)
       sub_man = firstSubjectsManager
     sub_man = newSubjectsManager

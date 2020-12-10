@@ -1,12 +1,13 @@
 package controllers
 
 import classes.Deck.Card
-import classes.{Deck, RandomWithState, Subject, SubjectsManager}
+import classes.{Deck, RandomWithState, SubjectsManager, Util}
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.GridPane
 
+import java.io.FileNotFoundException
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
@@ -20,21 +21,20 @@ class DeckController extends Initializable{
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
 //    subjs = classes.SubjectsManager.fromString("", List(), List())
-    subjs = SubjectsManager(List(Subject("PPM")))
+    subjs = SubjectsManagerController.getSubjectsManager
     subj_box.getItems.clear()
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
+    deck.cards.foreach(card => cardList.getItems.add(card._1))
   }
 
   def addCard(): Unit = {
-    var alert: Alert = new Alert(AlertType.CONFIRMATION)
+    val alert: Alert = new Alert(AlertType.CONFIRMATION)
     alert.setTitle("Add a Card")
     alert.setHeaderText("Choose a Question and Answer")
-    var grid = new GridPane
+    val grid = new GridPane
     val quest_text = new TextField()
     val ans_text = new TextField()
-    val ok_button = new Button("OK")
-    val cancel_button = new Button("Cancel")
-    subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
+    //subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
     grid.add(new Label("Question: "), 0, 0)
     grid.add(quest_text, 1, 0)
     grid.add(new Label("Answer: "), 0, 1)
@@ -43,7 +43,7 @@ class DeckController extends Initializable{
     val result = alert.showAndWait()
 
     result.get match {
-      case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem, LocalDate.now)
+      case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem.trim, LocalDate.now)
         DeckController setDeck deck.addCard(card)
         deck = DeckController.getDeck
         cardList.getItems.add(card._1)
@@ -59,38 +59,45 @@ class DeckController extends Initializable{
     cardList.getItems.remove(question)
   }
 
-  def launchCorrect(card: Card): Unit = {
-    var alert = new Alert(AlertType.NONE)
+  def launchCorrect(): Unit = {
+    val alert = new Alert(AlertType.INFORMATION)
     alert.setTitle("Your answer is...")
     alert.setHeaderText("CORRECT!")
+    alert.show()
   }
 
   def launchWrong(card: Card): Unit = {
-    var alert = new Alert(AlertType.WARNING)
+    val alert = new Alert(AlertType.WARNING)
     alert.setTitle("Your answer is...")
     alert.setHeaderText(s"Incorrect! The correct answer is:\n${card._2}")
+    alert.show()
   }
 
   def doQuiz(): Unit ={
-    val card_deck = deck.ask(subj_box.getSelectionModel.getSelectedItem)
+    val card_deck = deck.ask(subj_box.getSelectionModel.getSelectedItem.trim)
     deck = card_deck._2
     DeckController.setDeck(deck)
-    var alert: Alert = new Alert(AlertType.CONFIRMATION)
+    val alert: Alert = new Alert(AlertType.CONFIRMATION)
     alert.setTitle("Quiz - Give Us An Answer")
     alert.setHeaderText(card_deck._1._1)
     val gridPane = new GridPane
     gridPane.add(new Label("Answer: "), 0, 0)
     val answerField = new TextField()
-    gridPane.add(answerField, 0, 1)
-    alert.getDialogPane.getChildren.add(gridPane)
-    alert.showAndWait()
-    val correct = deck.answer(card_deck._1,answerField.getText)
-    deck = correct._2
-    DeckController.setDeck(deck)
-    if (correct._1)
-      launchCorrect(card_deck._1)
-    else
-      launchWrong(card_deck._1)
+    gridPane.add(answerField, 1, 0)
+    alert.getDialogPane.setContent(gridPane)
+    val result = alert.showAndWait()
+    result.get() match {
+      case ButtonType.OK =>
+        val correct = deck.answer(card_deck._1,answerField.getText)
+        deck = correct._2
+        DeckController.setDeck(deck)
+        if (correct._1)
+          launchCorrect()
+        else
+          launchWrong(card_deck._1)
+      case ButtonType.CANCEL =>
+    }
+
   }
 
 }
@@ -102,7 +109,19 @@ object DeckController {
   lazy val firstDeck: Deck = loadDeck
 
   private def loadDeck: Deck = {
+    try {
+      val masterFileContent = Util.readFromFile("deck.obj")
+      Deck.fromString(masterFileContent)
+    } catch {
+      case _: FileNotFoundException =>
+        /*val note1: Note = ("Nota1","Corpo1","MC")
+        val note2: Note = ("Nota2","Corpo2","TS")
+        val note3: Note = ("Nota3","Corpo3","PPM")
+        notebook = notebook.addNote(note1)
+        notebook = notebook.addNote(note2)
+        notebook = notebook.addNote(note3)*/
     Deck(List(), RandomWithState(0))
+    }
   }
 
   private def setDeck(newDeck: Deck): Unit = {
@@ -112,8 +131,10 @@ object DeckController {
   }
 
   def getDeck: Deck = {
-    if (deck == null)
+    if (deck == null) {
       deck = firstDeck
+      println(deck)
+    }
     deck
   }
 
