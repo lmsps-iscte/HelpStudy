@@ -20,36 +20,39 @@ class DeckController extends Initializable{
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
 //    subjs = classes.SubjectsManager.fromString("", List(), List())
-      subjs = SubjectsManager(List(Subject("PPM")))
+    subjs = SubjectsManager(List(Subject("PPM")))
+    subj_box.getItems.clear
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
   }
 
   def addCard(): Unit = {
-    var alert: Alert = new Alert(AlertType.NONE)
+    var alert: Alert = new Alert(AlertType.CONFIRMATION)
     alert.setTitle("Add a Card")
     alert.setHeaderText("Choose a Question and Answer")
     var grid = new GridPane
     val quest_text = new TextField()
     val ans_text = new TextField()
-    val ok_button = new Button()
-    val cancel_button = new Button()
+    val ok_button = new Button("OK")
+    val cancel_button = new Button("Cancel")
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
     grid.add(new Label("Question: "), 0, 0)
     grid.add(quest_text, 1, 0)
     grid.add(new Label("Answer: "), 0, 1)
     grid.add(ans_text, 1, 1)
-    grid.add(ok_button, 0, 2)
-    grid.add(cancel_button, 1, 2)
     alert.getDialogPane.setContent(grid)
-    alert.showAndWait()
-    val card = (quest_text.getText, ans_text.getText, 0, subj_box.getSelectionModel.getSelectedItem, LocalDate.now)
-    deck.addCard(card)
-    cardList.getItems.add(card._1)
+    val result = alert.showAndWait()
+
+    result.get match {
+      case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem, LocalDate.now)
+        deck = deck.addCard(card)
+        cardList.getItems.add(card._1)
+      case ButtonType.CANCEL =>
+    }
   }
 
   def deleteCard(): Unit = {
     val question = cardList.getSelectionModel.getSelectedItem
-    val card = deck.getCard(question).get
+    val card = deck.getCard(question)
     deck = deck.removeCard(card)
     cardList.getItems.remove(question)
   }

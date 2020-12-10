@@ -20,7 +20,7 @@ case class Deck(cards: List[Card], ro: RandomWithState) {
   //Print deck cards, opt is an optional String that works as a filter is not blank
   def printCards(cards: List[Card])(opt: String): Unit = Deck.printCards(cards)(opt)
 
-  def getCard(question: String) : Option[Card] = Deck.getCard(question, this)
+  def getCard(question: String) : Card = Deck.getCard(question, this)
 
   override def toString: String = Deck.toString(cards)
 }
@@ -37,8 +37,8 @@ object Deck {
     Deck(deck.cards.filterNot(c => c == card), deck.ro)
   }
 
-  def getCard(question: String, deck: Deck): Option[Card] = {
-    deck.cards.find(card => card._1 == question)
+  def getCard(question: String, deck: Deck): Card = {
+    deck.cards.filter(card => card._1 == question).head
   }
 
   private def available_cards(course_cards: List[(String, String, Int, String, LocalDate)]) = {
