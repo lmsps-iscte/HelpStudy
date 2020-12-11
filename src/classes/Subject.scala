@@ -24,7 +24,9 @@ case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note
 
   def add_evaluation(eval: Evaluation): Subject = Subject.add_evaluation(this, eval)
 
-  def delEvaluation(eval: String): Subject = Subject.del_evaluation(this, eval)
+  def del_evaluation(eval: String): Subject = Subject.del_evaluation(this, eval)
+
+  def getEvaluation(title: String, date: LocalDate): Evaluation = Subject.getEvaluation(this, title, date)
 
   def calculate_FinalGrade(): Double = Subject.calculate_FinalGrade(this)
 
@@ -58,18 +60,17 @@ object Subject {
 
   def del_evaluation(subj: Subject, title: Title): Subject = {
     searchEvaluation(subj, title) match {
-      case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equals(title)))
-      case None => /*System.err.println("Erro: Esse lembrete não existe")*/
-        throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+      case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equalsIgnoreCase(title)))
+      case None => throw new IllegalArgumentException("Erro: Essa avaliação não existe")
     }
   }
 
-  /*def getEvaluation(subj: Subject, title: String, date: LocalDate): Evaluation = {
+  def getEvaluation(subj: Subject, title: String, date: LocalDate): Evaluation = {
     subj.evals.filter(eval => eval._3.equals(title) && eval._1.equals(date)).head
-  }*/
+  }
 
   def searchEvaluation(subj: Subject, title: String): Option[Evaluation] = {
-    Option((subj.evals filter (e => e._3.equals(title))).head)
+    Option((subj.evals filter (e => e._3.equalsIgnoreCase(title))).head)
   }
 
   def calculate_FinalGrade(subj: Subject): Double = {
