@@ -9,12 +9,13 @@
          <children>
             <ListView fx:id="remindersListView" layoutX="44.0" layoutY="38.0" onMouseClicked="#elementClicked" prefHeight="382.0" prefWidth="694.0" />
             <TextField fx:id="title_box" layoutX="44.0" layoutY="442.0" promptText="Title" />
-            <ChoiceBox fx:id="priority_box" layoutX="234.0" layoutY="442.0" prefHeight="25.0" prefWidth="74.0" />
+            <ChoiceBox fx:id="priority_box" layoutX="218.0" layoutY="442.0" prefHeight="25.0" prefWidth="74.0" />
             <!-- <TextArea fx:id="text_field" layoutX="41.0" layoutY="499.0" prefHeight="112.0" prefWidth="714.0" promptText="Type the context..." wrapText="true" /> -->
-            <Button fx:id="add_button" layoutX="517.0" layoutY="442.0" mnemonicParsing="false" onAction="#add_func" text="Add" />
-            <DatePicker fx:id="date_box" layoutX="326.0" layoutY="442.0" prefHeight="25.0" prefWidth="171.0" />
-            <Button fx:id="delete_button" layoutX="572.0" layoutY="442.0" mnemonicParsing="false" onAction="#delete_func" text="Delete" />
+            <Button fx:id="add_button" layoutX="639.0" layoutY="442.0" mnemonicParsing="false" onAction="#add_func" text="Add" />
+            <DatePicker fx:id="date_box" layoutX="316.0" layoutY="442.0" prefHeight="25.0" prefWidth="171.0" />
+            <Button fx:id="delete_button" layoutX="687.0" layoutY="442.0" mnemonicParsing="false" onAction="#delete_func" text="Delete" />
             <TextArea fx:id="text_area" layoutX="44.0" layoutY="506.0" prefHeight="129.0" prefWidth="694.0" promptText="Type the context..." wrapText="true" />
+            <ChoiceBox fx:id="subject_picker" layoutX="505.0" layoutY="442.0" prefHeight="25.0" prefWidth="117.0" />
              <!-- <TextArea fx:id="text_field" layoutX="41.0" layoutY="499.0" prefHeight="112.0" prefWidth="694.0" promptText="Type the context..." text="&#10;" wrapText="true" /> -->
           </children>
        </AnchorPane>

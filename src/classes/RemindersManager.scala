@@ -18,7 +18,11 @@ case class RemindersManager(lst_rem: Reminder_List) {
 
   def sort_by_date(): RemindersManager = RemindersManager.sort_by_date(this)
 
-  def getByCUnit(name: String): List[Reminder] = RemindersManager.getByCUnit(this, name)
+  def getRemindersbyCUnit(cunit: String): List[Reminder] = RemindersManager.getRemindersbyCUnit(this, cunit)
+
+  def getReminder(title: String, cunit: String): Reminder =  RemindersManager.getReminder(this, title, cunit)
+
+  //def getByCUnit(name: String): List[Reminder] = RemindersManager.getByCUnit(this, name)
 
   override def toString: String = RemindersManager.toString(lst_rem)
 }
@@ -29,7 +33,8 @@ object RemindersManager {
   type Priority = Int
   type Date = LocalDate
   type Points = Double
-  type Reminder = (Title, Body, Priority, Date, Points)
+  type CUnit = String
+  type Reminder = (Title, Body, Priority, Date, Points, CUnit)
   type Reminder_List = List[Reminder]
 
   val boundary = "////0xFFFF////EOF"
@@ -39,10 +44,10 @@ object RemindersManager {
   def printReminders(lst: List[Reminder]) : Unit =
     lst match {
     case Nil => Nil
-    case head :: tail => println(s"Title: ${head._1} Body: ${head._2} Priority: ${head._3} Date: ${head._4}"); printReminders(tail)
+    case head :: tail => println(s"Title: ${head._1} Body: ${head._2} Priority: ${head._3} Date: ${head._4} CUNIT: ${head._6}"); printReminders(tail)
   }
 
-  def getByCUnit(rem_man: RemindersManager, name: String): List[Reminder] = rem_man.lst_rem.filter(rem => rem._1 equalsIgnoreCase name)
+  //def getByCUnit(rem_man: RemindersManager, name: String): List[Reminder] = rem_man.lst_rem.filter(rem => rem._1 equalsIgnoreCase name)
 
   //-------------UPDATE------------------------
   def addReminder(rem_man: RemindersManager, new_rem: Reminder): RemindersManager = {
@@ -57,12 +62,17 @@ object RemindersManager {
   def delReminder(rem_man: RemindersManager, title: String): RemindersManager = {
     searchReminder(rem_man, title) match {
       case Some(b) => RemindersManager(rem_man.lst_rem.filter(r => !r._1.equals(title)))
-      case None => /*System.err.println("Erro: Esse lembrete não existe")*/
-        throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+      case None => throw new IllegalArgumentException("Erro: Esse lembrete não existe")
     }
   }
 
-  //EDITAR REMINDER
+  def getRemindersbyCUnit(rem_man: RemindersManager, cunit: String): List[Reminder] = {
+    rem_man.lst_rem.filter(_._6 equalsIgnoreCase cunit)
+  }
+
+  def getReminder(rem_man: RemindersManager, title: String, cunit: String): Reminder = {
+    rem_man.lst_rem.filter(_._1 equalsIgnoreCase title).filter(_._6 equalsIgnoreCase cunit).head
+  }
 
   //  throw new IllegalArgumentException("Erro: Esse lembrete não existe")
   //------------AUXILIAR------------------------------
@@ -88,21 +98,14 @@ object RemindersManager {
       case "GAUSSIAN" => RemindersManager(smart_list(rem_man.lst_rem)(points_gaussian).sortBy(_._5).reverse)
       case _ => throw new IllegalArgumentException("ERROR: FUNCTION DOES NOT EXIST")
     }
-
-   /*f_name match {
-      case "SIGMOID" => val func = smart_list(rem_man.lst_rem)(points_sigmoid)
-      case "GAUSSIAN" => val func = smart_list(rem_man.lst_rem)(points_gaussian)
-      case _ => throw new IllegalArgumentException("ERROR: FUNCTION DOES NOT EXIST")
-    }
-    classes.RemindersManager(func())*/
   }
 
   def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {
       case Nil => Nil
       case head :: tail => if (head._4.isBefore(LocalDate.now))
-        (head._1, head._2, head._3, head._4, 0.0) :: smart_list(tail)(dist_func)
+        (head._1, head._2, head._3, head._4, 0.0, head._6) :: smart_list(tail)(dist_func) //ALTERADO1
       else
-        (head._1, head._2, head._3, head._4, points(head)(dist_func)) :: smart_list(tail)(dist_func)
+        (head._1, head._2, head._3, head._4, points(head)(dist_func), head._6) :: smart_list(tail)(dist_func) //ALTERADO2
     }
 
   def points(rem: Reminder)(dist_func: (Reminder, Int) => Double): Double = {
@@ -123,18 +126,19 @@ object RemindersManager {
 
   def toString(lst_rem: List[Reminder]): String = lst_rem match {
     case Nil => s""
-    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}"
-    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5}$boundary" +
+    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5},${head._6}" //ALTERADO3
+    case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5},${head._6}$boundary" +
       s"\\n${toString(tail)}"
   }
 
-  def parseItem(item: String): (String, String, Int, LocalDate, Double) = {
+  def parseItem(item: String): (String, String, Int, LocalDate, Double, String) = {
     val title = item.split(boundary)(0).trim
     val body = item.split(boundary)(1).trim
     val priority = item.split(boundary)(2).split(",")(0).trim.toInt
     val date = LocalDate.parse(item.split(boundary)(2).split(",")(1))
     val points = item.split(boundary)(2).split(",")(2).toDouble
-    (title, body,priority,date,points)
+    val cunit = item.split(boundary)(2).split(",")(3)
+    (title, body,priority,date,points, cunit)
   }
 
   def fromString(toParse: String): RemindersManager = {
@@ -152,9 +156,9 @@ object RemindersManager {
   }*/
 
   def main(args: Array[String]): Unit = {
-    val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
-      ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
-      ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
+    val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0, "Pessoal"),
+      ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0, "PPM"), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0, "ES"),
+      ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0, "PPM"), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0, "PPM")))
     //println(rems.sort_by_priority())
     //println(rems.sort_by_date())
     //println(rems.addReminder(("Titulo4", "Body4", 4, LocalDate.now())))

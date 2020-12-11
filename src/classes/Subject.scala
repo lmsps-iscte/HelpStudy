@@ -51,7 +51,7 @@ object Subject {
   }
 
   def add_evaluation(subj: Subject, eval: Evaluation): Subject = {
-    val rem = ("Avaliação: " + eval._3, "", 4, eval._1, 0.0)
+    val rem = ("Avaliação: " + eval._3, "", 4, eval._1, 0.0, subj.name)
     associate_reminder(subj, rem)
     Subject(subj.name, subj.rems, subj.notes, eval :: subj.evals)
   }
@@ -63,6 +63,10 @@ object Subject {
         throw new IllegalArgumentException("Erro: Esse lembrete não existe")
     }
   }
+
+  /*def getEvaluation(subj: Subject, title: String, date: LocalDate): Evaluation = {
+    subj.evals.filter(eval => eval._3.equals(title) && eval._1.equals(date)).head
+  }*/
 
   def searchEvaluation(subj: Subject, title: String): Option[Evaluation] = {
     Option((subj.evals filter (e => e._3.equals(title))).head)

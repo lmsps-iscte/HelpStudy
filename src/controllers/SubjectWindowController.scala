@@ -22,7 +22,7 @@ import javafx.stage.Stage
 
 class SubjectWindowController extends Initializable {
 
-  @FXML private var remindersListView: ListView[Reminder] = _
+  @FXML private var remindersListView: ListView[String] = _
   @FXML private var notesListView: ListView[String] = _
   @FXML private var evalsListView: ListView[Evaluation] = _
   @FXML private var subject_name_label: Label = _
@@ -45,9 +45,11 @@ class SubjectWindowController extends Initializable {
 
     subject_name_label.setText(subj_aux.name)
 
-    val rems_list = RemindersController.getReminders.getByCUnit(subj_aux.name)
-    var list_rems_obs = FXCollections.observableArrayList[Reminder]()
-    rems_list.forall(list_rems_obs.add(_))
+    val rems_list = RemindersController.getReminders.getRemindersbyCUnit(subj_aux.name.trim)
+    System.out.println(rems_list)
+    var list_rems_obs = FXCollections.observableArrayList[String]()
+    //rems_list.forall(list_rems_obs.add(_))
+    rems_list.forall( rem => list_rems_obs.add(rem._1 + " - " + rem._4))
     remindersListView.setItems(list_rems_obs)
 
     val notes_list = NotesController.getNotes.getNotesbyCUnit(subj_aux.name.trim)
@@ -57,8 +59,10 @@ class SubjectWindowController extends Initializable {
     notesListView.setItems(list_notes_obs)
 
     val evals_list = subj_aux.evals
+    //var list_evals_obs = FXCollections.observableArrayList[String]()
     var list_evals_obs = FXCollections.observableArrayList[Evaluation]()
     evals_list.forall(list_evals_obs.add(_))
+    //evals_list.forall(eval => list_evals_obs.add(eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2))
     evalsListView.setItems(list_evals_obs)
 
     date_picker.setValue(LocalDate.now())
@@ -93,7 +97,7 @@ class SubjectWindowController extends Initializable {
   }
 
   def time_spent_buttonClicked(): Unit = {
-    System.out.println(ScheduleController.getSchedule.timebyCUnitL7Days(subj.name))
+    System.out.println(ScheduleController.getSchedule.timebyCUnitL7Days(subj.name.trim))
     timeSpentAlert()
   }
 
@@ -108,7 +112,7 @@ class SubjectWindowController extends Initializable {
   def timeSpentAlert(): Unit = {
     val alert =  new Alert(AlertType.WARNING)
     alert.setTitle("Time Spent - " + subj.name.trim)
-    alert.setHeaderText("Your total time spent on " + subj.name.trim + " is " + ScheduleController.getSchedule.timebyCUnitL7Days(subj.name) + " hours")
+    alert.setHeaderText("Your total time spent on " + subj.name.trim + " is " + ScheduleController.getSchedule.timebyCUnitL7Days(subj.name.trim) + " hours")
     alert.showAndWait()
   }
 

@@ -47,7 +47,7 @@ object RemindersMenu {
     print("\nINSERT DATE(yyyy-mm-dd):")
     val date = LocalDate.parse(getUserInput_Original)
     val points = 0.0
-    val rem = (title, body, prior, date, points)
+    val rem = (title, body, prior, date, points, "")
     val rem_m1 = RemindersManager.addReminder(rem_m, rem)
     mainLoop_Reminders(rem_m1)
   }

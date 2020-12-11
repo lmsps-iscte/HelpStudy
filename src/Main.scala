@@ -132,10 +132,10 @@ object Main {
       case "BACK" => mainLoop()
       case _ =>
     }*/
-    val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
+    /*val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0),
       ("Titulo2", "Body2", 1,LocalDate.parse("2020-11-20") , 0.0), ("Titulo3", "Body3", 1, LocalDate.parse("2020-11-23"), 0.0),
       ("Titulo4", "Body4", 4, LocalDate.parse("2020-11-30"), 0.0), ("Titulo5", "Body5", 4, LocalDate.parse("2020-11-24"), 0.0)))
-    RemindersMenu.mainLoop_Reminders(rems)
+    RemindersMenu.mainLoop_Reminders(rems)*/
   }
 
   def subjectsLoop(): Unit = {
