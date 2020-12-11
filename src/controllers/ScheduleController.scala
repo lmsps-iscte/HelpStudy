@@ -2,10 +2,10 @@ package controllers
 
 import java.io.FileNotFoundException
 
-import classes.{SBlock, Schedule, Util}
+import classes.{SBlock, Schedule, SubjectsManager, Util}
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.{Alert, Button, DatePicker, Label, ListView, TextField}
+import javafx.scene.control.{Alert, Button, ChoiceBox, DatePicker, Label, ListView, TextField}
 import java.net.URL
 import java.time.{LocalDate, LocalTime}
 import java.util.ResourceBundle
@@ -43,7 +43,7 @@ class ScheduleController extends Initializable {
   @FXML private var sTimeTextField: TextField = _
   @FXML private var eTimeTextField: TextField = _
   @FXML private var titleTextField: TextField = _
-  @FXML private var cUnitTextField: TextField = _
+  @FXML private var subjectChoiceBox: ChoiceBox[String] = _
   @FXML private var datePicker: DatePicker = _
   @FXML private var addButton: Button = _
   @FXML private var editButton: Button = _
@@ -58,6 +58,7 @@ class ScheduleController extends Initializable {
   private var list_obs5 = FXCollections.observableArrayList[String]()
   private var list_obs6 = FXCollections.observableArrayList[String]()
   private var list_obs7 = FXCollections.observableArrayList[String]()
+  private var subjs: SubjectsManager = _
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
@@ -79,28 +80,40 @@ class ScheduleController extends Initializable {
 
     ratioTextBox.setText(schedule.school_percent.toString)
 
+    subjs = SubjectsManagerController.getSubjectsManager
+    subjectChoiceBox.getItems.clear()
+    subjs.subjs.foreach(sub => subjectChoiceBox.getItems.add(sub.name.trim))
+
     loadInfo()
 
   }
 
   def addFunc(): Unit = {
     if(datePicker.getValue == null || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
-      || titleTextField.getText().isEmpty || cUnitTextField.getText().isEmpty)
+      || titleTextField.getText().isEmpty || subjectChoiceBox.getSelectionModel.getSelectedItem == null)
       launchAlert()
     else {
       val date = datePicker.getValue
       val stime = LocalTime.parse(sTimeTextField.getText().trim)
       val etime = LocalTime.parse(eTimeTextField.getText().trim)
       val title = titleTextField.getText.trim
-      val cunit = cUnitTextField.getText().trim
+      val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem.trim
       val sblock = SBlock(date, stime, etime, title, cunit)
 
-      schedule = schedule.addSBlock(sblock)
-      ScheduleController.setSchedule(schedule)
-      //    Util.saveToFile(schedule.toString(), "schedule.obj")
-      loadInfo()
+      if(sblock.isTooLong)
+        launchTooLongAlert()
+      else {
+        if(schedule.willOverlay(sblock))
+          launchOverlayAlert()
+        else {
+          schedule = schedule.addSBlock(sblock)
+          ScheduleController.setSchedule(schedule)
+          //    Util.saveToFile(schedule.toString(), "schedule.obj")
+          loadInfo()
 
-      clearFields()
+          clearFields()
+        }
+      }
     }
   }
 
@@ -233,14 +246,14 @@ class ScheduleController extends Initializable {
     sTimeTextField.setText(item.split(" ")(0).trim)
     eTimeTextField.setText(item.split(" ")(2).split("\n")(0).trim)
     titleTextField.setText(item.split("\n")(1).trim)
-    cUnitTextField.setText(item.split("\n")(2).trim)
+    subjectChoiceBox.setValue(item.split("\n")(2).trim)
   }
 
   def clearFields(): Unit = {
     sTimeTextField.clear()
     eTimeTextField.clear()
     titleTextField.clear()
-    cUnitTextField.clear()
+    subjectChoiceBox.getSelectionModel.clearSelection()
   }
 
   def fieldsToSBlock(): SBlock = {
@@ -248,7 +261,7 @@ class ScheduleController extends Initializable {
     val stime = LocalTime.parse(sTimeTextField.getText().trim)
     val etime = LocalTime.parse(eTimeTextField.getText().trim)
     val title = titleTextField.getText.trim
-    val cunit = cUnitTextField.getText().trim
+    val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem
     SBlock(date, stime, etime, title, cunit)
   }
 
@@ -256,6 +269,20 @@ class ScheduleController extends Initializable {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
     alert.setHeaderText("You must fill all the fields!")
+    alert.showAndWait()
+  }
+
+  def launchOverlayAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You cannot insert this block on the schedule because it will overlay another!")
+    alert.showAndWait()
+  }
+
+  def launchTooLongAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You should not insert this block on the schedule because it is too long (more than 90 minutes)!")
     alert.showAndWait()
   }
 }

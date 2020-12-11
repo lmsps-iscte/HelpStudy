@@ -75,13 +75,7 @@ object Schedule {
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
 
-  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = if (sblock.isTooLong) {
-    println("YOU SHOULD NOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT IS TOO LONG (MORE THAN 90 MINUTES)!")
-    schedule
-  } else if (schedule.willOverlay(sblock)) {
-    println("YOU CANNOT INSERT THIS BLOCK ON THE SCHEDULE BECAUSE IT WILL OVERLAY ANOTHER!")
-    schedule
-  } else Schedule(sblock :: schedule.sblocks, schedule.school_percent)
+  def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = Schedule(sblock :: schedule.sblocks, schedule.school_percent)
 
   //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
   def getSBlockByName(schedule: Schedule, title: String): SBlock =
