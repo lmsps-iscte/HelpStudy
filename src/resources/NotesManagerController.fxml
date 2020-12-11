@@ -8,16 +8,15 @@
     <children>
         <AnchorPane layoutY="4.0" prefHeight="693.0" prefWidth="811.0">
             <children>
-                <ListView fx:id="notesListView" layoutX="44.0" layoutY="38.0" prefHeight="382.0" prefWidth="694.0" />
+                <ListView fx:id="notesListView" layoutX="44.0" layoutY="38.0" onMouseClicked="#elementClicked" prefHeight="382.0" prefWidth="694.0" />
                 <TextField fx:id="titleTextBox" layoutX="44.0" layoutY="442.0" promptText="Title" />
                 <!-- <TextArea fx:id="text_field" layoutX="41.0" layoutY="499.0" prefHeight="112.0" prefWidth="714.0" promptText="Type the context..." wrapText="true" /> -->
                 <Button fx:id="addButton" layoutX="366.0" layoutY="442.0" mnemonicParsing="false" onAction="#addFunc" text="Add" />
-                <Button fx:id="deleteButton" layoutX="456.0" layoutY="442.0" mnemonicParsing="false" onAction="#deleteFunc" text="Delete" />
+                <Button fx:id="deleteButton" layoutX="468.0" layoutY="442.0" mnemonicParsing="false" onAction="#deleteFunc" text="Delete" />
                 <TextArea fx:id="textArea" layoutX="44.0" layoutY="506.0" prefHeight="129.0" prefWidth="694.0" promptText="Type here the content of your note..." wrapText="true" />
-            <TextField fx:id="cUnitTextBox" layoutX="206.0" layoutY="442.0" promptText="Subject (Ex: MC)" />
-            <Button fx:id="editButton" layoutX="411.0" layoutY="442.0" mnemonicParsing="false" onAction="#editFunc" text="Edit" />
+            <Button fx:id="editButton" layoutX="411.0" layoutY="442.0" mnemonicParsing="false" onAction="#editFunc" onMouseEntered="#hoverFuncEnter3" onMouseExited="#hoverFuncExit3" text="Edit 🛈" />
             <Button fx:id="openButton" layoutX="681.0" layoutY="442.0" mnemonicParsing="false" onAction="#openFunc" prefHeight="25.0" prefWidth="57.0" text="Open" />
-            <Button fx:id="importButton" layoutX="365.0" layoutY="474.0" mnemonicParsing="false" onAction="#importFunc" onMouseEntered="#hoverFuncEnter2" onMouseExited="#hoverFuncExit2" prefHeight="25.0" prefWidth="143.0" text="Import 🛈" />
+            <Button fx:id="importButton" layoutX="365.0" layoutY="474.0" mnemonicParsing="false" onAction="#importFunc" onMouseEntered="#hoverFuncEnter2" onMouseExited="#hoverFuncExit2" prefHeight="25.0" prefWidth="156.0" text="Import 🛈" />
             <Button fx:id="exportButton" layoutX="611.0" layoutY="442.0" mnemonicParsing="false" onAction="#exportFunc" onMouseEntered="#hoverFuncEnter" onMouseExited="#hoverFuncExit" text="Export 🛈" />
             <Label fx:id="infoLabel" layoutX="456.0" layoutY="420.0" text="Select a note and it will be exported to your desktop." visible="false" />
             <TextField fx:id="importTextField" layoutX="44.0" layoutY="474.0" prefHeight="25.0" prefWidth="312.0" promptText="File path (Ex: C:\Users\user\desktop\note.txt)" />
@@ -29,6 +28,13 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <Label layoutX="214.0" layoutY="445.0" text="Subject:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="subjectChoiceBox" layoutX="270.0" layoutY="442.0" prefHeight="25.0" prefWidth="86.0" />
+            <Label fx:id="infoLabel3" layoutX="391.0" layoutY="422.0" text="Select your Note, edit it and when you are done press this button" visible="false" />
                 <!-- <TextArea fx:id="text_field" layoutX="41.0" layoutY="499.0" prefHeight="112.0" prefWidth="694.0" promptText="Type the context..." text="&#10;" wrapText="true" /> -->
             </children>
         </AnchorPane>

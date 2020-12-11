@@ -21,6 +21,7 @@ class RemindersController extends Initializable {
   @FXML private var text_area: TextArea = _
   @FXML private var date_box: DatePicker = _
   @FXML private var subject_picker: ChoiceBox[String] = _
+  @FXML private var infoLabel: Label = _
   private var rem_man = RemindersController.getReminders
   private var list_subjs = SubjectsManagerController.getSubjectsManager.subjs
 
@@ -56,6 +57,16 @@ class RemindersController extends Initializable {
     //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
     remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
 //    Util.saveToFile(rem_man.toString(), "reminders.obj")
+    clearFields()
+  }
+
+  def edit_func(): Unit = {
+    val item = remindersListView.getSelectionModel.getSelectedItem
+    deleteOps(item)
+    rem_man = rem_man.addReminder(fieldsToReminder())
+    RemindersController.setReminders(rem_man)
+    loadInfo()
+    clearFields()
   }
 
   def delete_func(): Unit = {
@@ -70,24 +81,48 @@ class RemindersController extends Initializable {
     val item = remindersListView.getSelectionModel.getSelectedItem
     val title = item.split("-")(0).trim
     val cunit = item.split("-")(1).trim
-    System.out.println(cunit)
     val rem = rem_man.getReminder(title, cunit)
     title_box.setText(rem._1)
     text_area.setText(rem._2)
     subject_picker.setValue(rem._6)
     date_box.setValue(rem._4)
     priority_box.setValue(rem._3)
-    deleteOps(rem, item)
-    //val title = rem.split("-")(0).trim
-    System.out.println(rem)
-    //LANCAR A POP-UP AQUI
+  }
+
+  def hoverFuncEnter(): Unit = {
+    infoLabel.setVisible(true)
+  }
+
+  def hoverFuncExit(): Unit = {
+    infoLabel.setVisible(false)
   }
 
 
-  def deleteOps(rem: Reminder, item: String): Unit = {
-    val list = remindersListView.getItems.remove(item)
-    rem_man = rem_man.delReminder(rem._1)
-    Util.saveToFile(rem_man.toString, "notes_paths.obj")
+  def deleteOps(item: String): Unit = {
+    remindersListView.getItems.remove(item)
+    rem_man = rem_man.delReminder(item.split("-")(0).trim)
+    RemindersController.setReminders(rem_man)
+  }
+
+  def fieldsToReminder(): Reminder = {
+    val title = title_box.getText.trim
+    val priority = priority_box.getSelectionModel.getSelectedItem
+    val body_aux = text_area.getText
+    val body = body_aux.trim
+    val cunit = subject_picker.getValue.trim
+    (title, body, priority, date_box.getValue, 0.0, cunit)
+  }
+
+  def loadInfo(): Unit = {
+    remindersListView.getItems.clear()
+    rem_man.lst_rem.foreach(reminder => remindersListView.getItems.add(reminder._1))
+  }
+
+  def clearFields(): Unit = {
+    title_box.clear()
+    priority_box.getSelectionModel.clearSelection()
+    text_area.clear()
+    subject_picker.getSelectionModel.clearSelection()
   }
 
 }

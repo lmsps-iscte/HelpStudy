@@ -2,7 +2,7 @@ package controllers
 
 import java.io.{File, FileNotFoundException}
 
-import classes.{Notebook, Util}
+import classes.{Notebook, SubjectsManager, Util}
 import classes.Notebook.{Note, getNote}
 import controllers.NotesController.setNotes
 import javafx.collections.FXCollections
@@ -21,20 +21,26 @@ class NotesController extends Initializable {
 
   @FXML private var notesListView: ListView[String] = _
   @FXML private var titleTextBox: TextField = _
-  @FXML private var cUnitTextBox: TextField = _
   @FXML private var importTextField: TextField = _
   @FXML private var infoLabel: Label = _
   @FXML private var infoLabel2: Label = _
+  @FXML private var infoLabel3: Label = _
   @FXML private var addButton: Button = _
   @FXML private var editButton: Button = _
   @FXML private var deleteButton: Button = _
   @FXML private var openButton: Button = _
   @FXML private var textArea: TextArea = _
   @FXML private var sortPicker: ChoiceBox[String] = _
+  @FXML private var subjectChoiceBox: ChoiceBox[String] = _
   private var notebook: Notebook = NotesController.getNotes
+  private var note: Note = _
+  private var subjs: SubjectsManager = _
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
+    subjs = SubjectsManagerController.getSubjectsManager
+    subjectChoiceBox.getItems.clear()
+    subjs.subjs.foreach(sub => subjectChoiceBox.getItems.add(sub.name.trim))
 
     var list_obs = FXCollections.observableArrayList[String]()
     notebook.notes.foreach(note => list_obs.add(note._1 + " - " + note._3))
@@ -60,13 +66,14 @@ class NotesController extends Initializable {
   }
 
   def addFunc(): Unit = {
-    val title = titleTextBox.getText.trim
-    val body = textArea.getText.trim
-    val cunit = cUnitTextBox.getText.trim
-    val note: Note = (title, body, cunit)
-    if(title.isEmpty || cunit.isEmpty)
+    if(titleTextBox.getText().isEmpty || subjectChoiceBox.getSelectionModel.getSelectedItem == null)
       launchAlert()
     else {
+      val title = titleTextBox.getText.trim
+      val body = textArea.getText.trim
+      val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem.trim
+      val note: Note = (title, body, cunit)
+
       notebook = notebook.addNote(note)
       NotesController.setNotes(notebook)
       notesListView.getItems.add(title + " - " + cunit)
@@ -74,7 +81,7 @@ class NotesController extends Initializable {
       //    Util.saveToFile(notebook.toString, "notes_paths.obj")
       titleTextBox.clear()
       textArea.clear()
-      cUnitTextBox.clear()
+      subjectChoiceBox.getSelectionModel.clearSelection()
     }
   }
 
@@ -85,29 +92,30 @@ class NotesController extends Initializable {
 
   def editFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
-    val title = item.split("-")(0).trim
-    val cunit = item.split("-")(1).trim
-    val note = notebook.getNote(title, cunit)
-    titleTextBox.setText(note._1)
-    textArea.setText(note._2)
-    cUnitTextBox.setText(note._3)
     deleteOps(item)
+    notebook = notebook.addNote(fieldsToNote())
+    NotesController.setNotes(notebook)
+    loadInfo()
+    notebook.exportToFile(fieldsToNote(), "normal")
+    clearFields()
 
   }
 
   def importFunc(): Unit = {
-    if (cUnitTextBox.getText.isEmpty)
-      cUnitTextBox.setText("Unknown")
-    val path = importTextField.getText()
-    val title = Paths.get(path).getFileName.toString.stripSuffix(".txt")
-    val cunit = cUnitTextBox.getText()
-    notebook = notebook.importFromFile(path, cunit)
-    setNotes(notebook)
-    notesListView.getItems.add(title + " - " + cunit)
-    notebook.exportToFile(getNote(notebook, title, cunit), "normal")
-    //    Util.saveToFile(notebook.toString, "notes_paths.obj")
-    importTextField.clear()
-    cUnitTextBox.clear()
+    if (subjectChoiceBox.getSelectionModel.getSelectedItem == null)
+      launchAlert1()
+    else {
+      val path = importTextField.getText()
+      val title = Paths.get(path).getFileName.toString.stripSuffix(".txt")
+      val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem.trim
+      notebook = notebook.importFromFile(path, cunit)
+      setNotes(notebook)
+      notesListView.getItems.add(title + " - " + cunit)
+      notebook.exportToFile(getNote(notebook, title, cunit), "normal")
+      //    Util.saveToFile(notebook.toString, "notes_paths.obj")
+      importTextField.clear()
+      subjectChoiceBox.getSelectionModel.clearSelection()
+    }
   }
 
   def exportFunc(): Unit = {
@@ -132,6 +140,14 @@ class NotesController extends Initializable {
     infoLabel2.setVisible(false)
   }
 
+  def hoverFuncEnter3(): Unit = {
+    infoLabel3.setVisible(true)
+  }
+
+  def hoverFuncExit3(): Unit = {
+    infoLabel3.setVisible(false)
+  }
+
   def applyFunc(): Unit = {
     val choice = sortPicker.getValue
 
@@ -146,19 +162,59 @@ class NotesController extends Initializable {
 
   }
 
+  def elementClicked(): Unit = {
+    val item = notesListView.getSelectionModel.getSelectedItem
+    setFields(item)
+    note = fieldsToNote()
+  }
+
+  def setFields(item: String): Unit = {
+    val title = item.split("-")(0).trim
+    val cunit = item.split("-")(1).trim
+    val note = notebook.getNote(title, cunit)
+    titleTextBox.setText(note._1)
+    textArea.setText(note._2)
+    subjectChoiceBox.setValue(note._3.trim)
+  }
+
+  def clearFields(): Unit = {
+    titleTextBox.clear()
+    textArea.clear()
+    subjectChoiceBox.getSelectionModel.clearSelection()
+  }
+
+  def fieldsToNote(): Note = {
+    val title = titleTextBox.getText().trim
+    val body = textArea.getText().trim
+    val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem.trim
+    (title, body, cunit)
+  }
+
   def deleteOps(item: String): Unit = {
-    var list = notesListView.getItems.remove(item)
+    notesListView.getItems.remove(item)
     val file = Paths.get(System.getProperty("user.dir"), item.split("-")(1).trim, item.split("-")(0).trim + ".txt")
     notebook = notebook.removeNote(getNote(notebook, item.split("-")(0).trim, item.split("-")(1).trim))
     NotesController.setNotes(notebook)
-    Util.saveToFile(notebook.toString, "notes_paths.obj")
+    //Util.saveToFile(notebook.toString, "notes_paths.obj")
     Util.deleteFile(file.toString)
+  }
+
+  def loadInfo(): Unit = {
+    notesListView.getItems.clear()
+    notebook.notes.foreach(note => notesListView.getItems.add(note._1+" - "+note._3))
   }
 
   def launchAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
-    alert.setHeaderText("You mus fill the fields title and subject to create a note!")
+    alert.setHeaderText("You must fill the fields title and subject to create a note!")
+    alert.showAndWait()
+  }
+
+  def launchAlert1(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You must specify the subject!")
     alert.showAndWait()
   }
 
