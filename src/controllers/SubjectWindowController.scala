@@ -24,7 +24,7 @@ class SubjectWindowController extends Initializable {
 
   @FXML private var remindersListView: ListView[String] = _
   @FXML private var notesListView: ListView[String] = _
-  @FXML private var evalsListView: ListView[Evaluation] = _
+  @FXML private var evalsListView: ListView[String] = _
   @FXML private var subject_name_label: Label = _
   @FXML private var schedule_evaluation_button: Button = _
   @FXML private var calculate_final_grade_button: Button = _
@@ -40,6 +40,7 @@ class SubjectWindowController extends Initializable {
 
   def setController(subj1: Subject): Unit = {
     subj = subj1
+    SubjectWindowController.setSubjectsManager(subj)
     System.out.println(subj)
     val subj_aux = subj
 
@@ -59,10 +60,10 @@ class SubjectWindowController extends Initializable {
     notesListView.setItems(list_notes_obs)
 
     val evals_list = subj_aux.evals
-    //var list_evals_obs = FXCollections.observableArrayList[String]()
-    var list_evals_obs = FXCollections.observableArrayList[Evaluation]()
-    evals_list.forall(list_evals_obs.add(_))
-    //evals_list.forall(eval => list_evals_obs.add(eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2))
+    var list_evals_obs = FXCollections.observableArrayList[String]()
+    //var list_evals_obs = FXCollections.observableArrayList[Evaluation]()
+    //evals_list.forall(list_evals_obs.add(_))
+    evals_list.forall(eval => list_evals_obs.add(eval._3.trim + " - " + eval._1 + " - " + eval._2._1 + "% Grade: " + eval._2._2))
     evalsListView.setItems(list_evals_obs)
 
     date_picker.setValue(LocalDate.now())
@@ -70,8 +71,11 @@ class SubjectWindowController extends Initializable {
 
   def delEvaluation_Clicked(): Unit = {
     val item = evalsListView.getSelectionModel.getSelectedItem
+    System.out.println(item)
     evalsListView.getItems.remove(item)
-    subj = subj.delEvaluation(item._3)
+    System.out.println(item.split("-")(0))
+    System.out.println(subj.evals)
+    subj = subj.del_evaluation(item.split("-")(0).trim)
     //eliminar no subj_man???
   }
 
@@ -82,9 +86,10 @@ class SubjectWindowController extends Initializable {
     val title: String = type_eval_field.getText
     val eval: Evaluation = (date, (percentage, 0.0), title)
     subj = subj.add_evaluation(eval)
-    evalsListView.getItems.add(evalsListView.getItems.size, eval)
+    evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
+    SubjectWindowController.setSubjectsManager(subj)
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
@@ -112,7 +117,7 @@ class SubjectWindowController extends Initializable {
   def timeSpentAlert(): Unit = {
     val alert =  new Alert(AlertType.WARNING)
     alert.setTitle("Time Spent - " + subj.name.trim)
-    alert.setHeaderText("Your total time spent on " + subj.name.trim + " is " + ScheduleController.getSchedule.timebyCUnitL7Days(subj.name.trim) + " hours")
+    alert.setHeaderText("Your total time spent on " + subj.name.trim + " is " + ScheduleController.getSchedule.timebyCUnitL7Days(subj.name.trim) + " mins")
     alert.showAndWait()
   }
 
@@ -121,6 +126,20 @@ class SubjectWindowController extends Initializable {
     alert.setTitle("WARNING")
     alert.setHeaderText("THE SUM OF PERCENTAGES OF YOUR EVALUATIONS IS DIFFERENT FROM 100%! CHECK YOUR LIST!")
     alert.showAndWait()
+  }
+
+}
+
+object SubjectWindowController {
+
+  var sub: Subject = _
+
+  def setSubjectsManager(newSubject: Subject): Unit = {
+    sub = newSubject
+  }
+
+  def getSubject: Subject = {
+    sub
   }
 
 }
