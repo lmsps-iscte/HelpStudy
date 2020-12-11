@@ -24,7 +24,7 @@ class DeckController extends Initializable{
     subjs = SubjectsManagerController.getSubjectsManager
     subj_box.getItems.clear()
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
-    deck.cards.foreach(card => cardList.getItems.add(s"${card._1} | ${card._4}"))
+    deck.cards.foreach(card => cardList.getItems.add(s"${card._1} - ${card._4}"))
   }
 
   def addCard(): Unit = {
@@ -47,14 +47,14 @@ class DeckController extends Initializable{
         if (!(quest_text.getText.isEmpty || ans_text.getText.isEmpty)) {
           DeckController setDeck deck.addCard(card)
           deck = DeckController.getDeck
-          cardList.getItems.add(s"${card._1} | ${card._4}")
+          cardList.getItems.add(s"${card._1} - ${card._4}")
         }
       case ButtonType.CANCEL =>
     }
   }
 
   def deleteCard(): Unit = {
-    val question = cardList.getSelectionModel.getSelectedItem.split("\\|").toList.head.trim
+    val question = cardList.getSelectionModel.getSelectedItem.split("-").toList.head.trim
     val card = deck.getCard(question)
     DeckController setDeck deck.removeCard(card)
     deck = DeckController.getDeck

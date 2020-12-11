@@ -90,7 +90,7 @@ object SubjectsManagerController {
 
       val masterFileContent = Util.readFromFile("subjects_paths.obj")
       System.out.println(masterFileContent)
-      SubjectsManager.fromString(masterFileContent/*, subj_notes, subj_rems*/)
+      SubjectsManager.fromString(masterFileContent, subj_notes, subj_rems)
       //System.out.println(subj_man)
     } catch {
       case e: FileNotFoundException =>

@@ -17,7 +17,7 @@ import java.util.ResourceBundle
 class SubjectWindowController extends Initializable {
 
   @FXML private var remindersListView: ListView[Reminder] = _
-  @FXML private var notesListView: ListView[Note] = _
+  @FXML private var notesListView: ListView[String] = _
   @FXML private var evalsListView: ListView[Evaluation] = _
   @FXML private var subject_name_label: Label = _
   @FXML private var schedule_evaluation_button: Button = _
@@ -39,14 +39,15 @@ class SubjectWindowController extends Initializable {
 
     subject_name_label.setText(subj_aux.name)
 
-    val rems_list = subj_aux.rems
+    val rems_list = RemindersController.getReminders.getByCUnit(subj_aux.name)
     var list_rems_obs = FXCollections.observableArrayList[Reminder]()
     rems_list.forall(list_rems_obs.add(_))
     remindersListView.setItems(list_rems_obs)
 
-    val notes_list = subj_aux.notes
-    var list_notes_obs = FXCollections.observableArrayList[Note]()
-    notes_list.forall(list_notes_obs.add(_))
+    val notes_list = NotesController.getNotes.getNotesbyCUnit(subj_aux.name.trim)
+    //NotesController.getNotes
+    var list_notes_obs = FXCollections.observableArrayList[String]()
+    notes_list.forall(note => list_notes_obs.add(note._1))
     notesListView.setItems(list_notes_obs)
 
     val evals_list = subj_aux.evals

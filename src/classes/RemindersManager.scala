@@ -18,6 +18,8 @@ case class RemindersManager(lst_rem: Reminder_List) {
 
   def sort_by_date(): RemindersManager = RemindersManager.sort_by_date(this)
 
+  def getByCUnit(name: String): List[Reminder] = RemindersManager.getByCUnit(this, name)
+
   override def toString: String = RemindersManager.toString(lst_rem)
 }
 
@@ -39,6 +41,8 @@ object RemindersManager {
     case Nil => Nil
     case head :: tail => println(s"Title: ${head._1} Body: ${head._2} Priority: ${head._3} Date: ${head._4}"); printReminders(tail)
   }
+
+  def getByCUnit(rem_man: RemindersManager, name: String): List[Reminder] = rem_man.lst_rem.filter(rem => rem._1 equalsIgnoreCase name)
 
   //-------------UPDATE------------------------
   def addReminder(rem_man: RemindersManager, new_rem: Reminder): RemindersManager = {
@@ -104,53 +108,12 @@ object RemindersManager {
   def points(rem: Reminder)(dist_func: (Reminder, Int) => Double): Double = {
     val today = LocalDate.now()
     val days = Period.between(today, rem._4).getDays
-/*    val prior_points = rem._3
-    if(days < 1)
-      prior_points match {
-        case 1 => 1*0.25
-        case 2 => 1*0.50
-        case 3 => 1*0.75
-        case 4 => 1*1
-      }
-    else if(days < 3)
-      prior_points match {
-        case 1 => 0.75*0.25
-        case 2 => 0.75*0.50
-        case 3 => 0.75*0.75
-        case 4 => 0.75*1
-      }
-
-    else if(days < 5)
-      prior_points match {
-        case 1 => 0.5*0.25
-        case 2 => 0.5*0.50
-        case 3 => 0.5*0.75
-        case 4 => 0.5*1
-      }
-
-    else if(days < 7){
-      prior_points match {
-        case 1 => 0.25*0.25
-        case 2 => 0.25*0.50
-        case 3 => 0.25*0.75
-        case 4 => 0.25*1
-      }
-    }
-
-    else {
-      prior_points match {
-        case 1 => 0.10*0.25
-        case 2 => 0.10*0.50
-        case 3 => 0.10*0.75
-        case 4 => 0.10*1
-      }
-    } */
     dist_func(rem, days)
   }
 
   def points_gaussian(rem: Reminder, days: Int): Double = {
-    val variancia = 1000000000
-    1/sqrt(2*Math.PI*variancia)*Math.exp(-pow(days,2)/(2*variancia))
+    val variancia = 5
+    (1/sqrt(2*Math.PI*variancia)*Math.exp(-pow(days,2)/(2*variancia)) + 1) * rem._3
 
   }
 

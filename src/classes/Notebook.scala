@@ -47,7 +47,7 @@ object Notebook {
     notebook.notes.filter(note => note._1.equals(title) && note._3.equals(cunit)).head
   }
 
-  def getNotesbyCUnit(nbook: Notebook, cunit: String): List[Note] = nbook.notes.filter(_._3 == cunit)
+  def getNotesbyCUnit(nbook: Notebook, cunit: String): List[Note] = nbook.notes.filter(_._3 equalsIgnoreCase cunit)
 
   def importFromFile(nb: Notebook, file: String, cunit: String): Notebook = {
     val handle = Source.fromFile(Paths.get(file).toAbsolutePath.toString)
