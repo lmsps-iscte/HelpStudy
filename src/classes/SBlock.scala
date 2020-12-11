@@ -27,12 +27,12 @@ object SBlock {
 
   //CHECKS IF A BLOCKS OVERLAYS ANOTHER
 
-  def isOverlay(block: SBlock, sblock: SBlock): Boolean = if(block.date == sblock.date
+  def isOverlay(block: SBlock, sblock: SBlock): Boolean = if (block.date == sblock.date
     && ((sblock.start_time.isAfter(block.start_time) && sblock.start_time.isBefore(block.end_time)) ||
     sblock.start_time == block.start_time)) true else false
 
   //CHECKS IF BLOCK OF TIME IS TOO LONG (OVER 90 MINUTES)
 
-  def isTooLong(sblock: SBlock): Boolean = if(sblock.duration() > 90.longValue()) true else false
+  def isTooLong(sblock: SBlock): Boolean = if (sblock.duration() > 90.longValue()) true else false
 
 }

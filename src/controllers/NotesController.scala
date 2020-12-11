@@ -1,6 +1,6 @@
 package controllers
 
-import java.io.{File, FileNotFoundException}
+import java.io.FileNotFoundException
 
 import classes.{Notebook, SubjectsManager, Util}
 import classes.Notebook.{Note, getNote}
@@ -10,7 +10,7 @@ import javafx.fxml.{FXML, Initializable}
 import javafx.scene.Scene
 import javafx.scene.control.{Alert, Button, ChoiceBox, Label, ListView, TextArea, TextField}
 import javafx.scene.layout.BorderPane
-import javafx.stage.{FileChooser, Stage}
+import javafx.stage.Stage
 import java.net.URL
 import java.nio.file.Paths
 import java.util.ResourceBundle
@@ -36,6 +36,8 @@ class NotesController extends Initializable {
   private var note: Note = _
   private var subjs: SubjectsManager = _
 
+  //LOADS INFO TO BE PRESENTED ON THE WINDOW
+
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
     subjs = SubjectsManagerController.getSubjectsManager
@@ -52,6 +54,8 @@ class NotesController extends Initializable {
     sortPicker.setItems(choices)
   }
 
+  //OPEN BUTTON FUNC
+
   def openFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
     val title = item.split("-")(0).trim
@@ -65,8 +69,10 @@ class NotesController extends Initializable {
 
   }
 
+  //ADD BUTTON FUNC
+
   def addFunc(): Unit = {
-    if(titleTextBox.getText().isEmpty || subjectChoiceBox.getSelectionModel.getSelectedItem == null)
+    if (titleTextBox.getText().isEmpty || subjectChoiceBox.getSelectionModel.getSelectedItem == null)
       launchAlert()
     else {
       val title = titleTextBox.getText.trim
@@ -78,17 +84,20 @@ class NotesController extends Initializable {
       NotesController.setNotes(notebook)
       notesListView.getItems.add(title + " - " + cunit)
       notebook.exportToFile(note, "normal")
-      //    Util.saveToFile(notebook.toString, "notes_paths.obj")
       titleTextBox.clear()
       textArea.clear()
       subjectChoiceBox.getSelectionModel.clearSelection()
     }
   }
 
+  //DELETE BUTTON FUNC
+
   def deleteFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
     deleteOps(item)
   }
+
+  //EDIT BUTTON FUNC
 
   def editFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
@@ -101,6 +110,8 @@ class NotesController extends Initializable {
 
   }
 
+  //IMPORT BUTTON FUNC
+
   def importFunc(): Unit = {
     if (subjectChoiceBox.getSelectionModel.getSelectedItem == null)
       launchAlert1()
@@ -112,11 +123,12 @@ class NotesController extends Initializable {
       setNotes(notebook)
       notesListView.getItems.add(title + " - " + cunit)
       notebook.exportToFile(getNote(notebook, title, cunit), "normal")
-      //    Util.saveToFile(notebook.toString, "notes_paths.obj")
       importTextField.clear()
       subjectChoiceBox.getSelectionModel.clearSelection()
     }
   }
+
+  //EXPORT BUTTON FUNC
 
   def exportFunc(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
@@ -124,29 +136,43 @@ class NotesController extends Initializable {
       item.split("-")(1).trim), "desktop")
   }
 
+  //EXPORT BUTTON MOUSE ENTER FUNC
+
   def hoverFuncEnter(): Unit = {
     infoLabel.setVisible(true)
   }
+
+  //EXPORT BUTTON MOUSE EXIT FUNC
 
   def hoverFuncExit(): Unit = {
     infoLabel.setVisible(false)
   }
 
+  //IMPORT BUTTON MOUSE ENTER FUNC
+
   def hoverFuncEnter2(): Unit = {
     infoLabel2.setVisible(true)
   }
+
+  //IMPORT BUTTON MOUSE EXIT FUNC
 
   def hoverFuncExit2(): Unit = {
     infoLabel2.setVisible(false)
   }
 
+  //EDIT BUTTON MOUSE ENTER FUNC
+
   def hoverFuncEnter3(): Unit = {
     infoLabel3.setVisible(true)
   }
 
+  //EDIT BUTTON MOUSE EXIT FUNC
+
   def hoverFuncExit3(): Unit = {
     infoLabel3.setVisible(false)
   }
+
+  //APPLY BUTTON FUNC
 
   def applyFunc(): Unit = {
     val choice = sortPicker.getValue
@@ -162,11 +188,15 @@ class NotesController extends Initializable {
 
   }
 
+  //GETS AND SETS FIELDS OF SELECTED ITEM
+
   def elementClicked(): Unit = {
     val item = notesListView.getSelectionModel.getSelectedItem
     setFields(item)
     note = fieldsToNote()
   }
+
+  //SETS ALL FIELDS
 
   def setFields(item: String): Unit = {
     val title = item.split("-")(0).trim
@@ -177,11 +207,15 @@ class NotesController extends Initializable {
     subjectChoiceBox.setValue(note._3.trim)
   }
 
+  //CLEARS ALL FIELDS
+
   def clearFields(): Unit = {
     titleTextBox.clear()
     textArea.clear()
     subjectChoiceBox.getSelectionModel.clearSelection()
   }
+
+  //CREATES NOTE BASED ON FIELDS CONTENT
 
   def fieldsToNote(): Note = {
     val title = titleTextBox.getText().trim
@@ -190,19 +224,24 @@ class NotesController extends Initializable {
     (title, body, cunit)
   }
 
+  //DELETE OPERATIONS
+
   def deleteOps(item: String): Unit = {
     notesListView.getItems.remove(item)
     val file = Paths.get(System.getProperty("user.dir"), item.split("-")(1).trim, item.split("-")(0).trim + ".txt")
     notebook = notebook.removeNote(getNote(notebook, item.split("-")(0).trim, item.split("-")(1).trim))
     NotesController.setNotes(notebook)
-    //Util.saveToFile(notebook.toString, "notes_paths.obj")
     Util.deleteFile(file.toString)
   }
 
+  //LOADS INFO TO LISTVIEW
+
   def loadInfo(): Unit = {
     notesListView.getItems.clear()
-    notebook.notes.foreach(note => notesListView.getItems.add(note._1+" - "+note._3))
+    notebook.notes.foreach(note => notesListView.getItems.add(note._1 + " - " + note._3))
   }
+
+  //ALERT OF ALL FIELDS MUST BE FILLED
 
   def launchAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
@@ -210,6 +249,8 @@ class NotesController extends Initializable {
     alert.setHeaderText("You must fill the fields title and subject to create a note!")
     alert.showAndWait()
   }
+
+  //ALERT OF SUBJECT NOT SPECIFIED
 
   def launchAlert1(): Unit = {
     val alert = new Alert(AlertType.WARNING)
@@ -226,26 +267,24 @@ object NotesController {
 
   lazy val firstNotes: Notebook = loadNotes
 
+  //LOADS NOTEBOOK FROM FILE
+
   private def loadNotes: Notebook = {
     try {
       val masterFileContent = Util.readFromFile("notes_paths.obj")
       Notebook.fromString(masterFileContent)
     } catch {
-      case e: FileNotFoundException =>
-        /*val note1: Note = ("Nota1","Corpo1","MC")
-        val note2: Note = ("Nota2","Corpo2","TS")
-        val note3: Note = ("Nota3","Corpo3","PPM")
-        notebook = notebook.addNote(note1)
-        notebook = notebook.addNote(note2)
-        notebook = notebook.addNote(note3)*/
-
-        Notebook(List())
+      case e: FileNotFoundException => Notebook(List())
     }
   }
+
+  //SETS NEW NOTEBOOK
 
   private def setNotes(newNotes: Notebook): Unit = {
     notes = newNotes
   }
+
+  //GETS EXISTING NOTEBOOK
 
   def getNotes: Notebook = {
     if (notes == null)

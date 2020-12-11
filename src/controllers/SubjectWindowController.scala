@@ -40,7 +40,9 @@ class SubjectWindowController extends Initializable {
   private var subj: Subject = _
   private var subj_man: SubjectsManager = _
 
-  override def initialize(location: URL, resources: ResourceBundle): Unit = {}
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {
+
+  }
 
   def setController(subj1: Subject, subj_man1: SubjectsManager): Unit = {
     subj_man = subj_man1

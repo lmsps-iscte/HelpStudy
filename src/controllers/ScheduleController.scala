@@ -61,6 +61,8 @@ class ScheduleController extends Initializable {
   private var list_obs7 = FXCollections.observableArrayList[String]()
   private var subjs: SubjectsManager = _
 
+  //LOADS INFO TO BE PRESENTED ON THE WINDOW
+
   def initialize(location: URL, resources: ResourceBundle): Unit = {
 
     date1.setText(LocalDate.now().toString)
@@ -89,8 +91,10 @@ class ScheduleController extends Initializable {
 
   }
 
+  //ADD BUTTON FUNC
+
   def addFunc(): Unit = {
-    if(datePicker.getValue == null || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
+    if (datePicker.getValue == null || sTimeTextField.getText().isEmpty || eTimeTextField.getText().isEmpty
       || titleTextField.getText().isEmpty || subjectChoiceBox.getSelectionModel.getSelectedItem == null)
       launchAlert()
     else {
@@ -101,49 +105,49 @@ class ScheduleController extends Initializable {
       val cunit = subjectChoiceBox.getSelectionModel.getSelectedItem.trim
       val sblock = SBlock(date, stime, etime, title, cunit)
 
-      if(sblock.isTooLong)
+      if (sblock.isTooLong)
         launchTooLongAlert()
       else {
-        if(schedule.willOverlay(sblock))
+        if (schedule.willOverlay(sblock))
           launchOverlayAlert()
         else {
           schedule = schedule.addSBlock(sblock)
           ScheduleController.setSchedule(schedule)
-          //    Util.saveToFile(schedule.toString(), "schedule.obj")
           loadInfo()
-
           clearFields()
         }
       }
     }
   }
 
+  //EDIT BUTTON FUNC
+
   def editFunc(): Unit = {
     schedule = schedule.removeSBlock(sblock)
     schedule = schedule.addSBlock(fieldsToSBlock())
     ScheduleController.setSchedule(schedule)
-//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
-
     clearFields()
   }
+
+  //DELETE BUTTON FUNC
 
   def deleteFunc(): Unit = {
     schedule = schedule.removeSBlock(fieldsToSBlock())
     ScheduleController.setSchedule(schedule)
-//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
-
     clearFields()
-
   }
+
+  //UPDATE BUTTON FUNC
 
   def updateFunc(): Unit = {
     schedule = schedule.updateRatio(ratioTextBox.getText().toInt)
     ScheduleController.setSchedule(schedule)
-//    Util.saveToFile(schedule.toString(), "schedule.obj")
     loadInfo()
   }
+
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 1
 
   def elementClicked1(): Unit = {
     val item = listView1.getSelectionModel.getSelectedItem
@@ -151,11 +155,15 @@ class ScheduleController extends Initializable {
     sblock = fieldsToSBlock()
   }
 
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 2
+
   def elementClicked2(): Unit = {
     val item = listView2.getSelectionModel.getSelectedItem
     setFields(item, date2.getText)
     sblock = fieldsToSBlock()
   }
+
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 3
 
   def elementClicked3(): Unit = {
     val item = listView3.getSelectionModel.getSelectedItem
@@ -163,11 +171,15 @@ class ScheduleController extends Initializable {
     sblock = fieldsToSBlock()
   }
 
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 4
+
   def elementClicked4(): Unit = {
     val item = listView4.getSelectionModel.getSelectedItem
     setFields(item, date4.getText)
     sblock = fieldsToSBlock()
   }
+
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 5
 
   def elementClicked5(): Unit = {
     val item = listView5.getSelectionModel.getSelectedItem
@@ -175,11 +187,15 @@ class ScheduleController extends Initializable {
     sblock = fieldsToSBlock()
   }
 
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 6
+
   def elementClicked6(): Unit = {
     val item = listView6.getSelectionModel.getSelectedItem
     setFields(item, date6.getText)
     sblock = fieldsToSBlock()
   }
+
+  //GETS AND SETS FIELDS OF SELECTED ITEM FROM LISTVIEW 7
 
   def elementClicked7(): Unit = {
     val item = listView7.getSelectionModel.getSelectedItem
@@ -187,21 +203,31 @@ class ScheduleController extends Initializable {
     sblock = fieldsToSBlock()
   }
 
+  //RATIO LABEL MOUSE ENTER FUNC
+
   def hoverFuncEnter(): Unit = {
     infoLabel.setVisible(true)
   }
+
+  //RATIO LABEL MOUSE EXIT FUNC
 
   def hoverFuncExit(): Unit = {
     infoLabel.setVisible(false)
   }
 
+  //EDIT BUTTON MOUSE ENTER FUNC
+
   def hoverFuncEnter1(): Unit = {
     infoLabel1.setVisible(true)
   }
 
+  //EDIT BUTTON MOUSE EXIT FUNC
+
   def hoverFuncExit1(): Unit = {
     infoLabel1.setVisible(false)
   }
+
+  //LOADS INFO TO LISTVIEW
 
   def loadInfo(): Unit = {
     list_obs1.clear()
@@ -238,7 +264,7 @@ class ScheduleController extends Initializable {
 
     ratioTextBox.setText(schedule.school_percent.toString)
 
-    if(schedule.fatigueAlert()) {
+    if (schedule.fatigueAlert()) {
       badAlert.setVisible(true)
       goodAlert.setVisible(false)
     }
@@ -250,6 +276,8 @@ class ScheduleController extends Initializable {
     timeInfoLabel.setText(schedule.timeSpentBySchoolToday().toString)
   }
 
+  //SETS ALL FIELDS
+
   def setFields(item: String, date: String): Unit = {
     datePicker.setValue(LocalDate.parse(date))
     sTimeTextField.setText(item.split(" ")(0).trim)
@@ -258,12 +286,16 @@ class ScheduleController extends Initializable {
     subjectChoiceBox.setValue(item.split("\n")(2).trim)
   }
 
+  //CLEARS ALL FIELDS
+
   def clearFields(): Unit = {
     sTimeTextField.clear()
     eTimeTextField.clear()
     titleTextField.clear()
     subjectChoiceBox.getSelectionModel.clearSelection()
   }
+
+  //CREATES SBLOCK BASED ON FIELDS CONTENT
 
   def fieldsToSBlock(): SBlock = {
     val date = datePicker.getValue
@@ -274,6 +306,8 @@ class ScheduleController extends Initializable {
     SBlock(date, stime, etime, title, cunit)
   }
 
+  //ALERT OF FIELDS NOT FILLED
+
   def launchAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
@@ -281,12 +315,16 @@ class ScheduleController extends Initializable {
     alert.showAndWait()
   }
 
+  //ALERT OF OVERLAY
+
   def launchOverlayAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
     alert.setTitle("WARNING")
     alert.setHeaderText("You cannot insert this block on the schedule because it will overlay another!")
     alert.showAndWait()
   }
+
+  //ALERT OF SBLOCK TOO LONG
 
   def launchTooLongAlert(): Unit = {
     val alert = new Alert(AlertType.WARNING)
@@ -302,28 +340,24 @@ object ScheduleController {
 
   lazy val firstSchedule: Schedule = loadSchedule
 
+  //LOADS SCHEDULE FROM FILE
+
   private def loadSchedule: Schedule = {
     try {
       val fileContent = Util.readFromFile("schedule.obj")
       Schedule.fromString(fileContent)
     } catch {
-      case e: FileNotFoundException =>
-      /*val bloco1 = SBlock(LocalDate.parse("2020-12-08"), LocalTime.of(9, 30, 0),
-        LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
-      val bloco2 = SBlock(LocalDate.parse("2020-12-09"), LocalTime.of(10, 30, 0),
-        LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
-      val bloco3 = SBlock(LocalDate.parse("2020-12-10"), LocalTime.of(11, 30, 0),
-        LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
-      schedule = schedule.addSBlock(bloco1)
-      schedule = schedule.addSBlock(bloco2)
-      schedule = schedule.addSBlock(bloco3)*/
-        Schedule(List(), 50)
+      case e: FileNotFoundException => Schedule(List(), 50)
     }
   }
+
+  //SETS NEW SCHEDULE
 
   private def setSchedule(newSchedule: Schedule): Unit = {
     schedule = newSchedule
   }
+
+  //GETS EXISTING SCHEDULE
 
   def getSchedule: Schedule = {
     if (schedule == null)

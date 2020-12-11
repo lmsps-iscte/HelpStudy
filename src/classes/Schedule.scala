@@ -1,16 +1,16 @@
 package classes
 
-import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
-import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
 import scala.annotation.tailrec
 
 case class Schedule(sblocks: List[SBlock], school_percent: Int) {
 
   //ADDS ONE BLOCK OF TIME TO THE SCHEDULE
+
   def addSBlock(sblock: SBlock): Schedule = Schedule.addSBlock(this, sblock)
 
   //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
+
   def getSBlockByName(title: String): SBlock = Schedule.getSBlockByName(this, title)
 
   //REMOVES A GIVEN SBLOCK
@@ -59,11 +59,14 @@ case class Schedule(sblocks: List[SBlock], school_percent: Int) {
   def willOverlay(sblock: SBlock): Boolean = Schedule.willOverlay(this, sblock)
 
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
+
   def fatigueAlert(): Boolean = Schedule.fatigueAlert(this)
 
   //UPDATES RATIO
 
   def updateRatio(value: Int): Schedule = Schedule.updateRatio(this, value)
+
+  //OVERRIDES THE ORIGINAL TOSTRING METHOD
 
   override def toString: String = Schedule.toString(sblocks, school_percent)
 
@@ -78,6 +81,7 @@ object Schedule {
   def addSBlock(schedule: Schedule, sblock: SBlock): Schedule = Schedule(sblock :: schedule.sblocks, schedule.school_percent)
 
   //GIVES ONE SBLOCK OBJECT WITH A GIVEN TITLE
+
   def getSBlockByName(schedule: Schedule, title: String): SBlock =
     schedule.sblocks.filter(block => block.title == title).head
 
@@ -154,11 +158,18 @@ object Schedule {
   }
 
   //ALERTS USER IF IT IS NOT FOLLOWING THE FUN - STUDY RATIO
+
   def fatigueAlert(schedule: Schedule): Boolean = {
     if (timeSpentBySchoolToday(schedule) > 960.longValue() * (schedule.school_percent / 100.floatValue()))
       true
     else false
   }
+
+  //UPDATES RATIO
+
+  def updateRatio(schedule: Schedule, value: Int): Schedule = Schedule(schedule.sblocks, value)
+
+  //OVERRIDES THE ORIGINAL TOSTRING METHOD
 
   def toString(sblocks: List[SBlock], school_percent: Int): String = sblocks match {
     case Nil => s""
@@ -168,6 +179,8 @@ object Schedule {
       s"$boundary ${head.cunit} \\n ${toString(tail, school_percent)}"
   }
 
+  //GETS AN SBLOCK FROM A STRING
+
   def parseItem(item: String): SBlock = {
     val date = LocalDate.parse(item.split(",")(1))
     val start_time = LocalTime.parse(item.split(",")(2))
@@ -176,6 +189,8 @@ object Schedule {
     val cunit = item.split(boundary)(2).trim
     SBlock(date, start_time, end_time, title, cunit)
   }
+
+  //GETS A SCHEDULE FROM A STRING
 
   def fromString(toParse: String): Schedule = {
     @tailrec
@@ -191,42 +206,5 @@ object Schedule {
     else
       aux(Schedule(List(), toParse.split(",")(0).trim.toInt), toParse.split("\\\\n").toList)
   }
-
-  //UPDATES RATIO
-
-  def updateRatio(schedule: Schedule, value: Int): Schedule = Schedule(schedule.sblocks, value)
-
-  def main(args: Array[String]): Unit = {
-
-
-    val bloco1 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-      LocalTime.of(9, 30, 0), LocalTime.of(10, 30, 0), "Aula TP de MC", "MC")
-    val bloco2 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-      LocalTime.of(10, 30, 0), LocalTime.of(11, 30, 0), "Aula TP de MC", "CDSI")
-    val bloco3 = SBlock(LocalDate.parse("19-11-2020", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-      LocalTime.of(11, 30, 0), LocalTime.of(13, 0, 0), "Aula TP de MC", "MC")
-
-    val horario = Schedule(Nil, 30)
-
-    val horario1 = horario.addSBlock(bloco1)
-    val horario2 = horario1.addSBlock(bloco2)
-    val horario3 = horario2.addSBlock(bloco3)
-
-    //        println(horario)
-    //        println(horario1)
-    //        println(horario2)
-    //        println(horario3)
-    //        println(horario3.fatigueAlert())
-    //        horario2.printToFile()
-
-    print("ESTE É O HORÁRIO 3 " + horario3 + "\n")
-    val horario4 = horario3.toString
-    print("ESTA É O TOSTRING DO HORÁRIO 3 " + horario4 + "\n")
-    val horario5 = fromString(horario4)
-    print("ESTE É O FROM STRING DO HORÁRIO 3 " + horario5 + "\n")
-
-
-  }
-
 
 }
