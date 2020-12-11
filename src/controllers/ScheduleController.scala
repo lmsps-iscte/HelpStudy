@@ -36,6 +36,7 @@ class ScheduleController extends Initializable {
   @FXML private var date6: Label = _
   @FXML private var date7: Label = _
   @FXML private var infoLabel: Label = _
+  @FXML private var infoLabel1: Label = _
   @FXML private var badAlert: Label = _
   @FXML private var goodAlert: Label = _
   @FXML private var timeInfoLabel: Label = _
@@ -192,6 +193,14 @@ class ScheduleController extends Initializable {
 
   def hoverFuncExit(): Unit = {
     infoLabel.setVisible(false)
+  }
+
+  def hoverFuncEnter1(): Unit = {
+    infoLabel1.setVisible(true)
+  }
+
+  def hoverFuncExit1(): Unit = {
+    infoLabel1.setVisible(false)
   }
 
   def loadInfo(): Unit = {
