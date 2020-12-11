@@ -5,13 +5,14 @@ import java.io.FileNotFoundException
 
 import classes.Notebook.Note
 import classes.RemindersManager.Reminder
-import classes.{Schedule, Subject}
+import classes.{Schedule, Subject, SubjectsManager, Util}
 import classes.Subject.Evaluation
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
 import java.lang.Double.parseDouble
 import java.net.URL
+import java.nio.file.Paths
 import java.time.LocalDate
 import java.util.ResourceBundle
 
@@ -19,6 +20,8 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+
+import scala.io.Source
 
 class SubjectWindowController extends Initializable {
 
@@ -35,12 +38,14 @@ class SubjectWindowController extends Initializable {
   @FXML private var delEvaluation_button: Button = _
 
   private var subj: Subject = _
+  private var subj_man: SubjectsManager = _
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {}
 
-  def setController(subj1: Subject): Unit = {
+  def setController(subj1: Subject, subj_man1: SubjectsManager): Unit = {
+    subj_man = subj_man1
     subj = subj1
-    SubjectWindowController.setSubjectsManager(subj)
+    SubjectWindowController.setSubject(subj)
     System.out.println(subj)
     val subj_aux = subj
 
@@ -75,7 +80,12 @@ class SubjectWindowController extends Initializable {
     evalsListView.getItems.remove(item)
     System.out.println(item.split("-")(0))
     System.out.println(subj.evals)
-    subj = subj.del_evaluation(item.split("-")(0).trim)
+    //subj = subj.del_evaluation(item.split("-")(0).trim)
+
+    System.out.println(subj_man)
+    subj_man = subj_man.replaceSubject(subj)
+    System.out.println(subj_man)
+    //Util.saveToFile(subj_man.toString, "subjects_paths.obj")
     //eliminar no subj_man???
   }
 
@@ -89,7 +99,14 @@ class SubjectWindowController extends Initializable {
     evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
-    SubjectWindowController.setSubjectsManager(subj)
+
+    System.out.println(subj_man)
+    subj_man = subj_man.replaceSubject(subj)
+    System.out.println(subj_man)
+    SubjectWindowController.setSubject(subj) //NAO APAGAR
+    //SubjectsManagerController.setSubjectsManager(subj_man)
+    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
+
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
@@ -134,12 +151,11 @@ object SubjectWindowController {
 
   var sub: Subject = _
 
-  def setSubjectsManager(newSubject: Subject): Unit = {
+  def setSubject(newSubject: Subject): Unit = {
     sub = newSubject
   }
 
   def getSubject: Subject = {
     sub
   }
-
 }

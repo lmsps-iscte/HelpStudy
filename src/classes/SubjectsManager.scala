@@ -15,6 +15,8 @@ case class SubjectsManager(subjs: List[Subject]) {
 
   def searchSubject(name: String): Option[Subject] = SubjectsManager.searchSubject(this, name)
 
+  def replaceSubject(subj: Subject): SubjectsManager = SubjectsManager.replaceSubject(this, subj)
+
   override def toString: String = SubjectsManager.toString(subjs)
 
 }
@@ -28,9 +30,16 @@ object SubjectsManager {
   def delSubject(subj_man: SubjectsManager, subj: Subject): SubjectsManager = {
     searchSubject(subj_man, subj.name) match {
       case Some(b) => SubjectsManager(subj_man.subjs.filter(r => !r.name.equals(subj.name)))
-      case None => /*System.err.println("Erro: Esse lembrete não existe")*/
-        throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+      case None => throw new IllegalArgumentException("Erro: Esse lembrete não existe")
     }
+  }
+
+  def replaceSubject(subj_man: SubjectsManager, subj: Subject): SubjectsManager = {
+    searchSubject(subj_man, subj.name) match {
+      case Some(b) => SubjectsManager(subj_man.subjs.filter(r => !r.name.equals(subj.name)))
+      case None => throw new IllegalArgumentException("Erro: Esse lembrete não existe")
+    }
+    addSubject(subj_man, subj)
   }
 
   def sort_Subjects(subj_man: SubjectsManager): SubjectsManager = {

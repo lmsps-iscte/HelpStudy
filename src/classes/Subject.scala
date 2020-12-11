@@ -47,7 +47,6 @@ object Subject {
     Subject(subj.name, rem :: subj.rems, subj.notes, subj.evals)
   }
 
-  
   def associate_note(subj: Subject, note: Note): Subject = {
     Subject(subj.name, subj.rems, note :: subj.notes, subj.evals)
   }
@@ -63,6 +62,10 @@ object Subject {
       case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equalsIgnoreCase(title)))
       case None => throw new IllegalArgumentException("Erro: Essa avaliação não existe")
     }
+  }
+
+  def update_root_manager_subject(subj_man: SubjectsManager, subj: Subject): SubjectsManager = {
+    subj_man.replaceSubject(subj)
   }
 
   def getEvaluation(subj: Subject, title: String, date: LocalDate): Evaluation = {

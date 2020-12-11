@@ -38,6 +38,7 @@ class SubjectsManagerController extends Initializable {
     subjectsListView.setItems(list_obs)
     var list = FXCollections.observableArrayList[Int]()
 
+
   }
 
   def add_func(): Unit = {
@@ -69,7 +70,7 @@ class SubjectsManagerController extends Initializable {
     val mainViewRoot: Parent = fxmlLoader.load()
     mainController.getMainPane.setCenter(mainViewRoot)
     val subjectWindowController: SubjectWindowController = fxmlLoader.getController
-    subjectWindowController.setController(subj)
+    subjectWindowController.setController(subj, subj_man)
   }
 
   def setParent(mainController1: MainController): Unit = {
@@ -85,14 +86,12 @@ object SubjectsManagerController {
 
   private def loadSubjectsManager: SubjectsManager = {
     try {
-      //Importar as notas e os reminders e depois dar filter pela subj?
       val subj_notes = List()
       val subj_rems = List()
 
       val masterFileContent = Util.readFromFile("subjects_paths.obj")
       System.out.println(masterFileContent)
       SubjectsManager.fromString(masterFileContent, subj_notes, subj_rems)
-      //System.out.println(subj_man)
     } catch {
       case e: FileNotFoundException =>
         SubjectsManager(List())
