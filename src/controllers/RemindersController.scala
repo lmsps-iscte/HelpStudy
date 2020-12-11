@@ -25,7 +25,7 @@ class RemindersController extends Initializable {
     rem_man = RemindersManager.sort_smart(rem_man, "SIGMOID") //Sort de acordo com a funcao desenvolvida
     val rems_list = rem_man.lst_rem
     val list_obs = FXCollections.observableArrayList[String]()
-    rems_list.forall(r => list_obs.add(r._1))
+    rems_list.forall(r => list_obs.add(r._1 + " - " + r._5))
     remindersListView.setItems(list_obs)
     val list = FXCollections.observableArrayList[Int]()
     List(1, 2, 3, 4).foreach(num => list.add(num))
@@ -52,11 +52,11 @@ class RemindersController extends Initializable {
     remindersListView.getItems.remove(item)
     rem_man = rem_man.delReminder(item)
     RemindersController.setReminders(rem_man)
-//    Util.saveToFile(rem_man.toString(), "reminders.obj")
   }
 
   def elementClicked(): Unit = {
     val rem = remindersListView.getSelectionModel.getSelectedItem
+    val title = rem.split("-")(0).trim
     System.out.println(rem)
     //LANCAR A POP-UP AQUI
   }

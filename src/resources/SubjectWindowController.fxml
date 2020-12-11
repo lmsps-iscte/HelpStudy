@@ -6,12 +6,12 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SubjectWindowController">
     <children>
-      <Label layoutX="38.0" layoutY="45.0" text="SUBJECT:">
+      <Label layoutX="65.0" layoutY="43.0" text="SUBJECT:">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-      <Label fx:id="subject_name_label" layoutX="171.0" layoutY="42.0" text="\$SUBJECT_NAME">
+      <Label fx:id="subject_name_label" layoutX="198.0" layoutY="40.0" text="\$SUBJECT_NAME">
          <font>
             <Font size="30.0" />
          </font>
@@ -28,8 +28,8 @@
             <Font size="19.0" />
          </font>
       </Label>
-      <Button fx:id="calculate_final_grade_button" layoutX="509.0" layoutY="590.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
-      <Button fx:id="time_spent_button" layoutX="531.0" layoutY="493.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
+      <Button fx:id="calculate_final_grade_button" layoutX="507.0" layoutY="479.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
+      <Button fx:id="time_spent_button" layoutX="530.0" layoutY="540.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
       <Button fx:id="schedule_evaluation_button" layoutX="235.0" layoutY="493.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="28.0" prefWidth="128.0" text="Schedule Evaluation" />
       <ListView fx:id="evalsListView" layoutX="65.0" layoutY="330.0" prefHeight="95.0" prefWidth="304.0" />
       <Label layoutX="65.0" layoutY="302.0" text="Evaluations">
@@ -41,9 +41,10 @@
       <Label layoutX="65.0" layoutY="453.0" prefHeight="17.0" prefWidth="63.0" text="Percentage:" />
       <TextField fx:id="percentage_field" layoutX="137.0" layoutY="449.0" prefHeight="25.0" prefWidth="50.0" promptText="(0-100)" />
       <Label layoutX="197.0" layoutY="453.0" text="Date:" />
-      <Button fx:id="delEvaluation_button" layoutX="247.0" layoutY="546.0" mnemonicParsing="false" onAction="#delEvaluation_Clicked" prefHeight="25.0" prefWidth="105.0" text="Delete Selection" />
+      <Button fx:id="delEvaluation_button" layoutX="235.0" layoutY="531.0" mnemonicParsing="false" onAction="#delEvaluation_Clicked" prefHeight="28.0" prefWidth="128.0" text="Delete Evaluation" />
       <Label layoutX="65.0" layoutY="498.0" text="Title:" />
       <TextField fx:id="type_eval_field" layoutX="99.0" layoutY="494.0" prefHeight="25.0" prefWidth="95.0" promptText="Type" />
+      <Label layoutX="172.0" layoutY="655.0" text="If you pretend to delete a reminder or a note, you should go to the respective menus!" />
     </children>
 
 </AnchorPane>

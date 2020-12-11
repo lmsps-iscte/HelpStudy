@@ -27,11 +27,12 @@ class SubjectsManagerController extends Initializable {
     val subj1 = subj3.associate_note(("Nota 1","Corpo 1","PPM"))
     val subs_list = List(subj1)*/
     //val subs_list: List[Subject] = List()
-    subj_man = SubjectsManagerController.getSubjectsManager
+
 //    SubjectsManagerController.setSubjectsManager(subj_man)
     //System.out.println("Cheguei")
     //val subs_list: List[Subject] = subj_man.subjs
     //System.out.println(subj_man.subjs)
+    subj_man = SubjectsManagerController.getSubjectsManager
     var list_obs = FXCollections.observableArrayList[String]()
     subj_man.subjs.forall(subj => list_obs.add(subj.name))
     subjectsListView.setItems(list_obs)

@@ -1,18 +1,24 @@
 package controllers
 
 
+import java.io.FileNotFoundException
+
 import classes.Notebook.Note
 import classes.RemindersManager.Reminder
-import classes.Subject
+import classes.{Schedule, Subject}
 import classes.Subject.Evaluation
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
 import javafx.scene.control._
-
 import java.lang.Double.parseDouble
 import java.net.URL
 import java.time.LocalDate
 import java.util.ResourceBundle
+
+import javafx.scene.Scene
+import javafx.scene.control.Alert.AlertType
+import javafx.scene.layout.BorderPane
+import javafx.stage.Stage
 
 class SubjectWindowController extends Initializable {
 
@@ -62,6 +68,7 @@ class SubjectWindowController extends Initializable {
     val item = evalsListView.getSelectionModel.getSelectedItem
     evalsListView.getItems.remove(item)
     subj = subj.delEvaluation(item._3)
+    //eliminar no subj_man???
   }
 
   def schedule_evaluation_buttonClicked(): Unit = {
@@ -77,10 +84,39 @@ class SubjectWindowController extends Initializable {
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
-    System.out.println(subj.calculate_FinalGrade())
+    val grade =
+      try {
+        showFinalGradeAlert()
+      } catch {
+        case e: IllegalStateException => badEvalListAlert()
+      }
   }
 
   def time_spent_buttonClicked(): Unit = {
+    System.out.println(ScheduleController.getSchedule.timebyCUnitL7Days(subj.name))
+    timeSpentAlert()
+  }
+
+  @throws(classOf[IllegalStateException])
+  def showFinalGradeAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("Final Grade - " + subj.name.trim)
+    alert.setHeaderText("Your final grade on " + subj.name.trim + " is " +  subj.calculate_FinalGrade())
+    alert.showAndWait()
+  }
+
+  def timeSpentAlert(): Unit = {
+    val alert =  new Alert(AlertType.WARNING)
+    alert.setTitle("Time Spent - " + subj.name.trim)
+    alert.setHeaderText("Your total time spent on " + subj.name.trim + " is " + ScheduleController.getSchedule.timebyCUnitL7Days(subj.name) + " hours")
+    alert.showAndWait()
+  }
+
+  def badEvalListAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("THE SUM OF PERCENTAGES OF YOUR EVALUATIONS IS DIFFERENT FROM 100%! CHECK YOUR LIST!")
+    alert.showAndWait()
   }
 
 }

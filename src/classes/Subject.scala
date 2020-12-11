@@ -9,6 +9,7 @@ import scala.annotation.tailrec
 import scala.util.control.Breaks.break
 
 
+
 //val rems_default = List()
 
 case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note] = List(), evals: List[Evaluation] = List()) {
@@ -68,6 +69,8 @@ object Subject {
   }
 
   def calculate_FinalGrade(subj: Subject): Double = {
+    val p = subj.evals.map(e => e._2._1).foldRight(0.0)(_+_)
+    if(p < 100 || p > 100) throw new IllegalStateException("ERRO: A soma das percentagens dos teus elementos de avaliação é diferente 100%")
     val x = subj.evals.map( a => a._2)
     val result = x.map{ case(a,b) => a*b/100}
     result.foldRight(0.0)(_+_)
