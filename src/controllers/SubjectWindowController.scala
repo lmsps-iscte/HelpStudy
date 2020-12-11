@@ -40,6 +40,7 @@ class SubjectWindowController extends Initializable {
 
   def setController(subj1: Subject): Unit = {
     subj = subj1
+    SubjectWindowController.setSubjectsManager(subj)
     System.out.println(subj)
     val subj_aux = subj
 
@@ -88,6 +89,7 @@ class SubjectWindowController extends Initializable {
     evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
+    SubjectWindowController.setSubjectsManager(subj)
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
@@ -124,6 +126,20 @@ class SubjectWindowController extends Initializable {
     alert.setTitle("WARNING")
     alert.setHeaderText("THE SUM OF PERCENTAGES OF YOUR EVALUATIONS IS DIFFERENT FROM 100%! CHECK YOUR LIST!")
     alert.showAndWait()
+  }
+
+}
+
+object SubjectWindowController {
+
+  var sub: Subject = _
+
+  def setSubjectsManager(newSubject: Subject): Unit = {
+    sub = newSubject
+  }
+
+  def getSubject: Subject = {
+    sub
   }
 
 }

@@ -94,6 +94,7 @@ object Subject {
       case Nil => s""
       case head :: tail => s"${head._1},${head._2._1},${head._2._2},${head._3} $boundary ${aux(tail)}"
     }
+    println(subj.evals)
     s"${subj.name} $boundary ${aux(subj.evals)}"
   }
 

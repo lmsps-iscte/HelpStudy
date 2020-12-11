@@ -1,10 +1,10 @@
 package classes
 
+import controllers._
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.{Stage, WindowEvent}
-import controllers.{DeckController, NotesController, RemindersController, ScheduleController, SubjectsManagerController}
 
 class App extends Application {
 
@@ -40,7 +40,14 @@ object HelpStudyApp {
     Util.saveToFile(rem_man.toString, "reminders.obj")
     val schedule = ScheduleController.getSchedule
     Util.saveToFile(schedule.toString, "schedule.obj")
-    val subjectsManager = SubjectsManagerController.getSubjectsManager
-    Util.saveToFile(subjectsManager.toString, "subjects_paths.obj")
+    val last_subj = SubjectWindowController.getSubject
+    if (last_subj != null){
+      val subjectsManager = SubjectsManagerController.getSubjectsManager
+      val oneDown = subjectsManager.delSubject(subjectsManager.searchSubject(last_subj.name).get)
+      Util.saveToFile(oneDown.addSubject(last_subj).toString, "subjects_paths.obj")
+    } else {
+      val subjectsManager = SubjectsManagerController.getSubjectsManager
+      Util.saveToFile(subjectsManager.toString, "subjects_paths.obj")
+    }
   }
 }
