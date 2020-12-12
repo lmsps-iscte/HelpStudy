@@ -11,6 +11,8 @@ import java.nio.file.Paths
 import java.time.LocalDate
 import java.util.ResourceBundle
 
+import javafx.scene.control.Alert.AlertType
+
 
 
 class RemindersController extends Initializable {
@@ -24,6 +26,7 @@ class RemindersController extends Initializable {
   @FXML private var infoLabel: Label = _
   private var rem_man = RemindersController.getReminders
   private var list_subjs = SubjectsManagerController.getSubjectsManager.subjs
+  private var reminder: Reminder = _
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
     rem_man = RemindersManager.sort_smart(rem_man, "SIGMOID") //Sort de acordo com a funcao desenvolvida
@@ -46,27 +49,37 @@ class RemindersController extends Initializable {
   }
 
   def add_func(): Unit = {
-    val title = title_box.getText.trim
-    val priority = priority_box.getSelectionModel.getSelectedItem
-    val body_aux = text_area.getText
-    val body = body_aux.trim
-    val cunit = subject_picker.getValue.trim
-    val rem: Reminder = (title, body, priority, date_box.getValue, 0.0, cunit)
-    rem_man = rem_man.addReminder(rem)
-    RemindersController.setReminders(rem_man)
-    //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
-    remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
-//    Util.saveToFile(rem_man.toString(), "reminders.obj")
-    clearFields()
+    if (title_box.getText().isEmpty || priority_box.getSelectionModel.getSelectedItem == null ||
+    text_area.getText().isEmpty || subject_picker.getSelectionModel.getSelectedItem == null)
+      launchAlert()
+    else {
+      val title = title_box.getText.trim
+      val priority = priority_box.getSelectionModel.getSelectedItem
+      val body_aux = text_area.getText
+      val body = body_aux.trim
+      val cunit = subject_picker.getValue.trim
+      val rem: Reminder = (title, body, priority, date_box.getValue, 0.0, cunit)
+      rem_man = rem_man.addReminder(rem)
+      RemindersController.setReminders(rem_man)
+      //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
+      remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
+      //    Util.saveToFile(rem_man.toString(), "reminders.obj")
+      clearFields()
+    }
   }
 
   def edit_func(): Unit = {
-    val item = remindersListView.getSelectionModel.getSelectedItem
-    deleteOps(item)
-    rem_man = rem_man.addReminder(fieldsToReminder())
-    RemindersController.setReminders(rem_man)
-    loadInfo()
-    clearFields()
+    if (title_box.getText().isEmpty || priority_box.getSelectionModel.getSelectedItem == null ||
+      text_area.getText().isEmpty || subject_picker.getSelectionModel.getSelectedItem == null)
+      launchAlert()
+    else {
+      val item = remindersListView.getSelectionModel.getSelectedItem
+      deleteOps(item)
+      rem_man = rem_man.addReminder(fieldsToReminder())
+      RemindersController.setReminders(rem_man)
+      loadInfo()
+      clearFields()
+    }
   }
 
   def delete_func(): Unit = {
@@ -76,17 +89,10 @@ class RemindersController extends Initializable {
     RemindersController.setReminders(rem_man)
   }
 
-  //ESTA A APAGAR O REMINDER na lista
   def elementClicked(): Unit = {
     val item = remindersListView.getSelectionModel.getSelectedItem
-    val title = item.split("-")(0).trim
-    val cunit = item.split("-")(1).trim
-    val rem = rem_man.getReminder(title, cunit)
-    title_box.setText(rem._1)
-    text_area.setText(rem._2)
-    subject_picker.setValue(rem._6)
-    date_box.setValue(rem._4)
-    priority_box.setValue(rem._3)
+    setFields(item)
+    reminder = fieldsToReminder()
   }
 
   def hoverFuncEnter(): Unit = {
@@ -118,12 +124,31 @@ class RemindersController extends Initializable {
     rem_man.lst_rem.foreach(reminder => remindersListView.getItems.add(reminder._1))
   }
 
+  def setFields(item: String): Unit = {
+    val title = item.split("-")(0).trim
+    val cunit = item.split("-")(1).trim
+    val rem = rem_man.getReminder(title, cunit)
+    title_box.setText(rem._1)
+    text_area.setText(rem._2)
+    date_box.setValue(rem._4)
+    priority_box.setValue(rem._3)
+    subject_picker.setValue(rem._6.trim)
+  }
+
   def clearFields(): Unit = {
     title_box.clear()
     priority_box.getSelectionModel.clearSelection()
     text_area.clear()
     subject_picker.getSelectionModel.clearSelection()
   }
+
+  def launchAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You must fill all the available fields!")
+    alert.showAndWait()
+  }
+
 
 }
 
