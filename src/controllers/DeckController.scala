@@ -28,28 +28,33 @@ class DeckController extends Initializable{
   }
 
   def addCard(): Unit = {
-    val alert: Alert = new Alert(AlertType.CONFIRMATION)
-    alert.setTitle("Add a Card")
-    alert.setHeaderText("Choose a Question and Answer")
-    val grid = new GridPane
-    val quest_text = new TextField()
-    val ans_text = new TextField()
-    //subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
-    grid.add(new Label("Question: "), 0, 0)
-    grid.add(quest_text, 1, 0)
-    grid.add(new Label("Answer: "), 0, 1)
-    grid.add(ans_text, 1, 1)
-    alert.getDialogPane.setContent(grid)
-    val result = alert.showAndWait()
+    if(subj_box.getSelectionModel.getSelectedItem == null) {
+      launchAlert()
+    }
+    else {
+      val alert: Alert = new Alert(AlertType.CONFIRMATION)
+      alert.setTitle("Add a Card")
+      alert.setHeaderText("Choose a Question and Answer")
+      val grid = new GridPane
+      val quest_text = new TextField()
+      val ans_text = new TextField()
+      //subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
+      grid.add(new Label("Question: "), 0, 0)
+      grid.add(quest_text, 1, 0)
+      grid.add(new Label("Answer: "), 0, 1)
+      grid.add(ans_text, 1, 1)
+      alert.getDialogPane.setContent(grid)
+      val result = alert.showAndWait()
 
-    result.get match {
-      case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem.trim, LocalDate.now)
-        if (!(quest_text.getText.isEmpty || ans_text.getText.isEmpty)) {
-          DeckController setDeck deck.addCard(card)
-          deck = DeckController.getDeck
-          cardList.getItems.add(s"${card._1} - ${card._4}")
-        }
-      case ButtonType.CANCEL =>
+      result.get match {
+        case ButtonType.OK => val card = (quest_text.getText.trim, ans_text.getText.trim, 0, subj_box.getSelectionModel.getSelectedItem.trim, LocalDate.now)
+          if (!(quest_text.getText.isEmpty || ans_text.getText.isEmpty)) {
+            DeckController setDeck deck.addCard(card)
+            deck = DeckController.getDeck
+            cardList.getItems.add(s"${card._1} - ${card._4}")
+          }
+        case ButtonType.CANCEL =>
+      }
     }
   }
 
@@ -76,30 +81,42 @@ class DeckController extends Initializable{
   }
 
   def doQuiz(): Unit ={
-    val card_deck = deck.ask(subj_box.getSelectionModel.getSelectedItem.trim)
-    deck = card_deck._2
-    DeckController.setDeck(deck)
-    val alert: Alert = new Alert(AlertType.CONFIRMATION)
-    alert.setTitle("Quiz - Give Us An Answer")
-    alert.setHeaderText(card_deck._1._1)
-    val gridPane = new GridPane
-    gridPane.add(new Label("Answer: "), 0, 0)
-    val answerField = new TextField()
-    gridPane.add(answerField, 1, 0)
-    alert.getDialogPane.setContent(gridPane)
-    val result = alert.showAndWait()
-    result.get() match {
-      case ButtonType.OK =>
-        val correct = deck.answer(card_deck._1,answerField.getText)
-        deck = correct._2
-        DeckController.setDeck(deck)
-        if (correct._1)
-          launchCorrect()
-        else
-          launchWrong(card_deck._1)
-      case ButtonType.CANCEL =>
+    if(subj_box.getSelectionModel.getSelectedItem == null) {
+      launchAlert()
+    }
+    else {
+      val card_deck = deck.ask(subj_box.getSelectionModel.getSelectedItem.trim)
+      deck = card_deck._2
+      DeckController.setDeck(deck)
+      val alert: Alert = new Alert(AlertType.CONFIRMATION)
+      alert.setTitle("Quiz - Give Us An Answer")
+      alert.setHeaderText(card_deck._1._1)
+      val gridPane = new GridPane
+      gridPane.add(new Label("Answer: "), 0, 0)
+      val answerField = new TextField()
+      gridPane.add(answerField, 1, 0)
+      alert.getDialogPane.setContent(gridPane)
+      val result = alert.showAndWait()
+      result.get() match {
+        case ButtonType.OK =>
+          val correct = deck.answer(card_deck._1, answerField.getText)
+          deck = correct._2
+          DeckController.setDeck(deck)
+          if (correct._1)
+            launchCorrect()
+          else
+            launchWrong(card_deck._1)
+        case ButtonType.CANCEL =>
+      }
     }
 
+  }
+
+  def launchAlert(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("You must select a subject!")
+    alert.showAndWait()
   }
 
 }

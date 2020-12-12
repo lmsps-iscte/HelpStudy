@@ -36,13 +36,12 @@ class SubjectWindowController extends Initializable {
   @FXML private var type_eval_field: TextField = _
   @FXML private var date_picker: DatePicker = _
   @FXML private var delEvaluation_button: Button = _
+  @FXML private var type_grade: TextField = _
 
   private var subj: Subject = _
   private var subj_man: SubjectsManager = _
 
-  override def initialize(location: URL, resources: ResourceBundle): Unit = {
-
-  }
+  override def initialize(location: URL, resources: ResourceBundle): Unit = {}
 
   def setController(subj1: Subject, subj_man1: SubjectsManager): Unit = {
     subj_man = subj_man1
@@ -56,63 +55,75 @@ class SubjectWindowController extends Initializable {
     val rems_list = RemindersController.getReminders.getRemindersbyCUnit(subj_aux.name.trim)
     System.out.println(rems_list)
     var list_rems_obs = FXCollections.observableArrayList[String]()
-    //rems_list.forall(list_rems_obs.add(_))
     rems_list.forall( rem => list_rems_obs.add(rem._1 + " - " + rem._4))
     remindersListView.setItems(list_rems_obs)
 
     val notes_list = NotesController.getNotes.getNotesbyCUnit(subj_aux.name.trim)
-    //NotesController.getNotes
     var list_notes_obs = FXCollections.observableArrayList[String]()
     notes_list.forall(note => list_notes_obs.add(note._1))
     notesListView.setItems(list_notes_obs)
 
     val evals_list = subj_aux.evals
     var list_evals_obs = FXCollections.observableArrayList[String]()
-    //var list_evals_obs = FXCollections.observableArrayList[Evaluation]()
-    //evals_list.forall(list_evals_obs.add(_))
     evals_list.forall(eval => list_evals_obs.add(eval._3.trim + " - " + eval._1 + " - " + eval._2._1 + "% Grade: " + eval._2._2))
     evalsListView.setItems(list_evals_obs)
 
     date_picker.setValue(LocalDate.now())
+
+    type_grade.setText("0")
   }
 
   def delEvaluation_Clicked(): Unit = {
     val item = evalsListView.getSelectionModel.getSelectedItem
-    System.out.println(item)
     evalsListView.getItems.remove(item)
-    System.out.println(item.split("-")(0))
-    System.out.println(subj.evals)
-    //subj = subj.del_evaluation(item.split("-")(0).trim)
-
-    System.out.println(subj_man)
+    System.out.println("Antes"+ subj.evals)
+    subj = subj.del_evaluation(item.split("-")(0).trim)
+    System.out.println("Depois"+subj.evals)
+    SubjectWindowController.setSubject(subj)
     subj_man = subj_man.replaceSubject(subj)
-    System.out.println(subj_man)
-    //Util.saveToFile(subj_man.toString, "subjects_paths.obj")
-    //eliminar no subj_man???
+    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
   }
 
   def schedule_evaluation_buttonClicked(): Unit = {
-    /*val eval: Evaluation = (LocalDate.parse("2020-11-20"), (100.0, 17))*/
     val percentage: Double = parseDouble(percentage_field.getText)
     val date: LocalDate = date_picker.getValue
     val title: String = type_eval_field.getText
-    val eval: Evaluation = (date, (percentage, 0.0), title)
+    val grade: Double = type_grade.getText.toDouble
+    val eval: Evaluation = (date, (percentage, grade), title)
     subj = subj.add_evaluation(eval)
-    evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + "%: " + eval._2._1 + " Grade: " + eval._2._2)
+    evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + eval._2._1 + "% Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
 
-    System.out.println(subj_man)
+    //System.out.println(subj_man)
     subj_man = subj_man.replaceSubject(subj)
-    System.out.println(subj_man)
+    //System.out.println(subj_man)
     SubjectWindowController.setSubject(subj) //NAO APAGAR
     //SubjectsManagerController.setSubjectsManager(subj_man)
     Util.saveToFile(subj_man.toString, "subjects_paths.obj")
 
   }
 
+  def evalClicked(): Unit = {
+    val item: String = evalsListView.getSelectionModel.getSelectedItem
+    System.out.println(item)
+    val title = item.split("-")(0).trim
+    //val date = LocalDate.parse(item.split("-")(1).trim)
+    //date_picker.setValue(date)
+    type_eval_field.setText(title)
+
+  }
+
+  def editEvaluation(): Unit = {
+    val item = evalsListView.getSelectionModel.getSelectedItem
+    deleteOps(item)
+    subj = subj.add_evaluation(fieldsToEvaluation())
+    SubjectWindowController.setSubject(subj)
+    loadInfo()
+    clearFields()
+  }
+
   def calculate_final_grade_buttonClicked(): Unit = {
-    val grade =
       try {
         showFinalGradeAlert()
       } catch {
@@ -147,6 +158,31 @@ class SubjectWindowController extends Initializable {
     alert.showAndWait()
   }
 
+  def deleteOps(item: String): Unit = {
+    evalsListView.getItems.remove(item)
+    subj = subj.del_evaluation(item.split("-")(0).trim)
+    SubjectWindowController.setSubject(subj)
+  }
+
+  def fieldsToEvaluation(): Evaluation = {
+    val title = type_eval_field.getText.trim
+    val percent = percentage_field.getText.toDouble
+    val date = date_picker.getValue
+    val grade = type_grade.getText.toDouble
+    (date, (percent, grade), title)
+  }
+
+  def loadInfo(): Unit = {
+    evalsListView.getItems.clear()
+    subj.evals.foreach(e => evalsListView.getItems.add(evalsListView.getItems.size, e._3 + " - " + e._1 + " - " + e._2._1 + "% Grade: " + e._2._2))
+  }
+
+  def clearFields(): Unit = {
+    type_grade.clear()
+    percentage_field.clear()
+    type_eval_field.clear()
+  }
+
 }
 
 object SubjectWindowController {
@@ -160,4 +196,5 @@ object SubjectWindowController {
   def getSubject: Subject = {
     sub
   }
+
 }

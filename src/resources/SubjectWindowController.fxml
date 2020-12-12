@@ -31,7 +31,7 @@
       <Button fx:id="calculate_final_grade_button" layoutX="507.0" layoutY="479.0" mnemonicParsing="false" onAction="#calculate_final_grade_buttonClicked" prefHeight="38.0" prefWidth="173.0" text="CALCULATE FINAL GRADE" />
       <Button fx:id="time_spent_button" layoutX="530.0" layoutY="540.0" mnemonicParsing="false" onAction="#time_spent_buttonClicked" prefHeight="38.0" prefWidth="128.0" text="GET TIME SPENT" />
       <Button fx:id="schedule_evaluation_button" layoutX="235.0" layoutY="493.0" mnemonicParsing="false" onAction="#schedule_evaluation_buttonClicked" prefHeight="28.0" prefWidth="128.0" text="Schedule Evaluation" />
-      <ListView fx:id="evalsListView" layoutX="65.0" layoutY="330.0" prefHeight="95.0" prefWidth="304.0" />
+      <ListView fx:id="evalsListView" layoutX="65.0" layoutY="330.0" onMouseClicked="#evalClicked" prefHeight="95.0" prefWidth="304.0" />
       <Label layoutX="65.0" layoutY="302.0" text="Evaluations">
          <font>
             <Font size="19.0" />
@@ -41,10 +41,18 @@
       <Label layoutX="65.0" layoutY="453.0" prefHeight="17.0" prefWidth="63.0" text="Percentage:" />
       <TextField fx:id="percentage_field" layoutX="137.0" layoutY="449.0" prefHeight="25.0" prefWidth="50.0" promptText="(0-100)" />
       <Label layoutX="197.0" layoutY="453.0" text="Date:" />
-      <Button fx:id="delEvaluation_button" layoutX="235.0" layoutY="531.0" mnemonicParsing="false" onAction="#delEvaluation_Clicked" prefHeight="28.0" prefWidth="128.0" text="Delete Evaluation" />
+      <Button fx:id="delEvaluation_button" layoutX="235.0" layoutY="572.0" mnemonicParsing="false" onAction="#delEvaluation_Clicked" prefHeight="28.0" prefWidth="128.0" text="Delete Evaluation" />
       <Label layoutX="65.0" layoutY="498.0" text="Title:" />
       <TextField fx:id="type_eval_field" layoutX="99.0" layoutY="494.0" prefHeight="25.0" prefWidth="95.0" promptText="Type" />
       <Label layoutX="172.0" layoutY="655.0" text="If you pretend to delete a reminder or a note, you should go to the respective menus!" />
+      <Label layoutX="66.0" layoutY="537.0" text="Grade:" />
+      <TextField fx:id="type_grade" layoutX="109.0" layoutY="533.0" prefHeight="25.0" prefWidth="50.0" promptText="(0-20)" />
+      <Label layoutX="66.0" layoutY="564.0" prefHeight="17.0" prefWidth="137.0" text="If its not done yet, set your grade to 0">
+         <font>
+            <Font size="8.0" />
+         </font></Label>
+      <Button fx:id="edit_eval_button" layoutX="236.0" layoutY="533.0" mnemonicParsing="false" onAction="#editEvaluation" prefHeight="25.0" prefWidth="128.0" text="Edit Evaluation" />
+      <Label layoutX="565.0" layoutY="592.0" text="Last 7 days" />
     </children>
 
 </AnchorPane>

@@ -58,10 +58,11 @@ object Subject {
   }
 
   def del_evaluation(subj: Subject, title: Title): Subject = {
-    searchEvaluation(subj, title) match {
+    /*searchEvaluation(subj, title) match {
       case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equalsIgnoreCase(title)))
       case None => throw new IllegalArgumentException("Erro: Essa avaliação não existe")
-    }
+    }*/
+    Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => e._3.equalsIgnoreCase(title)))
   }
 
   def update_root_manager_subject(subj_man: SubjectsManager, subj: Subject): SubjectsManager = {
