@@ -65,7 +65,7 @@ class SubjectWindowController extends Initializable {
 
     val evals_list = subj_aux.evals
     var list_evals_obs = FXCollections.observableArrayList[String]()
-    evals_list.forall(eval => list_evals_obs.add(eval._3.trim + " - " + eval._1 + " - " + eval._2._1 + "% Grade: " + eval._2._2))
+    evals_list.forall(eval => list_evals_obs.add(eval._3.trim + " / " + eval._1 + " / " + eval._2._1 + "% Grade: " + eval._2._2))
     evalsListView.setItems(list_evals_obs)
 
     date_picker.setValue(LocalDate.now())
@@ -91,7 +91,7 @@ class SubjectWindowController extends Initializable {
     val grade: Double = type_grade.getText.toDouble
     val eval: Evaluation = (date, (percentage, grade), title)
     subj = subj.add_evaluation(eval)
-    evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " - " + eval._1 + " - " + eval._2._1 + "% Grade: " + eval._2._2)
+    evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " / " + eval._1 + " / " + eval._2._1 + "% Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
 
@@ -105,12 +105,15 @@ class SubjectWindowController extends Initializable {
   }
 
   def evalClicked(): Unit = {
-    val item: String = evalsListView.getSelectionModel.getSelectedItem
-    System.out.println(item)
-    val title = item.split("-")(0).trim
+    val item: String = evalsListView.getSelectionModel.getSelectedItem.trim
+    val title = item.split("/")(0).trim
+    print(title)
     //val date = LocalDate.parse(item.split("-")(1).trim)
     //date_picker.setValue(date)
     type_eval_field.setText(title)
+    percentage_field.setText(item.split("/")(2).split("%")(0).trim)
+    date_picker.setValue(LocalDate.parse(item.split("/")(1).trim))
+    type_grade.setText(item.split("/")(2).split(" ")(3).trim)
 
   }
 
@@ -119,8 +122,10 @@ class SubjectWindowController extends Initializable {
     deleteOps(item)
     subj = subj.add_evaluation(fieldsToEvaluation())
     SubjectWindowController.setSubject(subj)
+    subj_man = subj_man.replaceSubject(subj)
     loadInfo()
     clearFields()
+    Util.saveToFile(subj_man.toString, "subjects_paths.obj")
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
@@ -174,7 +179,7 @@ class SubjectWindowController extends Initializable {
 
   def loadInfo(): Unit = {
     evalsListView.getItems.clear()
-    subj.evals.foreach(e => evalsListView.getItems.add(evalsListView.getItems.size, e._3 + " - " + e._1 + " - " + e._2._1 + "% Grade: " + e._2._2))
+    subj.evals.foreach(e => evalsListView.getItems.add(evalsListView.getItems.size, e._3 + " / " + e._1 + " / " + e._2._1 + "% Grade: " + e._2._2))
   }
 
   def clearFields(): Unit = {
