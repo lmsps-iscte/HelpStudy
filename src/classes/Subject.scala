@@ -60,6 +60,8 @@ object Subject {
     subj.evals.filter(eval => eval._3.equals(title) && eval._1.equals(date)).head
   }
 
+  
+
   def searchEvaluation(subj: Subject, title: String): Option[Evaluation] = {
     Option((subj.evals filter (e => e._3.equalsIgnoreCase(title))).head)
   }

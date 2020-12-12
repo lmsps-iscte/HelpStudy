@@ -22,6 +22,8 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 
 import scala.io.Source
+import scala.util.{Try, Failure, Success}
+
 
 class SubjectWindowController extends Initializable {
 
@@ -166,12 +168,24 @@ class SubjectWindowController extends Initializable {
     SubjectWindowController.setSubject(subj)
   }
 
+  def makeDouble(s: String): Try[Double] = Try(s.trim.toDouble)
+
   def fieldsToEvaluation(): Evaluation = {
     val title = type_eval_field.getText.trim
     val percent = percentage_field.getText.toDouble
     val date = date_picker.getValue
-    val grade = type_grade.getText.toDouble
-    (date, (percent, grade), title)
+    makeDouble(type_grade.getText) match {
+      case Success(i) => (date, (percent, i), title)
+      case Failure(s) => (date, (percent, 0.0), title)
+    }
+
+  }
+
+  def alertGrade_field(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("YOUR GRADE MUST BE A NUMBER")
+    alert.showAndWait()
   }
 
   def loadInfo(): Unit = {

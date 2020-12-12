@@ -86,7 +86,7 @@ class RemindersController extends Initializable {
   def delete_func(): Unit = {
     val item: String = remindersListView.getSelectionModel.getSelectedItem
     remindersListView.getItems.remove(item)
-    rem_man = rem_man.delReminder(item)
+    rem_man = rem_man.delReminder(item.split("-")(0).trim)
     RemindersController.setReminders(rem_man)
   }
 
