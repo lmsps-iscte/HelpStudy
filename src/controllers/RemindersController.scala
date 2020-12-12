@@ -62,7 +62,7 @@ class RemindersController extends Initializable {
       rem_man = rem_man.addReminder(rem)
       RemindersController.setReminders(rem_man)
       //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
-      remindersListView.getItems.add(remindersListView.getItems.size(), rem._1)
+      remindersListView.getItems.add(rem._1+" - "+rem._6)
       //    Util.saveToFile(rem_man.toString(), "reminders.obj")
       clearFields()
     }
@@ -121,7 +121,7 @@ class RemindersController extends Initializable {
 
   def loadInfo(): Unit = {
     remindersListView.getItems.clear()
-    rem_man.lst_rem.foreach(reminder => remindersListView.getItems.add(reminder._1))
+    rem_man.lst_rem.foreach(reminder => remindersListView.getItems.add(reminder._1+" - "+reminder._6))
   }
 
   def setFields(item: String): Unit = {
