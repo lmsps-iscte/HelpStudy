@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="big_pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" prefHeight="682.0" prefWidth="521.0">
+    <children>
+        <Label layoutX="218.0" layoutY="203.0" text="Your best friend at Study time! ">
+            <font>
+                <Font size="22.0" />
+            </font>
+        </Label>
+        <Label layoutX="280.0" layoutY="110.0" text="HelpStudy">
+            <font>
+                <Font size="39.0" />
+            </font>
+        </Label>
+        <Label layoutX="321.0" layoutY="354.0" text="Developed by">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="335.0" layoutY="394.0" text="João Polónio" />
+        <Label layoutX="345.0" layoutY="417.0" text="Luís Pires" />
+        <Label layoutX="337.0" layoutY="440.0" text="Tiago Torres" />
+        <Label layoutX="341.0" layoutY="534.0" text="Version 1.0" />
+    </children>
+    <padding>
+        <Insets top="10.0" />
+    </padding>
+</AnchorPane>
