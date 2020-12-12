@@ -11,3 +11,10 @@ evento é muito raro mas pode acontecer.
 
 A lista de reminders é ordenada por definição por uma função matemática desenvolvida pelo grupo que se baseia numa
 para atribuir uma pontuação eficaz que combina a prioridade e a data do reminder.
+
+
+TREE TESTING: https://app.optimalworkshop.com/treejack/wcr47qsv/ywlo11xr-0/shared-results/t50x8dpx3g6y7u0m745f6z6gnx8xw3s6
+
+CARD SORTING: https://app.optimalworkshop.com/optimalsort/wcr47qsv/n2qa8fza/shared-results/303k4a75v51kpb3hk1p64bk0120w21av
+
+VÍDEO DE DEMONSTRAÇÃO: https://1drv.ms/v/s!Ar9MmLZ1c3ZMyd1iLeLEe4iM9z1Ytw?e=w1feJZ
