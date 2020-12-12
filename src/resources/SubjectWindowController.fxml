@@ -47,10 +47,6 @@
       <Label layoutX="172.0" layoutY="655.0" text="If you pretend to delete a reminder or a note, you should go to the respective menus!" />
       <Label layoutX="66.0" layoutY="537.0" text="Grade:" />
       <TextField fx:id="type_grade" layoutX="109.0" layoutY="533.0" prefHeight="25.0" prefWidth="50.0" promptText="(0-20)" />
-      <Label layoutX="66.0" layoutY="564.0" prefHeight="17.0" prefWidth="137.0" text="If its not done yet, set your grade to 0">
-         <font>
-            <Font size="8.0" />
-         </font></Label>
       <Button fx:id="edit_eval_button" layoutX="236.0" layoutY="533.0" mnemonicParsing="false" onAction="#editEvaluation" prefHeight="25.0" prefWidth="128.0" text="Edit Evaluation" />
       <Label layoutX="565.0" layoutY="592.0" text="Last 7 days" />
     </children>

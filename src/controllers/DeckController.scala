@@ -20,7 +20,7 @@ class DeckController extends Initializable{
   private var subjs: SubjectsManager = _
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
-//    subjs = classes.SubjectsManager.fromString("", List(), List())
+
     subjs = SubjectsManagerController.getSubjectsManager
     subj_box.getItems.clear()
     subjs.subjs.foreach(sub => subj_box.getItems.add(sub.name))
@@ -133,12 +133,6 @@ object DeckController {
       Deck.fromString(masterFileContent)
     } catch {
       case _: FileNotFoundException =>
-        /*val note1: Note = ("Nota1","Corpo1","MC")
-        val note2: Note = ("Nota2","Corpo2","TS")
-        val note3: Note = ("Nota3","Corpo3","PPM")
-        notebook = notebook.addNote(note1)
-        notebook = notebook.addNote(note2)
-        notebook = notebook.addNote(note3)*/
     Deck(List(), RandomWithState(0))
     }
   }

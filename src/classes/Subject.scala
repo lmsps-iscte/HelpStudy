@@ -6,17 +6,8 @@ import classes.Subject.Evaluation
 import java.time.LocalDate
 
 import scala.annotation.tailrec
-import scala.util.control.Breaks.break
-
-
-
-//val rems_default = List()
 
 case class Subject(name: String, rems: List[Reminder] = List(), notes: List[Note] = List(), evals: List[Evaluation] = List()) {
-
-  /*def this(m: Map[String, String]) =
-    this(m.getOrElse("rems", rems_default))*/
-
 
   def associate_reminder(rem: Reminder): Subject = Subject.associate_reminder(this, rem)
 
@@ -58,10 +49,6 @@ object Subject {
   }
 
   def del_evaluation(subj: Subject, title: Title): Subject = {
-    /*searchEvaluation(subj, title) match {
-      case Some(b) => Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => !e._3.equalsIgnoreCase(title)))
-      case None => throw new IllegalArgumentException("Erro: Essa avaliação não existe")
-    }*/
     Subject(subj.name, subj.rems, subj.notes, subj.evals.filter(e => e._3.equalsIgnoreCase(title)))
   }
 
@@ -106,7 +93,7 @@ object Subject {
     val fields = head.split(",")
     val date = LocalDate.parse(fields.head.trim)
     val percent_Grade = fields(1).toDouble
-    val grade = fields(2).toDouble //ATENCAO---------!!!!!!!!!
+    val grade = fields(2).toDouble
     val title = fields.last
     (date, (percent_Grade, grade), title)
   }
@@ -127,13 +114,13 @@ object Subject {
   }
 
   def main(args: Array[String]): Unit = {
-    val eval1 = (LocalDate.parse("2020-11-19"), (30.0, 20.0), "Teste")
-    val eval2 = (LocalDate.parse("2020-12-18"), (70.0, 15.0), "Teste")
+
+    //DEMONSTRAÇÃO DO FUNCIONAMENTO DO CURRYING
     val subj = Subject("PPM")
-    val subj1 = add_evaluation(subj, eval1)
-    val subj2 = add_evaluation(subj1, eval2)
-    //println(calculate_FinalGrade(subj2))
-     val i = calculate_FinalGrade2(0.5 , List(20)) (0.25, List(15))_
+    val i = calculate_FinalGrade2(0.5 , List(20)) (0.25, List(15))(0.25, List(15))
+    val b = calculate_FinalGrade2(0.5 , List(20)) (0.5, List(15))_
+    println(i)
+
   }
 
 

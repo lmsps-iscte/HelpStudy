@@ -5,7 +5,7 @@ import java.io.FileNotFoundException
 
 import classes.Notebook.Note
 import classes.RemindersManager.Reminder
-import classes.{Schedule, Subject, SubjectsManager, Util}
+import classes.{HelpStudyApp, Schedule, Subject, SubjectsManager, Util}
 import classes.Subject.Evaluation
 import javafx.collections.FXCollections
 import javafx.fxml.{FXML, Initializable}
@@ -82,6 +82,7 @@ class SubjectWindowController extends Initializable {
     SubjectWindowController.setSubject(subj)
     subj_man = subj_man.replaceSubject(subj)
     Util.saveToFile(subj_man.toString, "subjects_paths.obj")
+    alertEvaluation()
   }
 
   def schedule_evaluation_buttonClicked(): Unit = {
@@ -94,13 +95,10 @@ class SubjectWindowController extends Initializable {
     evalsListView.getItems.add(evalsListView.getItems.size, eval._3 + " / " + eval._1 + " / " + eval._2._1 + "% Grade: " + eval._2._2)
     percentage_field.clear()
     type_eval_field.clear()
-
-    //System.out.println(subj_man)
     subj_man = subj_man.replaceSubject(subj)
-    //System.out.println(subj_man)
-    SubjectWindowController.setSubject(subj) //NAO APAGAR
-    //SubjectsManagerController.setSubjectsManager(subj_man)
+    SubjectWindowController.setSubject(subj)
     Util.saveToFile(subj_man.toString, "subjects_paths.obj")
+    alertEvaluation()
 
   }
 
@@ -108,8 +106,6 @@ class SubjectWindowController extends Initializable {
     val item: String = evalsListView.getSelectionModel.getSelectedItem.trim
     val title = item.split("/")(0).trim
     print(title)
-    //val date = LocalDate.parse(item.split("-")(1).trim)
-    //date_picker.setValue(date)
     type_eval_field.setText(title)
     percentage_field.setText(item.split("/")(2).split("%")(0).trim)
     date_picker.setValue(LocalDate.parse(item.split("/")(1).trim))
@@ -126,6 +122,7 @@ class SubjectWindowController extends Initializable {
     loadInfo()
     clearFields()
     Util.saveToFile(subj_man.toString, "subjects_paths.obj")
+    alertEvaluation()
   }
 
   def calculate_final_grade_buttonClicked(): Unit = {
@@ -186,6 +183,13 @@ class SubjectWindowController extends Initializable {
     type_grade.clear()
     percentage_field.clear()
     type_eval_field.clear()
+  }
+
+  def alertEvaluation(): Unit = {
+    val alert = new Alert(AlertType.WARNING)
+    alert.setTitle("WARNING")
+    alert.setHeaderText("YOU MADE CHANGES TO YOUR EVALUATIONS! DON'T RETURN TO " + subj.name.trim.toUpperCase + " TAB FOR THEM TO TAKE EFFECT")
+    alert.showAndWait()
   }
 
 }

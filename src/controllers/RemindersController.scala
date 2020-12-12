@@ -29,7 +29,7 @@ class RemindersController extends Initializable {
   private var reminder: Reminder = _
 
   def initialize(location: URL, resources: ResourceBundle): Unit = {
-    rem_man = RemindersManager.sort_smart(rem_man, "SIGMOID") //Sort de acordo com a funcao desenvolvida
+    rem_man = RemindersManager.sort_smart(rem_man, "SIGMOID") //SORT DE ACORDO COM O ALGORITMO DESENVOLVIDO
 
     val rems_list = rem_man.lst_rem
     val list_obs = FXCollections.observableArrayList[String]()
@@ -48,6 +48,7 @@ class RemindersController extends Initializable {
     subject_picker.setItems(list_subjs_obs)
   }
 
+  //ADD REMINDER
   def add_func(): Unit = {
     if (title_box.getText().isEmpty || priority_box.getSelectionModel.getSelectedItem == null ||
     text_area.getText().isEmpty || subject_picker.getSelectionModel.getSelectedItem == null)
@@ -61,13 +62,12 @@ class RemindersController extends Initializable {
       val rem: Reminder = (title, body, priority, date_box.getValue, 0.0, cunit)
       rem_man = rem_man.addReminder(rem)
       RemindersController.setReminders(rem_man)
-      //rem_man = sort_smart(rem_man, "SIGMOID") NAO ATUALIZA A LISTA
       remindersListView.getItems.add(rem._1+" - "+rem._6)
-      //    Util.saveToFile(rem_man.toString(), "reminders.obj")
       clearFields()
     }
   }
 
+  //EDIT REMINDER
   def edit_func(): Unit = {
     if (title_box.getText().isEmpty || priority_box.getSelectionModel.getSelectedItem == null ||
       text_area.getText().isEmpty || subject_picker.getSelectionModel.getSelectedItem == null)
@@ -82,6 +82,7 @@ class RemindersController extends Initializable {
     }
   }
 
+  //DELETE REMINDER
   def delete_func(): Unit = {
     val item: String = remindersListView.getSelectionModel.getSelectedItem
     remindersListView.getItems.remove(item)

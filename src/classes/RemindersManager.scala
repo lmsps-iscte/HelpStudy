@@ -22,8 +22,6 @@ case class RemindersManager(lst_rem: Reminder_List) {
 
   def getReminder(title: String, cunit: String): Reminder =  RemindersManager.getReminder(this, title, cunit)
 
-  //def getByCUnit(name: String): List[Reminder] = RemindersManager.getByCUnit(this, name)
-
   override def toString: String = RemindersManager.toString(lst_rem)
 }
 
@@ -46,8 +44,6 @@ object RemindersManager {
     case Nil => Nil
     case head :: tail => println(s"Title: ${head._1} Body: ${head._2} Priority: ${head._3} Date: ${head._4} CUNIT: ${head._6}"); printReminders(tail)
   }
-
-  //def getByCUnit(rem_man: RemindersManager, name: String): List[Reminder] = rem_man.lst_rem.filter(rem => rem._1 equalsIgnoreCase name)
 
   //-------------UPDATE------------------------
   def addReminder(rem_man: RemindersManager, new_rem: Reminder): RemindersManager = {
@@ -74,7 +70,6 @@ object RemindersManager {
     rem_man.lst_rem.filter(_._1 equalsIgnoreCase title).filter(_._6 equalsIgnoreCase cunit).head
   }
 
-  //  throw new IllegalArgumentException("Erro: Esse lembrete não existe")
   //------------AUXILIAR------------------------------
   def searchReminder(rem_man: RemindersManager, title: String): Option[Reminder] = {
     Option((rem_man.lst_rem filter (r => r._1.equals(title))).head)
@@ -89,9 +84,8 @@ object RemindersManager {
     RemindersManager(rem_man.lst_rem.sortBy(_._4))
   }
 
+  //ALGORITMO MATEMÁTICO QUE COMBINA A PRIORIDADE COM A DATA DO REMINDER
   def sort_smart(rem_man: RemindersManager, f_name: String): RemindersManager = {
-    //Algoritmo de complexidade
-    //classes.RemindersManager((rem_man.lst_rem.sortBy( r => (r._4, r._3))))
     val f1_name = f_name.toUpperCase
     f1_name match {
       case "SIGMOID" => RemindersManager(smart_list(rem_man.lst_rem)(points_sigmoid).sortBy(_._5).reverse)
@@ -103,9 +97,9 @@ object RemindersManager {
   def smart_list(rems: List[Reminder])(dist_func: (Reminder, Int) => Double): List[Reminder] = rems match {
       case Nil => Nil
       case head :: tail => if (head._4.isBefore(LocalDate.now))
-        (head._1, head._2, head._3, head._4, 0.0, head._6) :: smart_list(tail)(dist_func) //ALTERADO1
+        (head._1, head._2, head._3, head._4, 0.0, head._6) :: smart_list(tail)(dist_func)
       else
-        (head._1, head._2, head._3, head._4, points(head)(dist_func), head._6) :: smart_list(tail)(dist_func) //ALTERADO2
+        (head._1, head._2, head._3, head._4, points(head)(dist_func), head._6) :: smart_list(tail)(dist_func)
     }
 
   def points(rem: Reminder)(dist_func: (Reminder, Int) => Double): Double = {
@@ -126,7 +120,7 @@ object RemindersManager {
 
   def toString(lst_rem: List[Reminder]): String = lst_rem match {
     case Nil => s""
-    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5},${head._6}" //ALTERADO3
+    case head :: Nil => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5},${head._6}"
     case head :: tail => s"${head._1} $boundary ${head._2} $boundary ${head._3},${head._4},${head._5},${head._6}$boundary" +
       s"\\n${toString(tail)}"
   }
@@ -151,9 +145,6 @@ object RemindersManager {
     }
     aux(RemindersManager(List()),toParse.split("\\\\n").toList)
   }
-
-  /*def variancia(): Int = {
-  }*/
 
   def main(args: Array[String]): Unit = {
     val rems: RemindersManager = RemindersManager(List(("Titulo1", "Body1", 3, LocalDate.now(), 0.0, "Pessoal"),
